@@ -2,8 +2,16 @@
   const $ = (sel, ctx=document) => ctx.querySelector(sel);
   const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
 
-  function openModal(modal) { if (modal) modal.hidden = false; }
-  function closeModal(modal) { if (modal) modal.hidden = true; }
+  function openModal(modal) {
+    if (!modal) return;
+    modal.classList.add('show');
+    document.body.classList.add('modal-open');
+  }
+  function closeModal(modal) {
+    if (!modal) return;
+    modal.classList.remove('show');
+    document.body.classList.remove('modal-open');
+  }
 
   function initReviewModal() {
     const modal = $('#reviewModal');
@@ -12,6 +20,16 @@
     const cancelBtn = modal.querySelector('[data-dismiss]');
     closeBtn?.addEventListener('click', () => closeModal(modal));
     cancelBtn?.addEventListener('click', () => closeModal(modal));
+
+    // Click outside to close
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal(modal);
+    });
+
+    // ESC to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('show')) closeModal(modal);
+    });
 
     const stars = $$('.star-input .star', modal);
     const ratingInput = $('#reviewRating', modal);
@@ -59,6 +77,16 @@
     const cancelBtn = modal.querySelector('[data-dismiss]');
     closeBtn?.addEventListener('click', () => closeModal(modal));
     cancelBtn?.addEventListener('click', () => closeModal(modal));
+
+    // Click outside to close
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal(modal);
+    });
+
+    // ESC to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('show')) closeModal(modal);
+    });
 
     const form = $('#replyForm', modal);
     form?.addEventListener('submit', async (e) => {

@@ -6,6 +6,9 @@
   <meta name="description" content="Saheli Plus - Women's Service Marketplace">
   <title><%- title %></title>
   <link rel="stylesheet" href="/styles/main.css">
+  <link rel="stylesheet" href="/styles/user-menu.css">
+  <link rel="stylesheet" href="/styles/modal.css">
+    <link rel="stylesheet" href="/styles/toast.css">
   <% if (locals.authPage) { %>
     <link rel="stylesheet" href="/styles/auth.css">
   <% } %>
@@ -50,11 +53,13 @@
   <%- include('../partials/footer') %>
   
   <script src="/js/main.js"></script>
+  <script src="/js/user-menu.js"></script>
   <% if (locals.homePage) { %>
     <script src="/js/home.js"></script>
   <% } %>
   <% if (locals.searchPage) { %>
     <script src="/js/search.js"></script>
+    <script src="/js/search-filters.js"></script>
   <% } %>
   <% if (locals.detailPage) { %>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

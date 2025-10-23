@@ -1,31 +1,18 @@
-<% if (locals.successMessage) { %>
-  <div class="alert alert-success">
-    <span class="alert-icon">✓</span>
-    <span class="alert-message"><%= successMessage %></span>
-    <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
-  </div>
-<% } %>
-
-<% if (locals.errorMessage) { %>
-  <div class="alert alert-error">
-    <span class="alert-icon">✕</span>
-    <span class="alert-message"><%= errorMessage %></span>
-    <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
-  </div>
-<% } %>
-
-<% if (locals.infoMessage) { %>
-  <div class="alert alert-info">
-    <span class="alert-icon">ℹ</span>
-    <span class="alert-message"><%= infoMessage %></span>
-    <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
-  </div>
-<% } %>
-
-<% if (locals.warningMessage) { %>
-  <div class="alert alert-warning">
-    <span class="alert-icon">⚠</span>
-    <span class="alert-message"><%= warningMessage %></span>
-    <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
-  </div>
+<% if (locals.successMessage || locals.errorMessage || locals.infoMessage || locals.warningMessage) { %>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      <% if (locals.successMessage) { %>
+        showToast('<%= successMessage.replace(/'/g, "\\'") %>', 'success', 5000);
+      <% } %>
+      <% if (locals.errorMessage) { %>
+        showToast('<%= errorMessage.replace(/'/g, "\\'") %>', 'error', 6000);
+      <% } %>
+      <% if (locals.infoMessage) { %>
+        showToast('<%= infoMessage.replace(/'/g, "\\'") %>', 'info', 5000);
+      <% } %>
+      <% if (locals.warningMessage) { %>
+        showToast('<%= warningMessage.replace(/'/g, "\\'") %>', 'warning', 5000);
+      <% } %>
+    });
+  </script>
 <% } %>

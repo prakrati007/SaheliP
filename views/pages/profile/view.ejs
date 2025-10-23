@@ -1,66 +1,167 @@
 
-<div class="profile-container">
-  <div class="profile-header">
-    <div class="profile-picture-wrapper">
-      <% if (user.profilePic) { %>
-        <img src="<%= user.profilePic %>" alt="Profile Picture" class="profile-picture" />
-      <% } else { %>
-        <div class="profile-picture-placeholder"><%= user.name[0] %></div>
-      <% } %>
-      <% if (user.role === 'saheli' && user.hasVerificationBadge) { %>
-        <span class="profile-badge badge-verified" title="Verified Provider - 3+ completed bookings">&#x2714;</span>
-      <% } %>
-    </div>
-    <div class="profile-info">
-      <h1 class="profile-name"><%= user.name %></h1>
-      <div class="profile-badges">
-        <% if (user.role === 'saheli') { %>
-          <span class="profile-badge badge-saheli">Service Provider</span>
+<div class="profile-container-modern">
+  <!-- Profile Header Card -->
+  <div class="profile-header-card">
+    <div class="profile-header-bg"></div>
+    <div class="profile-header-content">
+      <div class="profile-avatar-wrapper">
+        <% if (user.profilePic) { %>
+          <img src="<%= user.profilePic %>" alt="Profile Picture" class="profile-avatar" />
         <% } else { %>
-          <span class="profile-badge badge-customer">Customer</span>
+          <div class="profile-avatar-placeholder">
+            <%= user.name[0].toUpperCase() %>
+          </div>
+        <% } %>
+        <% if (user.role === 'saheli' && user.hasVerificationBadge) { %>
+          <div class="profile-verified-badge" title="Verified Provider - 3+ completed bookings">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+            </svg>
+          </div>
         <% } %>
       </div>
-      <div class="profile-location">
-        <%= user.city %>, <%= user.pincode %>
+      
+      <div class="profile-user-info">
+        <h1 class="profile-user-name"><%= user.name %></h1>
+        
+        <div class="profile-meta">
+          <% if (user.role === 'saheli') { %>
+            <span class="profile-role-badge role-saheli">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              Service Provider
+            </span>
+          <% } else { %>
+            <span class="profile-role-badge role-customer">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              Customer
+            </span>
+          <% } %>
+          
+          <span class="profile-location-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <%= user.city %>, <%= user.pincode %>
+          </span>
+        </div>
+
+        <a href="/profile/edit" class="profile-edit-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          Edit Profile
+        </a>
       </div>
-      <a href="/profile/edit" class="btn btn-primary" style="margin-top:1rem;">Edit Profile</a>
     </div>
   </div>
-  <section class="profile-section">
-    <h2 class="profile-section-title">Bio</h2>
-    <div class="profile-bio">
-      <%= user.bio ? user.bio : 'No bio added yet.' %>
-    </div>
-  </section>
-  <section class="profile-section">
-    <h2 class="profile-section-title">Languages</h2>
-    <div class="profile-tags">
-      <% if (user.languages && user.languages.length) { %>
-        <% user.languages.forEach(function(lang) { %>
-          <span class="profile-tag"><%= lang %></span>
-        <% }) %>
-      <% } else { %>
-        <span class="profile-tag">Not specified</span>
-      <% } %>
-    </div>
-  </section>
-  <% if (user.role === 'saheli') { %>
-    <section class="profile-section">
-      <h2 class="profile-section-title">Experience</h2>
-      <div class="profile-info-item">
-        <span class="info-label">Years of Experience</span>
-        <span class="info-value"><%= user.experienceYears !== null ? user.experienceYears + ' years' : 'Not specified' %></span>
+
+  <!-- Profile Details Grid -->
+  <div class="profile-details-grid">
+    <!-- Bio Section -->
+    <div class="profile-detail-card">
+      <div class="profile-card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <h2 class="profile-card-title">Bio</h2>
       </div>
-      <h2 class="profile-section-title">Certifications</h2>
-      <div class="profile-tags">
-        <% if (user.certifications && user.certifications.length) { %>
-          <% user.certifications.forEach(function(cert) { %>
-            <span class="profile-tag"><%= cert %></span>
-          <% }) %>
+      <div class="profile-card-body">
+        <% if (user.bio) { %>
+          <p class="profile-bio-text"><%= user.bio %></p>
         <% } else { %>
-          <span class="profile-tag">No certifications added</span>
+          <p class="profile-empty-state">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            No bio added yet. Click "Edit Profile" to add one.
+          </p>
         <% } %>
       </div>
-    </section>
-  <% } %>
+    </div>
+
+    <!-- Languages Section -->
+    <div class="profile-detail-card">
+      <div class="profile-card-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          <path d="M2 12h20"></path>
+        </svg>
+        <h2 class="profile-card-title">Languages</h2>
+      </div>
+      <div class="profile-card-body">
+        <div class="profile-tags-modern">
+          <% if (user.languages && user.languages.length) { %>
+            <% user.languages.forEach(function(lang) { %>
+              <span class="profile-tag-modern tag-language"><%= lang %></span>
+            <% }) %>
+          <% } else { %>
+            <span class="profile-tag-modern tag-empty">Not specified</span>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Experience & Certifications (for Saheli) -->
+    <% if (user.role === 'saheli') { %>
+      <div class="profile-detail-card">
+        <div class="profile-card-header">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          <h2 class="profile-card-title">Professional Details</h2>
+        </div>
+        <div class="profile-card-body">
+          <div class="profile-info-row">
+            <span class="profile-info-label">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              Years of Experience
+            </span>
+            <span class="profile-info-value">
+              <%= user.experienceYears !== null ? user.experienceYears + ' years' : 'Not specified' %>
+            </span>
+          </div>
+          
+          <div class="profile-divider"></div>
+          
+          <div class="profile-info-label" style="margin-bottom: 0.75rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            Certifications
+          </div>
+          <div class="profile-tags-modern">
+            <% if (user.certifications && user.certifications.length) { %>
+              <% user.certifications.forEach(function(cert) { %>
+                <span class="profile-tag-modern tag-cert"><%= cert %></span>
+              <% }) %>
+            <% } else { %>
+              <span class="profile-tag-modern tag-empty">No certifications added</span>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
 </div>

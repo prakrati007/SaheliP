@@ -392,6 +392,24 @@
 
     async function loadReviews() {
       try {
+        // Show loading skeleton
+        list.innerHTML = `
+          <div class="review-skeleton">
+            <div class="skeleton-header">
+              <div class="skeleton-avatar"></div>
+              <div class="skeleton-meta">
+                <div class="skeleton-line skeleton-name"></div>
+                <div class="skeleton-line skeleton-date"></div>
+              </div>
+            </div>
+            <div class="skeleton-body">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line short"></div>
+            </div>
+          </div>
+        `.repeat(3);
+        
         const res = await fetch(`/reviews/service/${serviceId}?page=${page}&limit=${limit}&sort=${sort}`);
         const data = await res.json();
         if (!data.success) return;
@@ -400,9 +418,11 @@
         if (!reviews || reviews.length === 0) {
           list.innerHTML = '<p class="reviews-placeholder">No reviews yet.</p>';
         } else {
-          reviews.forEach(r => {
+          reviews.forEach((r, index) => {
             const card = document.createElement('div');
             card.className = 'review-card';
+            card.style.opacity = '0';
+            card.style.animation = `fadeInUp 0.4s ease forwards ${index * 0.1}s`;
             card.innerHTML = `
               <div class="review-header">
                 <div class="reviewer">

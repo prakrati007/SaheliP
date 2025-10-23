@@ -24,15 +24,54 @@
         <ul class="navbar-auth">
           <% if (locals.user) { %>
             <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
-            <% if (locals.user.role === 'saheli') { %>
-              <li><a href="/services/my" class="nav-link">My Services</a></li>
-              <li><a href="/booking/provider/list" class="nav-link">My Bookings</a></li>
-            <% } %>
-            <li><a href="/profile/view" class="nav-link">Profile</a></li>
-            <li>
-              <form method="POST" action="/auth/logout" style="display: inline;">
-                <button type="submit" class="btn btn-secondary" style="border: none; cursor: pointer;">Logout</button>
-              </form>
+            <li class="user-menu-wrapper">
+              <button class="user-menu-trigger" id="userMenuTrigger" aria-label="User menu" aria-expanded="false">
+                <div class="user-avatar">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                  </svg>
+                </div>
+                <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M7 10l5 5 5-5z"/>
+                </svg>
+              </button>
+              
+              <div class="user-dropdown-menu" id="userDropdownMenu">
+                <div class="user-dropdown-header">
+                  <div class="user-dropdown-avatar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                    </svg>
+                  </div>
+                  <div class="user-dropdown-info">
+                    <div class="user-dropdown-name"><%= user.name %></div>
+                    <div class="user-dropdown-email"><%= user.email %></div>
+                  </div>
+                </div>
+                
+                <div class="user-dropdown-divider"></div>
+                
+                <ul class="user-dropdown-items">
+                  <li>
+                    <a href="/profile/view" class="user-dropdown-item">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                      </svg>
+                      <span>View Profile</span>
+                    </a>
+                  </li>
+                  <li>
+                    <form method="POST" action="/auth/logout" class="user-dropdown-form">
+                      <button type="submit" class="user-dropdown-item logout-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                        </svg>
+                        <span>Logout</span>
+                      </button>
+                    </form>
+                  </li>
+                </ul>
+              </div>
             </li>
           <% } else { %>
             <li><a href="/auth/login" class="btn btn-outline">Login</a></li>

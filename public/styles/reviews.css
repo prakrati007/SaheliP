@@ -4,14 +4,87 @@
 .stars .star.half { background-image: url('/images/star-half.svg'); }
 .stars .star.empty { background-image: url('/images/star-empty.svg'); opacity: 0.5; }
 
-.review-card { border: 1px solid #eee; border-radius: 10px; padding: 14px; margin-bottom: 14px; background: #fff; }
-.review-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.reviewer { display: flex; align-items: center; gap: 10px; }
-.reviewer .avatar { width: 36px; height: 36px; border-radius: 50%; background: #F9C5D1; color: #333; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; }
-.reviewer .meta .name { font-weight: 600; }
-.reviewer .meta .date { color: #777; font-size: 12px; }
-.review-body { margin-top: 10px; }
-.review-body .image img { max-width: 100%; border-radius: 8px; margin-top: 8px; }
+.review-card { 
+  border: 1px solid #F3E0E6; 
+  border-radius: 12px; 
+  padding: 1.25rem; 
+  margin-bottom: 1rem; 
+  background: linear-gradient(180deg, #FFF, #FFFBFC); 
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.review-card:hover {
+  box-shadow: 0 4px 12px rgba(249, 197, 209, 0.2);
+  transform: translateY(-2px);
+}
+
+.review-header { 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  gap: 12px; 
+  flex-wrap: wrap;
+}
+
+.reviewer { 
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+}
+
+.reviewer .avatar { 
+  width: 44px; 
+  height: 44px; 
+  border-radius: 50%; 
+  background: linear-gradient(135deg, #F9C5D1, #F6A5C0); 
+  color: #fff; 
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-weight: 700; 
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(246, 165, 192, 0.3);
+}
+
+.reviewer .meta .name { 
+  font-weight: 600; 
+  color: var(--text-charcoal);
+  font-size: 0.9375rem;
+}
+
+.reviewer .meta .date { 
+  color: var(--muted-gray); 
+  font-size: 0.8125rem; 
+  margin-top: 2px;
+}
+
+.review-header .stars {
+  color: #F6A5C0;
+  font-size: 1.125rem;
+  letter-spacing: 2px;
+}
+
+.review-body { 
+  margin-top: 12px; 
+}
+
+.review-body .text {
+  line-height: 1.6;
+  color: var(--text-charcoal);
+  font-size: 0.9375rem;
+}
+
+.review-body .image { 
+  margin-top: 12px;
+}
+
+.review-body .image img { 
+  max-width: 100%; 
+  max-height: 300px;
+  border-radius: 8px; 
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 .review-actions { margin-top: 8px; display: flex; gap: 10px; }
 .btn-link { background: none; border: none; color: #F06EA9; cursor: pointer; padding: 0; }
 .btn-link[disabled] { color: #bbb; cursor: not-allowed; }
@@ -20,22 +93,101 @@
 .provider-reply-cta { margin-top: 8px; }
 .btn-outline { border: 1px solid #F06EA9; color: #F06EA9; background: transparent; padding: 6px 10px; border-radius: 6px; cursor: pointer; }
 
-/* Modals */
-.modal[hidden] { display: none; }
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 1000; }
-.modal-content { background: #fff; border-radius: 10px; width: 100%; max-width: 520px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
-.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid #eee; }
-.modal-close { background: none; border: none; font-size: 22px; cursor: pointer; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 10px; padding: 12px 16px; border-top: 1px solid #eee; }
-.modal-content form { padding: 12px 16px; }
+/* Review & Reply Modals (new modal system) */
+#reviewModal .modal-dialog { max-width: 56rem; width: 100%; }
+#replyModal .modal-dialog { max-width: 42rem; width: 100%; }
+
+/* Footer buttons alignment */
+#reviewModal .modal-footer,
+#replyModal .modal-footer { display: flex; justify-content: flex-end; gap: 12px; }
+
+/* Form spacing inside modal body */
+#reviewModal .modal-body form,
+#replyModal .modal-body form { padding: 0; }
 .form-group { margin-bottom: 12px; }
 .form-group label { display: block; font-weight: 600; margin-bottom: 6px; }
 .form-group .help { color: #777; font-size: 12px; }
 .form-group .error { color: #D32F2F; font-size: 12px; margin-top: 4px; min-height: 14px; }
-.btn-primary { background: #F06EA9; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
-.btn-secondary { background: #eee; color: #333; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
+.btn-primary { background: #F06EA9; color: #fff; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; }
+.btn-secondary { background: #eee; color: #333; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; }
 
 /* Star input for review modal */
 .star-input { display: inline-flex; gap: 6px; cursor: pointer; }
 .star-input .star { width: 22px; height: 22px; background-image: url('/images/star-empty.svg'); background-size: contain; }
 .star-input .star.active { background-image: url('/images/star-filled.svg'); }
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+/* Loading Skeleton */
+.review-skeleton {
+  border: 1px solid #F3E0E6;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  background: #FFF;
+}
+
+.skeleton-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.skeleton-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #F3E0E6 0%, #FFE8E8 50%, #F3E0E6 100%);
+  background-size: 400% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-meta {
+  flex: 1;
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #F3E0E6 0%, #FFE8E8 50%, #F3E0E6 100%);
+  background-size: 400% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  margin-bottom: 8px;
+}
+
+.skeleton-name {
+  width: 120px;
+}
+
+.skeleton-date {
+  width: 80px;
+  height: 10px;
+}
+
+.skeleton-body .skeleton-line {
+  margin-bottom: 6px;
+}
+
+.skeleton-body .skeleton-line.short {
+  width: 60%;
+}

@@ -1,23 +1,19 @@
 <!-- Booking Detail Modal -->
-<div id="bookingDetailModal" class="booking-modal" style="display: none;">
-  <div class="booking-modal-overlay"></div>
-  <div class="booking-modal-container">
+<div id="bookingDetailModal" class="modal-overlay">
+  <div class="modal-dialog booking-detail-modal">
     <!-- Modal Header -->
-    <div class="booking-modal-header">
-      <h2 class="booking-modal-title">Booking Details</h2>
-      <button class="booking-modal-close" onclick="closeBookingDetailModal()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path d="M18 6L6 18M6 6l12 12" stroke-width="2" stroke-linecap="round"/>
+    <div class="modal-header">
+      <h2 class="modal-title">Booking Details</h2>
+      <button class="modal-close-btn" onclick="closeBookingDetailModal()" aria-label="Close modal">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
         </svg>
       </button>
     </div>
 
     <!-- Modal Body (populated via JavaScript) -->
-    <div class="booking-modal-body">
-      <div class="booking-detail-loading">
-        <div class="spinner"></div>
-        <p>Loading booking details...</p>
-      </div>
+    <div class="modal-body">
+      <div class="loading-spinner"></div>
       
       <!-- Content populated by JavaScript -->
       <div id="bookingDetailContent" style="display: none;">
@@ -176,7 +172,7 @@
     </div>
 
     <!-- Modal Footer (role-specific actions) -->
-    <div class="booking-modal-footer" id="bookingModalFooter">
+    <div class="modal-footer" id="bookingModalFooter">
       <!-- Actions populated by JavaScript based on role and status -->
     </div>
   </div>

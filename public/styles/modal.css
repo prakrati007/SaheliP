@@ -1,0 +1,486 @@
+/**
+ * Modern Modal System - Pastel Pink Theme
+ * Beautiful, accessible modal dialogs with smooth animations
+ */
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay.show {
+  display: flex;
+  opacity: 1;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Modal Dialog */
+.modal-dialog {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 42rem;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.modal-overlay.show .modal-dialog {
+  transform: scale(1) translateY(0);
+  animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Modal Header */
+.modal-header {
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #FFF9F8 0%, #FFE8E8 100%);
+  border-bottom: 1px solid #FFE8E8;
+  border-radius: 1rem 1rem 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+  background: linear-gradient(135deg, #F9C5D1 0%, #F6A5C0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Close Button - Top Right */
+.modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: #666;
+}
+
+.modal-close-btn:hover {
+  background: #FFF0F5;
+  color: #F6A5C0;
+  transform: rotate(90deg);
+  box-shadow: 0 4px 12px rgba(249, 197, 209, 0.3);
+}
+
+.modal-close-btn:active {
+  transform: rotate(90deg) scale(0.95);
+}
+
+.modal-close-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+  position: relative;
+}
+
+/* Custom Scrollbar */
+.modal-body::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: #F5F5F5;
+  border-radius: 0.25rem;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #F9C5D1;
+  border-radius: 0.25rem;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #F6A5C0;
+}
+
+/* Loading State */
+.booking-detail-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  min-height: 15rem;
+}
+
+.loading-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 4px solid #FFE8E8;
+  border-top-color: #F6A5C0;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.booking-detail-loading p {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Booking Detail Sections */
+.booking-detail-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #FFE8E8;
+}
+
+.booking-detail-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.booking-detail-section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.booking-detail-section-title::before {
+  content: '';
+  width: 4px;
+  height: 1.25rem;
+  background: linear-gradient(135deg, #F9C5D1 0%, #F6A5C0 100%);
+  border-radius: 2px;
+}
+
+/* Detail Grid */
+.booking-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.booking-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.booking-detail-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.booking-detail-label {
+  font-size: 0.875rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.booking-detail-value {
+  font-size: 1rem;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Status Badges in Modal */
+.booking-detail-value .status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+/* Pricing Breakdown */
+.booking-pricing-breakdown {
+  background: #FFF9F8;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  border: 1px solid #FFE8E8;
+}
+
+.pricing-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #FFE8E8;
+  font-size: 0.9375rem;
+}
+
+.pricing-row:last-child {
+  border-bottom: none;
+}
+
+.pricing-row.total {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #F6A5C0;
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+  border-top: 2px solid #F9C5D1;
+}
+
+.pricing-row.advance {
+  color: #10B981;
+  font-weight: 600;
+}
+
+.pricing-row.remaining {
+  color: #F59E0B;
+  font-weight: 600;
+}
+
+/* Timeline */
+.booking-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.booking-timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.375rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 2px;
+  background: linear-gradient(to bottom, #F9C5D1, #F6A5C0);
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.125rem;
+  top: 0.25rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #F6A5C0;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 0 2px #F9C5D1;
+}
+
+.timeline-label {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.timeline-value {
+  font-size: 0.9375rem;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Notes */
+.booking-notes {
+  background: #FFF9F8;
+  border-left: 4px solid #F9C5D1;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Modal Footer */
+.modal-footer {
+  padding: 1.25rem 2rem;
+  border-top: 1px solid #FFE8E8;
+  background: #FAFAFA;
+  border-radius: 0 0 1rem 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.modal-footer .btn,
+.modal-footer .btn-primary,
+.modal-footer .btn-secondary,
+.modal-footer .btn-outline {
+  min-width: 7rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: scale(0.9) translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal-dialog {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .modal-header {
+    padding: 1.25rem 1.5rem;
+    border-radius: 0;
+  }
+
+  .modal-title {
+    font-size: 1.25rem;
+  }
+
+  .modal-close-btn {
+    top: 0.875rem;
+    right: 0.875rem;
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+
+  .booking-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+
+  .modal-footer {
+    padding: 1rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-overlay {
+    padding: 0;
+  }
+
+  .modal-dialog {
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .modal-header {
+    padding: 1rem 1.25rem;
+  }
+
+  .modal-title {
+    font-size: 1.125rem;
+  }
+
+  .modal-close-btn {
+    width: 2rem;
+    height: 2rem;
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+
+  .modal-close-btn svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .modal-body {
+    padding: 1.25rem;
+  }
+
+  .booking-detail-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
+  }
+
+  .booking-detail-section-title {
+    font-size: 1rem;
+  }
+
+  .pricing-row {
+    font-size: 0.875rem;
+    padding: 0.625rem 0;
+  }
+
+  .pricing-row.total {
+    font-size: 1rem;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+  }
+}
+
+/* Accessibility */
+.modal-overlay:focus {
+  outline: none;
+}
+
+.modal-close-btn:focus-visible {
+  outline: 2px solid #F6A5C0;
+  outline-offset: 2px;
+}
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+  overflow: hidden;
+}

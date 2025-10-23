@@ -1,21 +1,25 @@
-<div id="replyModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="replyModalTitle" hidden>
-  <div class="modal-content">
+<div id="replyModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="replyModalTitle">
+  <div class="modal-dialog reply-modal">
     <div class="modal-header">
-      <h3 id="replyModalTitle">Reply to Review</h3>
-      <button class="modal-close" aria-label="Close">×</button>
+      <h3 class="modal-title" id="replyModalTitle">Reply to Review</h3>
+      <button class="modal-close-btn modal-close" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
     </div>
-    <form id="replyForm">
-      <input type="hidden" id="replyReviewId" />
-      <div class="form-group">
-        <label for="replyText">Your reply</label>
-        <textarea id="replyText" rows="3" maxlength="500" placeholder="Write a thoughtful response..." required></textarea>
-        <div class="help">Max 500 characters</div>
-        <div class="error" data-error-for="replyText"></div>
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="btn-secondary" data-dismiss>Cancel</button>
-        <button type="submit" class="btn-primary">Send Reply</button>
-      </div>
-    </form>
+    <div class="modal-body">
+      <form id="replyForm">
+        <input type="hidden" id="replyReviewId" />
+        <div class="form-group">
+          <label for="replyText">Your reply</label>
+          <textarea id="replyText" rows="3" maxlength="500" placeholder="Write a thoughtful response..." required></textarea>
+          <div class="help">Max 500 characters</div>
+          <div class="error" data-error-for="replyText"></div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-secondary" data-dismiss>Cancel</button>
+      <button type="submit" form="replyForm" class="btn-primary">Send Reply</button>
+    </div>
   </div>
 </div>

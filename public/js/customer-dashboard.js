@@ -7,6 +7,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   initBookingTabs();
   initPaymentHistory();
+  initModalEventListeners();
   
   // Handle deep linking (URL hash)
   const hash = window.location.hash.replace('#', '');
@@ -192,12 +193,13 @@ async function handlePayRemaining(bookingId) {
  */
 async function openBookingDetailModal(bookingId) {
   const modal = document.getElementById('bookingDetailModal');
-  const loadingEl = modal.querySelector('.booking-detail-loading');
+  const loadingEl = modal.querySelector('.loading-spinner');
   const contentEl = document.getElementById('bookingDetailContent');
   
   // Show modal and loading state
-  modal.style.display = 'block';
-  loadingEl.style.display = 'block';
+  modal.classList.add('show');
+  document.body.classList.add('modal-open');
+  loadingEl.style.display = 'flex';
   contentEl.style.display = 'none';
 
   try {
@@ -227,7 +229,37 @@ async function openBookingDetailModal(bookingId) {
  */
 function closeBookingDetailModal() {
   const modal = document.getElementById('bookingDetailModal');
-  modal.style.display = 'none';
+  modal.classList.remove('show');
+  document.body.classList.remove('modal-open');
+  
+  // Reset modal content after animation
+  setTimeout(() => {
+    const contentEl = document.getElementById('bookingDetailContent');
+    if (contentEl) contentEl.style.display = 'none';
+  }, 300);
+}
+
+/**
+ * Initialize modal event listeners
+ */
+function initModalEventListeners() {
+  const modal = document.getElementById('bookingDetailModal');
+  
+  if (modal) {
+    // Close modal when clicking outside
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeBookingDetailModal();
+      }
+    });
+    
+    // Close on ESC key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.classList.contains('show')) {
+        closeBookingDetailModal();
+      }
+    });
+  }
 }
 
 /**
@@ -325,7 +357,8 @@ function populateBookingModal(booking, userRole) {
       const modal = document.getElementById('reviewModal');
       if (!modal) return;
       document.getElementById('reviewBookingId').value = booking._id;
-      modal.hidden = false;
+      modal.classList.add('show');
+      document.body.classList.add('modal-open');
     };
   } else {
     reviewCta.style.display = 'none';
@@ -362,34 +395,6 @@ function formatCurrency(amount) {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2
   });
-}
-
-/**
- * Show toast notification
- */
-function showToast(message, type = 'info') {
-  const toast = document.createElement('div');
-  toast.className = `toast toast-${type}`;
-  toast.textContent = message;
-  toast.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 1rem 1.5rem;
-    background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
-    color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    z-index: 10000;
-    animation: slideIn 0.3s ease;
-  `;
-  
-  document.body.appendChild(toast);
-  
-  setTimeout(() => {
-    toast.style.animation = 'slideOut 0.3s ease';
-    setTimeout(() => toast.remove(), 300);
-  }, 3000);
 }
 
 // Close modal on overlay click

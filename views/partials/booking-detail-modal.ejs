@@ -1,0 +1,183 @@
+<!-- Booking Detail Modal -->
+<div id="bookingDetailModal" class="booking-modal" style="display: none;">
+  <div class="booking-modal-overlay"></div>
+  <div class="booking-modal-container">
+    <!-- Modal Header -->
+    <div class="booking-modal-header">
+      <h2 class="booking-modal-title">Booking Details</h2>
+      <button class="booking-modal-close" onclick="closeBookingDetailModal()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M18 6L6 18M6 6l12 12" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body (populated via JavaScript) -->
+    <div class="booking-modal-body">
+      <div class="booking-detail-loading">
+        <div class="spinner"></div>
+        <p>Loading booking details...</p>
+      </div>
+      
+      <!-- Content populated by JavaScript -->
+      <div id="bookingDetailContent" style="display: none;">
+        <!-- Booking Reference -->
+        <div class="booking-detail-section">
+          <h3 class="booking-detail-section-title">Booking Information</h3>
+          <div class="booking-detail-grid">
+            <div class="booking-detail-item">
+              <span class="booking-detail-label">Booking ID:</span>
+              <span class="booking-detail-value" id="bookingId"></span>
+            </div>
+            <div class="booking-detail-item">
+              <span class="booking-detail-label">Status:</span>
+              <span class="booking-detail-value" id="bookingStatus"></span>
+            </div>
+            <div class="booking-detail-item">
+              <span class="booking-detail-label">Payment Status:</span>
+              <span class="booking-detail-value" id="bookingPaymentStatus"></span>
+            </div>
+            <div class="booking-detail-item">
+              <span class="booking-detail-label">Booked On:</span>
+              <span class="booking-detail-value" id="bookingCreatedAt"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service Information -->
+        <div class="booking-detail-section">
+          <h3 class="booking-detail-section-title">Service Details</h3>
+          <div class="booking-detail-grid">
+            <div class="booking-detail-item">
+              <span class="booking-detail-label">Service:</span>
+              <span class="booking-detail-value" id="serviceName"></span>
+            </div>
+            <div class="booking-detail-item">
+              <span class="booking-detail-label">Category:</span>
+              <span class="booking-detail-value" id="serviceCategory"></span>
+            </div>
+            <div class="booking-detail-item">
+              <span class="booking-detail-label">Type:</span>
+              <span class="booking-detail-value" id="serviceType"></span>
+            </div>
+            <div class="booking-detail-item">
+              <span class="booking-detail-label">Duration:</span>
+              <span class="booking-detail-value" id="serviceDuration"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Schedule -->
+        <div class="booking-detail-section">
+          <h3 class="booking-detail-section-title">Schedule</h3>
+          <div class="booking-detail-grid">
+            <div class="booking-detail-item">
+              <span class="booking-detail-label">Date:</span>
+              <span class="booking-detail-value" id="bookingDate"></span>
+            </div>
+            <div class="booking-detail-item">
+              <span class="booking-detail-label">Time:</span>
+              <span class="booking-detail-value" id="bookingTime"></span>
+            </div>
+            <div class="booking-detail-item full-width" id="bookingAddressContainer">
+              <span class="booking-detail-label">Address:</span>
+              <span class="booking-detail-value" id="bookingAddress"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer/Provider Info (role-dependent) -->
+        <div class="booking-detail-section" id="contactInfoSection">
+          <h3 class="booking-detail-section-title" id="contactInfoTitle"></h3>
+          <div class="booking-detail-grid">
+            <div class="booking-detail-item">
+              <span class="booking-detail-label">Name:</span>
+              <span class="booking-detail-value" id="contactName"></span>
+            </div>
+            <div class="booking-detail-item">
+              <span class="booking-detail-label">Email:</span>
+              <span class="booking-detail-value" id="contactEmail"></span>
+            </div>
+            <div class="booking-detail-item">
+              <span class="booking-detail-label">City:</span>
+              <span class="booking-detail-value" id="contactCity"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pricing Breakdown -->
+        <div class="booking-detail-section">
+          <h3 class="booking-detail-section-title">Pricing</h3>
+          <div class="booking-pricing-breakdown">
+            <div class="pricing-row">
+              <span>Base Amount:</span>
+              <span id="priceBase"></span>
+            </div>
+            <div class="pricing-row" id="priceTravelFeeRow">
+              <span>Travel Fee:</span>
+              <span id="priceTravelFee"></span>
+            </div>
+            <div class="pricing-row" id="priceWeekendRow">
+              <span>Weekend Premium:</span>
+              <span id="priceWeekend"></span>
+            </div>
+            <div class="pricing-row total">
+              <span>Total Amount:</span>
+              <span id="priceTotal"></span>
+            </div>
+            <div class="pricing-row advance">
+              <span>Advance Paid:</span>
+              <span id="priceAdvance"></span>
+            </div>
+            <div class="pricing-row remaining">
+              <span>Remaining Amount:</span>
+              <span id="priceRemaining"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Details -->
+        <div class="booking-detail-section" id="paymentDetailsSection">
+          <h3 class="booking-detail-section-title">Payment Information</h3>
+          <div class="booking-detail-grid" id="paymentDetailsGrid">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Lifecycle Timestamps -->
+        <div class="booking-detail-section" id="lifecycleSection" style="display: none;">
+          <h3 class="booking-detail-section-title">Service Timeline</h3>
+          <div class="booking-timeline" id="bookingTimeline">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Cancellation Details -->
+        <div class="booking-detail-section" id="cancellationSection" style="display: none;">
+          <h3 class="booking-detail-section-title">Cancellation Details</h3>
+          <div class="booking-detail-grid" id="cancellationDetailsGrid">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="booking-detail-section" id="notesSection" style="display: none;">
+          <h3 class="booking-detail-section-title">Notes</h3>
+          <p class="booking-notes" id="bookingNotes"></p>
+        </div>
+
+        <!-- Review CTA (shown for completed and not reviewed bookings for customers) -->
+        <div class="booking-detail-section" id="reviewCtaSection" style="display: none;">
+          <h3 class="booking-detail-section-title">Share Your Experience</h3>
+          <p>You can post a review within 24 hours after completion.</p>
+          <button class="btn" id="openReviewFromModal" data-booking-id="">Rate & Review</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer (role-specific actions) -->
+    <div class="booking-modal-footer" id="bookingModalFooter">
+      <!-- Actions populated by JavaScript based on role and status -->
+    </div>
+  </div>
+</div>

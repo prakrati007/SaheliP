@@ -1,0 +1,289 @@
+/* Booking Modal Styles */
+.booking-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.booking-modal-overlay.active {
+  display: flex;
+}
+
+.booking-modal {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow: hidden;
+  animation: slideUp 0.25s ease-out;
+}
+
+.booking-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #F9C5D1 0%, #F6A5C0 100%);
+}
+
+.booking-modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.booking-modal-close {
+  position: relative;
+  border: none;
+  background: transparent;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+}
+
+.booking-modal-body {
+  padding: 16px 20px;
+  overflow-y: auto;
+  max-height: calc(90vh - 140px);
+}
+
+.booking-form-section { 
+  margin-bottom: 16px; 
+  padding-bottom: 12px; 
+  border-bottom: 1px solid #eee; 
+}
+
+.booking-form-section-title { 
+  font-size: 1.1rem; 
+  font-weight: 600; 
+  margin: 0 0 10px; 
+  color: #333; 
+}
+
+.booking-form-label { 
+  display: block; 
+  font-weight: 600; 
+  margin-bottom: 6px; 
+  color: #333; 
+  font-size: 0.95rem; 
+}
+
+.booking-form-input, .booking-form-select, .booking-form-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+.booking-form-input:focus, .booking-form-select:focus, .booking-form-textarea:focus {
+  border-color: #F6A5C0;
+  box-shadow: 0 0 0 3px rgba(246, 165, 192, 0.2);
+}
+
+.booking-form-helper { 
+  font-size: 0.85rem; 
+  color: #777; 
+  margin-top: 6px; 
+}
+
+.booking-form-error { 
+  font-size: 0.85rem; 
+  color: #D32F2F; 
+  margin-top: 6px; 
+}
+
+.booking-character-counter { 
+  text-align: right; 
+  font-size: 0.8rem; 
+  color: #777; 
+  margin-top: 4px; 
+}
+
+.booking-time-slots { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); 
+  gap: 10px; 
+}
+
+.booking-time-slot { 
+  padding: 10px; 
+  border: 1px solid #ddd; 
+  border-radius: 6px; 
+  text-align: center; 
+  cursor: pointer; 
+  transition: all 0.15s ease-in-out; 
+}
+
+.booking-time-slot:hover { 
+  border-color: #F6A5C0; 
+  background: #FFF5F8; 
+}
+
+.booking-time-slot.selected { 
+  background: #F6A5C0; 
+  color: #fff; 
+  border-color: #F6A5C0; 
+}
+
+.booking-time-slot.disabled { 
+  opacity: 0.5; 
+  cursor: not-allowed; 
+  background: #f7f7f7; 
+}
+
+.booking-time-slot.booked { 
+  opacity: 0.4; 
+  cursor: not-allowed; 
+  background: #ffebee; 
+  border-color: #ef5350; 
+  color: #c62828; 
+  text-decoration: line-through; 
+}
+
+.booking-time-slot.booked:hover {
+  background: #ffebee;
+  border-color: #ef5350;
+}
+
+.booking-packages { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 10px; 
+}
+
+.booking-package-card { 
+  border: 1px solid #eee; 
+  border-radius: 8px; 
+  padding: 12px; 
+  display: flex; 
+  gap: 12px; 
+  cursor: pointer; 
+}
+
+.booking-package-card:hover { 
+  border-color: #F6A5C0; 
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
+}
+
+.booking-package-card.selected { 
+  border-color: #F06292; 
+  background: #FFF5F8; 
+}
+
+.booking-package-radio { 
+  margin-top: 4px; 
+}
+
+.booking-package-name { 
+  font-weight: 600; 
+}
+
+.booking-package-price { 
+  font-size: 1.1rem; 
+  font-weight: 700; 
+  color: #E91E63; 
+}
+
+.booking-package-description { 
+  font-size: 0.9rem; 
+  color: #666; 
+}
+
+.booking-price-breakdown { 
+  background: #f9f9f9; 
+  border-radius: 8px; 
+  padding: 12px; 
+}
+
+.booking-price-item { 
+  display: flex; 
+  justify-content: space-between; 
+  padding: 8px 0; 
+  border-bottom: 1px solid #eee; 
+}
+
+.booking-price-item:last-child { 
+  border-bottom: none; 
+}
+
+.booking-price-total { 
+  font-size: 1.2rem; 
+  font-weight: 700; 
+  color: #E91E63; 
+}
+
+.booking-weekend-badge { 
+  display: inline-block; 
+  background: #FB8C00; 
+  color: #fff; 
+  padding: 2px 8px; 
+  border-radius: 12px; 
+  font-size: 0.75rem; 
+}
+
+.booking-modal-footer { 
+  display: flex; 
+  justify-content: flex-end; 
+  gap: 10px; 
+  padding: 12px 20px; 
+  border-top: 1px solid #eee; 
+  background: #f9f9f9; 
+}
+
+.booking-btn-submit { 
+  position: relative; 
+}
+
+.booking-btn-submit:disabled { 
+  opacity: 0.6; 
+  cursor: not-allowed; 
+}
+
+.booking-spinner { 
+  display: inline-block; 
+  width: 16px; 
+  height: 16px; 
+  border: 2px solid #fff; 
+  border-top-color: transparent; 
+  border-radius: 50%; 
+  animation: spin 1s linear infinite; 
+  margin-left: 8px; 
+}
+
+@keyframes spin { 
+  to { transform: rotate(360deg); } 
+}
+
+@keyframes fadeIn { 
+  from { opacity: 0; } 
+  to { opacity: 1; } 
+}
+
+@keyframes slideUp { 
+  from { transform: translateY(10px); opacity: 0; } 
+  to { transform: translateY(0); opacity: 1; } 
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .booking-modal {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  .booking-modal-body {
+    max-height: calc(100vh - 140px);
+  }
+}

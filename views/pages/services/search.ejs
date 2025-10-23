@@ -1,0 +1,153 @@
+<div class="search-page-container">
+  <div class="container">
+    <h1 class="page-title">Browse Services</h1>
+    <% if (services.length > 0) { %>
+      <p class="results-count">(<%= pagination.totalItems %> services found)</p>
+    <% } %>
+    
+    <% if (locals.errors && errors.length > 0) { %>
+      <div class="alert alert-error">
+        <% errors.forEach(function(error) { %>
+          <p><%= error %></p>
+        <% }) %>
+      </div>
+    <% } %>
+    
+    <div class="search-layout">
+      <!-- Filters Sidebar -->
+      <aside class="filters-sidebar">
+        <h2 class="filters-title">Filter Services</h2>
+        
+        <form action="/services" method="GET" id="filterForm">
+          <!-- Search Input -->
+          <div class="filter-section">
+            <label class="filter-label" for="search">Search</label>
+            <input 
+              type="text" 
+              id="search" 
+              name="search" 
+              class="filter-input" 
+              placeholder="Search services..." 
+              value="<%= filters.search || '' %>" 
+            />
+          </div>
+          
+          <!-- Category Filter -->
+          <div class="filter-section">
+            <label class="filter-label" for="category">Category</label>
+            <select id="category" name="category" class="filter-select">
+              <option value="">All Categories</option>
+              <% Object.keys(categories).forEach(function(catKey) { 
+                const category = categories[catKey];
+              %>
+                <option value="<%= catKey %>" <%= filters.category === catKey ? 'selected' : '' %>>
+                  <%= category.label %>
+                </option>
+              <% }) %>
+            </select>
+          </div>
+          
+          <!-- City Filter -->
+          <div class="filter-section">
+            <label class="filter-label" for="city">City</label>
+            <input 
+              type="text" 
+              id="city" 
+              name="city" 
+              class="filter-input" 
+              placeholder="Enter city..." 
+              value="<%= filters.city || '' %>" 
+            />
+          </div>
+          
+          <!-- Price Range -->
+          <div class="filter-section">
+            <label class="filter-label">Price Range (₹)</label>
+            <div class="filter-range">
+              <input 
+                type="number" 
+                name="priceMin" 
+                class="filter-input" 
+                placeholder="Min" 
+                min="0" 
+                value="<%= filters.priceMin || '' %>" 
+              />
+              <input 
+                type="number" 
+                name="priceMax" 
+                class="filter-input" 
+                placeholder="Max" 
+                min="0" 
+                value="<%= filters.priceMax || '' %>" 
+              />
+            </div>
+          </div>
+          
+          <!-- Minimum Rating -->
+          <div class="filter-section">
+            <label class="filter-label">Minimum Rating</label>
+            <div class="filter-stars" id="ratingFilter">
+              <% for (let i = 1; i <= 5; i++) { %>
+                <span class="star <%= filters.rating && parseInt(filters.rating) >= i ? 'active' : '' %>" data-rating="<%= i %>">★</span>
+              <% } %>
+            </div>
+            <input type="hidden" name="rating" id="ratingInput" value="<%= filters.rating || '' %>" />
+          </div>
+          
+          <!-- Availability Date -->
+          <div class="filter-section">
+            <label class="filter-label" for="availableDate">Available On</label>
+            <input 
+              type="date" 
+              id="availableDate" 
+              name="availableDate" 
+              class="filter-input" 
+              min="<%= new Date().toISOString().split('T')[0] %>" 
+              value="<%= filters.availableDate || '' %>" 
+            />
+          </div>
+          
+          <!-- Sort Options -->
+          <div class="filter-section">
+            <label class="filter-label" for="sort">Sort By</label>
+            <select id="sort" name="sort" class="filter-select">
+              <option value="newest" <%= filters.sort === 'newest' ? 'selected' : '' %>>Newest First</option>
+              <option value="price-low" <%= filters.sort === 'price-low' ? 'selected' : '' %>>Price: Low to High</option>
+              <option value="price-high" <%= filters.sort === 'price-high' ? 'selected' : '' %>>Price: High to Low</option>
+              <option value="rating" <%= filters.sort === 'rating' ? 'selected' : '' %>>Highest Rated</option>
+            </select>
+          </div>
+          
+          <!-- Filter Actions -->
+          <div class="filter-actions">
+            <button type="submit" class="btn btn-primary apply-filters-btn">Apply Filters</button>
+            <a href="/services" class="clear-filters-link">Clear Filters</a>
+          </div>
+        </form>
+      </aside>
+      
+      <!-- Search Results -->
+      <main class="search-results">
+        <% if (services.length === 0) { %>
+          <div class="empty-state">
+            <p class="empty-state-icon">🔍</p>
+            <h3>No services found matching your criteria</h3>
+            <p>Try adjusting your filters or search terms</p>
+            <a href="/services" class="btn btn-outline">Clear Filters</a>
+          </div>
+        <% } else { %>
+          <div class="results-grid">
+            <% services.forEach(function(service) { %>
+              <%- include('../../partials/service-card', { service: service, showActions: false }) %>
+            <% }) %>
+          </div>
+          
+          <!-- Pagination -->
+          <% if (pagination.totalPages > 1) { %>
+            <%- include('../../partials/pagination', { pagination: pagination, filters: filters }) %>
+          <% } %>
+        <% } %>
+      </main>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<div id="reviewModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle" hidden>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="reviewModalTitle">Rate & Review</h3>
+      <button class="modal-close" aria-label="Close">×</button>
+    </div>
+    <form id="reviewForm" enctype="multipart/form-data">
+      <input type="hidden" name="bookingId" id="reviewBookingId" />
+      <div class="form-group">
+        <label>Rating</label>
+        <div class="star-input" data-selected="0" aria-label="Choose rating">
+          <% for (let i = 1; i <= 5; i++) { %>
+            <span class="star" data-value="<%= i %>" aria-hidden="true"></span>
+          <% } %>
+          <input type="hidden" name="rating" id="reviewRating" value="0" />
+        </div>
+        <div class="error" data-error-for="rating"></div>
+      </div>
+      <div class="form-group">
+        <label for="reviewText">Your review</label>
+        <textarea id="reviewText" name="reviewText" rows="4" maxlength="1000" placeholder="Share details of your experience..."></textarea>
+        <div class="help">20–1000 characters</div>
+        <div class="error" data-error-for="reviewText"></div>
+      </div>
+      <div class="form-group">
+        <label for="reviewImage">Add a photo (optional)</label>
+        <input type="file" id="reviewImage" name="reviewImage" accept="image/*" />
+        <div class="help">PNG/JPG up to 5MB</div>
+        <div class="error" data-error-for="reviewImage"></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" data-dismiss>Cancel</button>
+        <button type="submit" class="btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>

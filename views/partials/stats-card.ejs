@@ -1,0 +1,28 @@
+<% 
+  // Extract stats card parameters
+  const cardIcon = locals.icon || '📊';
+  const cardValue = locals.value || '0';
+  const cardLabel = locals.label || 'Stat';
+  const cardColor = locals.color || 'pink';
+  const cardTrend = locals.trend || null;
+%>
+
+<div class="stats-card color-<%= cardColor %>">
+  <div class="stats-icon bg-<%= cardColor %>">
+    <%= cardIcon %>
+  </div>
+  <div class="stats-value"><%= cardValue %></div>
+  <div class="stats-label"><%= cardLabel %></div>
+  <% if (cardTrend) { %>
+    <div class="stats-trend <%= cardTrend.direction %>">
+      <% if (cardTrend.direction === 'up') { %>
+        ↑
+      <% } else if (cardTrend.direction === 'down') { %>
+        ↓
+      <% } else { %>
+        →
+      <% } %>
+      <%= cardTrend.percentage %>%
+    </div>
+  <% } %>
+</div>

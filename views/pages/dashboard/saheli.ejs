@@ -1,0 +1,218 @@
+<!-- Saheli (Provider) Dashboard -->
+
+<div class="dashboard-container">
+  <!-- Dashboard Header -->
+  <div class="dashboard-header">
+    <h1 class="dashboard-welcome">
+      Welcome back, <%= user.name %>!
+      <% if (user.hasVerificationBadge) { %>
+        <span class="verification-badge">✓ Verified</span>
+      <% } %>
+    </h1>
+    <p class="dashboard-subtitle">Manage your services and bookings</p>
+  </div>
+
+  <!-- Overview Stats Cards -->
+  <div class="stats-grid">
+    <div class="stats-card color-blue">
+      <div class="stats-icon">📊</div>
+      <div class="stats-value"><%= stats.totalBookings %></div>
+      <div class="stats-label">Total Bookings</div>
+    </div>
+    
+    <div class="stats-card color-green">
+      <div class="stats-icon">✓</div>
+      <div class="stats-value"><%= stats.completedBookings %></div>
+      <div class="stats-label">Completed Services</div>
+    </div>
+    
+    <div class="stats-card color-pink">
+      <div class="stats-icon">💰</div>
+      <div class="stats-value">₹<%= stats.totalEarnings.toLocaleString('en-IN') %></div>
+      <div class="stats-label">Total Earnings</div>
+    </div>
+    
+    <div class="stats-card color-orange">
+      <div class="stats-icon">⏳</div>
+      <div class="stats-value">₹<%= stats.pendingEarnings.toLocaleString('en-IN') %></div>
+      <div class="stats-label">Pending Earnings</div>
+    </div>
+  </div>
+
+  <!-- My Services Summary -->
+  <div class="dashboard-section">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">My Services</h2>
+        <p class="section-subtitle">Manage your service offerings</p>
+      </div>
+      <div class="section-actions">
+        <a href="/services/add" class="btn btn-secondary">Add New Service</a>
+        <a href="/services/my" class="btn btn-primary">Manage Services</a>
+      </div>
+    </div>
+    
+    <div class="services-summary">
+      <div class="services-stats-row">
+        <div class="service-stat-item">
+          <div class="service-stat-value"><%= stats.totalServices %></div>
+          <div class="service-stat-label">Total Services</div>
+        </div>
+        <div class="service-stat-item">
+          <div class="service-stat-value"><%= stats.activeServices %></div>
+          <div class="service-stat-label">Active</div>
+        </div>
+        <div class="service-stat-item">
+          <div class="service-stat-value"><%= stats.pausedServices %></div>
+          <div class="service-stat-label">Paused</div>
+        </div>
+        <div class="service-stat-item">
+          <div class="service-stat-value">
+            <%= stats.averageRating %> ⭐
+          </div>
+          <div class="service-stat-label"><%= stats.totalReviews %> Reviews</div>
+        </div>
+      </div>
+
+      <% if (topServices && topServices.length > 0) { %>
+        <div class="services-quick-grid">
+          <% topServices.forEach(service => { %>
+            <div class="service-mini-card">
+              <h4><%= service.title %></h4>
+              <p class="service-mini-stats">
+                <%= service.viewCount %> views • ⭐ <%= service.averageRating.toFixed(1) %>
+              </p>
+              <a href="/services/<%= service._id %>/edit" class="btn-sm btn-outline">Edit</a>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Earnings Overview -->
+  <div class="dashboard-section">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Monthly Earnings</h2>
+        <p class="section-subtitle">Last 6 months</p>
+      </div>
+    </div>
+    
+    <div class="earnings-container">
+      <!-- Chart -->
+      <div class="earnings-chart-wrapper">
+        <div id="earningsChart" data-earnings='<%= JSON.stringify(monthlyEarnings) %>'></div>
+      </div>
+
+      <!-- Recent Transactions Table -->
+      <% if (recentTransactions && recentTransactions.length > 0) { %>
+        <div class="transactions-table-wrapper">
+          <h3 class="section-subtitle" style="margin-bottom: 1rem;">Recent Transactions</h3>
+          <table class="transactions-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Service</th>
+                <th>Customer</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% recentTransactions.forEach(transaction => { %>
+                <tr class="transaction-row" data-booking-id="<%= transaction._id %>">
+                  <td><%= new Date(transaction.date).toLocaleDateString('en-IN') %></td>
+                  <td><%= transaction.serviceId?.title || 'N/A' %></td>
+                  <td><%= transaction.customerId?.name || 'N/A' %></td>
+                  <td class="transaction-amount">₹<%= transaction.totalAmount.toLocaleString('en-IN') %></td>
+                  <td><span class="status-badge status-paid">Paid</span></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Bookings Management -->
+  <div class="dashboard-section">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Recent Bookings</h2>
+        <p class="section-subtitle">
+          <%= stats.confirmedBookings %> Confirmed • <%= stats.inProgressBookings %> In Progress
+        </p>
+      </div>
+      <div class="section-actions">
+        <a href="/booking/provider/list" class="btn btn-primary">View All Bookings</a>
+      </div>
+    </div>
+    
+    <% if (upcomingBookings && upcomingBookings.length > 0) { %>
+      <div class="bookings-cards-grid">
+        <% upcomingBookings.forEach(booking => { %>
+          <div class="booking-card">
+            <div class="booking-card-header">
+              <span class="status-badge status-<%= booking.status.toLowerCase() %>">
+                <%= booking.status %>
+              </span>
+              <span class="payment-badge payment-<%= booking.paymentStatus.toLowerCase() %>">
+                <%= booking.paymentStatus %>
+              </span>
+            </div>
+            
+            <div class="booking-card-body">
+              <h3 class="booking-service-title"><%= booking.serviceId?.title || 'Service' %></h3>
+              <p class="booking-customer">Customer: <%= booking.customerId?.name || 'N/A' %></p>
+              <p class="booking-datetime">
+                <%= new Date(booking.date).toLocaleDateString('en-IN') %> • 
+                <%= booking.startTime %> - <%= booking.endTime %>
+              </p>
+              <p class="booking-amount">Total: ₹<%= booking.totalAmount.toLocaleString('en-IN') %></p>
+            </div>
+            
+            <div class="booking-card-actions">
+              <% if (booking.status === 'Confirmed') { %>
+                <button class="btn-sm btn-primary" onclick="handleStartBooking('<%= booking._id %>')">
+                  Start Service
+                </button>
+              <% } else if (booking.status === 'InProgress') { %>
+                <button class="btn-sm btn-success" onclick="handleCompleteBooking('<%= booking._id %>')">
+                  Complete
+                </button>
+              <% } %>
+              <button class="btn-sm btn-outline" onclick="openBookingDetailModal('<%= booking._id %>')">
+                View Details
+              </button>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <p class="empty-state">No upcoming bookings at the moment.</p>
+    <% } %>
+  </div>
+
+  <!-- Recent Reviews Section -->
+  <div class="dashboard-section">
+    <div class="section-header">
+      <h2 class="section-title">Recent Reviews</h2>
+    </div>
+    
+    <% if (recentReviews && recentReviews.length > 0) { %>
+      <div class="recent-reviews">
+        <% recentReviews.forEach(function(review) { %>
+          <%- include('../../partials/review-card', { review: review, user: user }) %>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <p class="empty-state">No reviews yet. Completed bookings will start showing reviews here.</p>
+    <% } %>
+  </div>
+</div>
+
+<!-- Include Booking Detail Modal -->
+<%- include('../../partials/booking-detail-modal') %>
+<%- include('../../partials/provider-reply-modal') %>

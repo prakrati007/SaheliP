@@ -1,0 +1,355 @@
+/* ===========================
+   Authentication Pages Styles
+   =========================== */
+
+/* Auth Container */
+.auth-container {
+  max-width: 500px;
+  margin: var(--spacing-xl) auto;
+  padding: var(--spacing-lg);
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.auth-header h1 {
+  font-size: 2rem;
+  color: var(--text-charcoal);
+  margin-bottom: var(--spacing-xs);
+}
+
+.auth-header p {
+  color: var(--text-charcoal);
+  opacity: 0.7;
+  font-size: 1rem;
+}
+
+/* Role Choice Grid */
+.role-choice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+}
+
+.role-card {
+  background: var(--bg-ivory);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.role-card:hover {
+  border-color: var(--primary-pink);
+  box-shadow: 0 4px 12px var(--shadow);
+  transform: translateY(-5px);
+}
+
+.role-icon {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.role-card h2 {
+  font-size: 1.25rem;
+  color: var(--text-charcoal);
+  margin-bottom: var(--spacing-sm);
+}
+
+.role-card p {
+  color: var(--text-charcoal);
+  opacity: 0.7;
+  margin-bottom: var(--spacing-md);
+  font-size: 0.9rem;
+}
+
+.role-card .btn {
+  width: 100%;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-charcoal);
+  margin-bottom: var(--spacing-xs);
+  font-size: 0.9rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border-gray);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-family: var(--font-family);
+  transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary-pink);
+  box-shadow: 0 0 0 3px rgba(249, 197, 209, 0.2);
+}
+
+.form-input::placeholder {
+  color: #999;
+}
+
+.form-error {
+  display: block;
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: var(--spacing-xs);
+}
+
+/* Password Input Wrapper */
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.password-toggle:hover {
+  opacity: 1;
+}
+
+/* Checkbox Label */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 0.9rem;
+  color: var(--text-charcoal);
+  cursor: pointer;
+}
+
+.checkbox-label input[type='checkbox'] {
+  cursor: pointer;
+}
+
+/* Login Tabs */
+.login-tabs {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-lg);
+  border-bottom: 2px solid var(--border-gray);
+}
+
+.tab-button {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-charcoal);
+  opacity: 0.6;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: -2px;
+}
+
+.tab-button:hover {
+  opacity: 0.8;
+}
+
+.tab-button.active {
+  opacity: 1;
+  border-bottom-color: var(--secondary-blush);
+  color: var(--secondary-blush);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* OTP Inputs */
+.otp-inputs {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.otp-input {
+  width: 50px;
+  height: 60px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: 2px solid var(--border-gray);
+  border-radius: var(--radius-md);
+  transition: border-color 0.3s ease;
+}
+
+.otp-input:focus {
+  outline: none;
+  border-color: var(--primary-pink);
+  box-shadow: 0 0 0 3px rgba(249, 197, 209, 0.2);
+}
+
+/* Remove number input spinners */
+.otp-input::-webkit-outer-spin-button,
+.otp-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.otp-input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Resend Link */
+.resend-link {
+  color: var(--secondary-blush);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.resend-link:hover {
+  color: var(--primary-pink);
+}
+
+.resend-link.disabled {
+  color: #999;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Auth Footer */
+.auth-footer {
+  text-align: center;
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border-gray);
+}
+
+.auth-footer p {
+  color: var(--text-charcoal);
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+.auth-footer a {
+  color: var(--secondary-blush);
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.auth-footer a:hover {
+  color: var(--primary-pink);
+}
+
+/* Auth Links */
+.auth-links {
+  text-align: center;
+  margin-top: var(--spacing-md);
+}
+
+.auth-links a {
+  color: var(--secondary-blush);
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.auth-links a:hover {
+  color: var(--primary-pink);
+}
+
+/* Info Text */
+.info-text {
+  background: var(--bg-ivory);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--text-charcoal);
+  opacity: 0.8;
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .auth-container {
+    margin: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+
+  .role-choice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .otp-input {
+    width: 45px;
+    height: 55px;
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    margin: var(--spacing-sm);
+    padding: var(--spacing-sm);
+  }
+
+  .otp-inputs {
+    gap: var(--spacing-xs);
+  }
+
+  .otp-input {
+    width: 40px;
+    height: 50px;
+    font-size: 1.125rem;
+  }
+
+  .tab-button {
+    font-size: 0.9rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+}

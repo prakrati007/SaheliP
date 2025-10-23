@@ -1,0 +1,45 @@
+<% /* Review Card Partial: expects { review, user } in locals or passed via include */ %>
+<div class="review-card" data-review-id="<%= review._id %>">
+  <div class="review-header">
+    <div class="reviewer">
+      <div class="avatar" aria-hidden="true"><span><%= (review.customerId?.name || 'U')[0] %></span></div>
+      <div class="meta">
+        <div class="name"><%= review.customerId?.name || 'Customer' %></div>
+        <div class="date"><%= (helpers && helpers.formatReviewDate ? helpers.formatReviewDate(review.createdAt) : new Date(review.createdAt).toLocaleString()) %></div>
+      </div>
+    </div>
+    <div class="stars" aria-label="Rating: <%= review.rating %> out of 5">
+      <% if (helpers && helpers.getStarRatingHTML) { %>
+        <%- helpers.getStarRatingHTML(review.rating) %>
+      <% } else { %>
+        <span><%= '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating) %></span>
+      <% } %>
+    </div>
+  </div>
+  <div class="review-body">
+    <p class="text"><%= review.reviewText %></p>
+    <% if (review.reviewImage) { %>
+      <div class="image">
+        <img src="<%= review.reviewImage %>" alt="Review image" loading="lazy" />
+      </div>
+    <% } %>
+  </div>
+  <div class="review-actions">
+    <% if (user && String(user.id) === String(review.customerId?._id || review.customerId)) { %>
+      <% const canEdit = (helpers && helpers.canEditReview) ? helpers.canEditReview(review, user) : true; %>
+      <button class="btn-link edit-review" <%= canEdit ? '' : 'disabled' %>>Edit</button>
+      <button class="btn-link delete-review" <%= canEdit ? '' : 'disabled' %>>Delete</button>
+    <% } %>
+  </div>
+  <% if (review.providerReply) { %>
+    <div class="provider-reply">
+      <div class="label">Provider reply</div>
+      <div class="reply-text"><%= review.providerReply %></div>
+      <div class="reply-date"><%= (helpers && helpers.formatReviewDate ? helpers.formatReviewDate(review.repliedAt) : new Date(review.repliedAt).toLocaleString()) %></div>
+    </div>
+  <% } else if (user && user.role === 'saheli' && String(user.id) === String(review.providerId?._id || review.providerId)) { %>
+    <div class="provider-reply-cta">
+      <button class="btn-outline reply-review">Reply</button>
+    </div>
+  <% } %>
+</div>

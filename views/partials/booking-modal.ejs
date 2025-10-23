@@ -1,0 +1,186 @@
+<div class="booking-modal-overlay" id="bookingModalOverlay">
+  <div class="booking-modal">
+    <!-- Modal Header -->
+    <div class="booking-modal-header">
+      <h2 class="booking-modal-title">Book This Service</h2>
+      <button type="button" class="booking-modal-close" id="closeBookingModal" aria-label="Close">
+        &times;
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="booking-modal-body">
+      <form id="bookingForm" class="booking-form">
+        <!-- Date Selection Section -->
+        <div class="booking-form-section">
+          <h3 class="booking-form-section-title">Select Date</h3>
+          <div class="booking-form-group">
+            <label class="booking-form-label" for="bookingDate">Choose a date *</label>
+            <input 
+              type="date" 
+              id="bookingDate" 
+              name="date" 
+              class="booking-form-input booking-date-input" 
+              required
+              min="<%= new Date().toISOString().split('T')[0] %>"
+              <% if (service.advanceBookingLimit) { %>
+                max="<%= new Date(Date.now() + service.advanceBookingLimit * 24 * 60 * 60 * 1000).toISOString().split('T')[0] %>"
+              <% } %>
+            >
+            <div class="booking-form-helper">
+              Choose a date within the next <%= service.advanceBookingLimit || 365 %> days
+            </div>
+            <div class="booking-form-error" id="dateError"></div>
+          </div>
+        </div>
+
+        <!-- Time Selection Section -->
+        <div class="booking-form-section">
+          <h3 class="booking-form-section-title">Select Time Slot</h3>
+          <div class="booking-form-group">
+            <label class="booking-form-label">Available time slots *</label>
+            <div class="booking-time-slots" id="timeSlotContainer">
+              <p class="booking-form-helper">Select a date first to see available time slots</p>
+            </div>
+            <input type="hidden" id="startTime" name="startTime" required>
+            <input type="hidden" id="endTime" name="endTime" required>
+            <div class="booking-form-error" id="timeError"></div>
+          </div>
+        </div>
+
+        <!-- Package Selection (if Package pricing) -->
+        <% if (service.pricingType === 'Package' && service.packages && service.packages.length > 0) { %>
+          <div class="booking-form-section">
+            <h3 class="booking-form-section-title">Select Package</h3>
+            <div class="booking-packages" id="packageContainer">
+              <% service.packages.forEach((pkg, index) => { %>
+                <label class="booking-package-card" data-index="<%= index %>">
+                  <input 
+                    type="radio" 
+                    name="selectedPackageIndex" 
+                    value="<%= index %>" 
+                    class="booking-package-radio" 
+                    <%= index === 0 ? 'checked' : '' %>
+                    data-price="<%= pkg.price %>"
+                    data-duration="<%= pkg.duration %>"
+                  >
+                  <div class="booking-package-content">
+                    <div class="booking-package-name"><%= pkg.name %></div>
+                    <div class="booking-package-price">₹<%= pkg.price.toFixed(2) %></div>
+                    <div class="booking-package-description"><%= pkg.description %></div>
+                    <div class="booking-package-duration"><%= pkg.duration %> hours</div>
+                  </div>
+                </label>
+              <% }) %>
+            </div>
+          </div>
+        <% } %>
+
+        <!-- Address (if Onsite or Hybrid) -->
+        <% if (service.mode === 'Onsite' || service.mode === 'Hybrid') { %>
+          <div class="booking-form-section">
+            <h3 class="booking-form-section-title">Service Address</h3>
+            <div class="booking-form-group">
+              <label class="booking-form-label" for="bookingAddress">Complete address *</label>
+              <textarea 
+                id="bookingAddress" 
+                name="address" 
+                class="booking-form-textarea" 
+                rows="3" 
+                maxlength="500" 
+                required
+                placeholder="Enter the complete address where the service should be provided"
+              ></textarea>
+              <div class="booking-character-counter">
+                <span id="addressCharCount">0</span>/500
+              </div>
+              <div class="booking-form-error" id="addressError"></div>
+            </div>
+          </div>
+        <% } %>
+
+        <!-- Special Requirements -->
+        <div class="booking-form-section">
+          <h3 class="booking-form-section-title">Special Requirements (Optional)</h3>
+          <div class="booking-form-group">
+            <label class="booking-form-label" for="bookingNotes">Any specific requirements or preferences?</label>
+            <textarea 
+              id="bookingNotes" 
+              name="notes" 
+              class="booking-form-textarea" 
+              rows="3" 
+              maxlength="1000"
+              placeholder="E.g., preferred timing, special instructions, etc."
+            ></textarea>
+            <div class="booking-character-counter">
+              <span id="notesCharCount">0</span>/1000
+            </div>
+          </div>
+        </div>
+
+        <!-- Price Breakdown -->
+        <div class="booking-form-section">
+          <h3 class="booking-form-section-title">Price Breakdown</h3>
+          <div class="booking-price-breakdown">
+            <div class="booking-price-item">
+              <span class="booking-price-label">Base Amount</span>
+              <span class="booking-price-value" id="priceBase">₹0.00</span>
+            </div>
+            <% if (service.travelFee && service.travelFee > 0) { %>
+              <div class="booking-price-item" id="priceTravelRow">
+                <span class="booking-price-label">Travel Fee</span>
+                <span class="booking-price-value" id="priceTravel">₹<%= service.travelFee.toFixed(2) %></span>
+              </div>
+            <% } %>
+            <div class="booking-price-item" id="priceWeekendRow" style="display: none;">
+              <span class="booking-price-label">
+                Weekend Premium 
+                <span class="booking-weekend-badge">Weekend</span>
+              </span>
+              <span class="booking-price-value" id="priceWeekend">₹0.00</span>
+            </div>
+            <div class="booking-price-item booking-price-total">
+              <span>Total Amount</span>
+              <span id="priceTotal">₹0.00</span>
+            </div>
+            <div class="booking-price-advance">
+              <div class="booking-price-item" style="color: #4CAF50;">
+                <span class="booking-price-label">✓ Advance Payment (<%= service.advancePercentage || 0 %>%)</span>
+                <span class="booking-price-value" id="priceAdvance">₹0.00</span>
+              </div>
+              <div class="booking-price-item" style="color: #FF9800;">
+                <span class="booking-price-label">Remaining Balance</span>
+                <span class="booking-price-value" id="priceRemaining">₹0.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="booking-modal-footer">
+      <button type="button" class="btn btn-outline booking-btn-cancel" id="cancelBookingBtn">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-primary booking-btn-submit" id="submitBookingBtn" disabled>
+        <span class="btn-text">Proceed to Payment</span>
+        <span class="booking-spinner" style="display: none;"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden inputs for service data -->
+<input type="hidden" id="modalServiceId" value="<%= service._id %>">
+<input type="hidden" id="modalPricingType" value="<%= service.pricingType %>">
+<input type="hidden" id="modalBasePrice" value="<%= service.basePrice %>">
+<input type="hidden" id="modalAdvancePercentage" value="<%= service.advancePercentage || 0 %>">
+<input type="hidden" id="modalTravelFee" value="<%= service.travelFee || 0 %>">
+<input type="hidden" id="modalWeekendPremium" value="<%= service.weekendPremium || 0 %>">
+<input type="hidden" id="modalMode" value="<%= service.mode %>">
+<input type="hidden" id="modalWeeklySchedule" value='<%- JSON.stringify(service.weeklySchedule || []) %>'>
+<input type="hidden" id="modalUnavailableDates" value='<%- JSON.stringify((service.unavailableDates || []).map(d => new Date(d).toISOString().split("T")[0])) %>'>
+<% if (service.packages && service.packages.length > 0) { %>
+  <input type="hidden" id="modalPackages" value='<%- JSON.stringify(service.packages) %>'>
+<% } %>

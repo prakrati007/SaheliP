@@ -1,0 +1,66 @@
+
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="profile-picture-wrapper">
+      <% if (user.profilePic) { %>
+        <img src="<%= user.profilePic %>" alt="Profile Picture" class="profile-picture" />
+      <% } else { %>
+        <div class="profile-picture-placeholder"><%= user.name[0] %></div>
+      <% } %>
+      <% if (user.role === 'saheli' && user.hasVerificationBadge) { %>
+        <span class="profile-badge badge-verified" title="Verified Provider - 3+ completed bookings">&#x2714;</span>
+      <% } %>
+    </div>
+    <div class="profile-info">
+      <h1 class="profile-name"><%= user.name %></h1>
+      <div class="profile-badges">
+        <% if (user.role === 'saheli') { %>
+          <span class="profile-badge badge-saheli">Service Provider</span>
+        <% } else { %>
+          <span class="profile-badge badge-customer">Customer</span>
+        <% } %>
+      </div>
+      <div class="profile-location">
+        <%= user.city %>, <%= user.pincode %>
+      </div>
+      <a href="/profile/edit" class="btn btn-primary" style="margin-top:1rem;">Edit Profile</a>
+    </div>
+  </div>
+  <section class="profile-section">
+    <h2 class="profile-section-title">Bio</h2>
+    <div class="profile-bio">
+      <%= user.bio ? user.bio : 'No bio added yet.' %>
+    </div>
+  </section>
+  <section class="profile-section">
+    <h2 class="profile-section-title">Languages</h2>
+    <div class="profile-tags">
+      <% if (user.languages && user.languages.length) { %>
+        <% user.languages.forEach(function(lang) { %>
+          <span class="profile-tag"><%= lang %></span>
+        <% }) %>
+      <% } else { %>
+        <span class="profile-tag">Not specified</span>
+      <% } %>
+    </div>
+  </section>
+  <% if (user.role === 'saheli') { %>
+    <section class="profile-section">
+      <h2 class="profile-section-title">Experience</h2>
+      <div class="profile-info-item">
+        <span class="info-label">Years of Experience</span>
+        <span class="info-value"><%= user.experienceYears !== null ? user.experienceYears + ' years' : 'Not specified' %></span>
+      </div>
+      <h2 class="profile-section-title">Certifications</h2>
+      <div class="profile-tags">
+        <% if (user.certifications && user.certifications.length) { %>
+          <% user.certifications.forEach(function(cert) { %>
+            <span class="profile-tag"><%= cert %></span>
+          <% }) %>
+        <% } else { %>
+          <span class="profile-tag">No certifications added</span>
+        <% } %>
+      </div>
+    </section>
+  <% } %>
+</div>

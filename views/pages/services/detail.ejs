@@ -1,0 +1,297 @@
+<div class="detail-container">
+  <div class="container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/" class="breadcrumb-link">Home</a>
+      <span class="breadcrumb-separator">›</span>
+      <a href="/services" class="breadcrumb-link">Services</a>
+      <span class="breadcrumb-separator">›</span>
+      <a href="/services?category=<%= encodeURIComponent(service.category) %>" class="breadcrumb-link"><%= service.category %></a>
+      <span class="breadcrumb-separator">›</span>
+      <span><%= service.title %></span>
+    </nav>
+    
+    <!-- Main Content Grid -->
+    <div class="detail-grid">
+      <!-- Left Column: Image Gallery -->
+      <div class="gallery-container">
+        <% if (service.images && service.images.length > 0) { %>
+          <div class="gallery-main" id="galleryMain">
+            <img src="<%= service.images[0] %>" alt="<%= service.title %>" id="mainImage" />
+          </div>
+          <div class="gallery-thumbnails">
+            <% service.images.forEach(function(img, index) { %>
+              <div class="gallery-thumbnail <%= index === 0 ? 'active' : '' %>" data-index="<%= index %>">
+                <img src="<%= img %>" alt="<%= service.title %> - Image <%= index + 1 %>" />
+              </div>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <div class="gallery-placeholder">
+            <span class="placeholder-icon">📷</span>
+            <p>No images available</p>
+          </div>
+        <% } %>
+        
+        <!-- Lightbox -->
+        <div class="gallery-lightbox" id="lightbox">
+          <span class="gallery-lightbox-close" id="lightboxClose">&times;</span>
+          <span class="gallery-lightbox-nav gallery-lightbox-prev" id="lightboxPrev">‹</span>
+          <img src="" alt="Service image" id="lightboxImage" class="gallery-lightbox-image" />
+          <span class="gallery-lightbox-nav gallery-lightbox-next" id="lightboxNext">›</span>
+        </div>
+      </div>
+      
+      <!-- Right Column: Service Info -->
+      <div class="service-info">
+        <h1><%= service.title %></h1>
+        
+        <div class="service-badges">
+          <span class="badge badge-category"><%= service.category %></span>
+          <% if (service.subcategory) { %>
+            <span class="badge badge-subcategory"><%= service.subcategory %></span>
+          <% } %>
+          <span class="badge badge-mode"><%= service.mode %></span>
+          <% if ((service.mode === 'Onsite' || service.mode === 'Hybrid') && service.serviceRadius) { %>
+            <span class="badge badge-radius">📍 <%= service.serviceRadius %> km radius</span>
+          <% } %>
+        </div>
+        
+        <!-- Provider Info Card -->
+        <div class="provider-card">
+          <div class="provider-header">
+            <% if (provider && provider.profilePic) { %>
+              <img src="<%= provider.profilePic %>" alt="<%= provider.name %>" class="provider-avatar" />
+            <% } else { %>
+              <div class="provider-avatar-placeholder">👤</div>
+            <% } %>
+            <div class="provider-details">
+              <h3 class="provider-name"><%= provider ? provider.name : 'Provider' %></h3>
+              <p class="provider-meta">
+                <%= service.city %> • <%= provider && provider.experienceYears ? provider.experienceYears + ' years exp' : 'Service Provider' %>
+              </p>
+              <% if (provider && provider.hasVerificationBadge) { %>
+                <span class="provider-badge">✓ Verified Provider</span>
+              <% } %>
+            </div>
+          </div>
+          
+          <% if (provider && provider.languages && provider.languages.length > 0) { %>
+            <p class="provider-languages">
+              <strong>Languages:</strong> <%= provider.languages.join(', ') %>
+            </p>
+          <% } %>
+          
+          <% if (provider && provider.bio) { %>
+            <p class="provider-bio"><%= provider.bio %></p>
+          <% } %>
+        </div>
+        
+        <!-- Rating and Views -->
+        <div class="service-stats">
+          <% if (service.averageRating > 0) { %>
+            <div class="stat-item">
+              <span class="stat-label">Rating:</span>
+              <span class="stat-value">
+                ⭐ <%= service.averageRating.toFixed(1) %> (<%= service.reviewCount %> reviews)
+              </span>
+            </div>
+          <% } %>
+          <div class="stat-item">
+            <span class="stat-label">Views:</span>
+            <span class="stat-value"><%= service.viewCount %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Full-Width Sections -->
+    
+    <!-- Description -->
+    <div class="detail-full-width">
+      <h2>About This Service</h2>
+      <p class="service-description"><%= service.description %></p>
+      
+      <% if (provider && provider.certifications && provider.certifications.length > 0) { %>
+        <div class="certifications">
+          <h3>Certifications</h3>
+          <div class="certification-badges">
+            <% provider.certifications.forEach(function(cert) { %>
+              <span class="badge badge-certification"><%= cert %></span>
+            <% }) %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+    
+    <!-- Pricing -->
+    <div class="detail-full-width">
+      <div class="pricing-container">
+        <h2 class="pricing-header">Pricing</h2>
+        
+        <% if (service.pricingType === 'Hourly') { %>
+          <div class="pricing-main">₹<%= service.basePrice %>/hour</div>
+        <% } else if (service.pricingType === 'Fixed') { %>
+          <div class="pricing-main">₹<%= service.basePrice %></div>
+        <% } else if (service.pricingType === 'Package' && service.packages && service.packages.length > 0) { %>
+          <div class="package-grid">
+            <% service.packages.forEach(function(pkg) { %>
+              <div class="package-card">
+                <h3 class="package-name"><%= pkg.name %></h3>
+                <div class="package-price">₹<%= pkg.price %></div>
+                <% if (pkg.description) { %>
+                  <p class="package-description"><%= pkg.description %></p>
+                <% } %>
+                <% if (pkg.duration) { %>
+                  <p class="package-duration">Duration: <%= pkg.duration %></p>
+                <% } %>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+        
+        <div class="pricing-details">
+          <% if (service.advancePercentage) { %>
+            <div class="pricing-detail-item">
+              <span>Advance payment required:</span>
+              <span><%= service.advancePercentage %>%</span>
+            </div>
+          <% } %>
+          <% if (service.travelFee) { %>
+            <div class="pricing-detail-item">
+              <span>Travel fee:</span>
+              <span>₹<%= service.travelFee %></span>
+            </div>
+          <% } %>
+          <% if (service.weekendPremium) { %>
+            <div class="pricing-detail-item">
+              <span>Weekend premium:</span>
+              <span>+<%= service.weekendPremium %>%</span>
+            </div>
+          <% } %>
+        </div>
+        
+        <% if (service.cancellationPolicy) { %>
+          <div class="cancellation-policy">
+            <h3>Cancellation Policy</h3>
+            <p><%= service.cancellationPolicy %></p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+    
+    <!-- Availability -->
+    <div class="detail-full-width">
+      <div class="availability-container">
+        <h2 class="availability-header">Provider Availability</h2>
+        
+        <% if (Object.keys(availabilityMap).length > 0) { %>
+          <div class="availability-grid">
+            <% ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].forEach(function(day) { %>
+              <% if (availabilityMap[day] && availabilityMap[day].length > 0) { %>
+                <div class="availability-day">
+                  <h3 class="availability-day-name"><%= day %></h3>
+                  <div class="availability-slots">
+                    <% availabilityMap[day].forEach(function(slot) { %>
+                      <div class="availability-slot"><%= slot.start %> - <%= slot.end %></div>
+                    <% }) %>
+                  </div>
+                </div>
+              <% } %>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <p>No availability schedule set</p>
+        <% } %>
+        
+        <% if (service.unavailableDates && service.unavailableDates.length > 0) { %>
+          <div class="availability-unavailable">
+            <strong>Unavailable dates:</strong>
+            <% service.unavailableDates.forEach(function(date) { %>
+              <%= new Date(date).toLocaleDateString() %>
+            <% }) %>
+          </div>
+        <% } %>
+        
+        <p class="availability-note"><em>Note: Booking functionality coming soon</em></p>
+      </div>
+    </div>
+    
+    <!-- CTA Buttons -->
+    <div class="cta-container">
+      <% if (!locals.user) { %>
+        <a class="btn btn-primary btn-large cta-btn-primary" href="/auth/login?returnTo=/service/<%= service._id %>">
+          Login to Book
+        </a>
+      <% } else if (locals.user && locals.user.role === 'saheli') { %>
+        <button class="btn btn-outline btn-large cta-btn-secondary" disabled>
+          Switch to customer account to book services
+        </button>
+      <% } else if (locals.user && locals.user.id && locals.user.id.toString() === service.providerId._id.toString()) { %>
+        <button class="btn btn-outline btn-large cta-btn-secondary" disabled>
+          You cannot book your own service
+        </button>
+      <% } else { %>
+        <button 
+          class="btn btn-primary btn-large cta-btn-primary" 
+          id="bookServiceBtn"
+          data-service-id="<%= service._id %>"
+          data-pricing-type="<%= service.pricingType %>"
+          data-base-price="<%= service.basePrice %>"
+          data-advance-percentage="<%= service.advancePercentage || 0 %>"
+          data-travel-fee="<%= service.travelFee || 0 %>"
+          data-weekend-premium="<%= service.weekendPremium || 0 %>"
+          data-mode="<%= service.mode %>"
+          onclick="openBookingModal()"
+        >
+          Book This Service
+        </button>
+        <button class="btn btn-outline btn-large cta-btn-secondary" disabled title="Messaging coming soon">
+          Contact Provider
+          <span class="cta-tooltip">Messaging available soon</span>
+        </button>
+      <% } %>
+    </div>
+    
+    <!-- Related Services -->
+    <% if (relatedServices && relatedServices.length > 0) { %>
+      <div class="related-services detail-full-width">
+        <h2>Similar Services You May Like</h2>
+        <div class="related-services-scroll">
+          <% relatedServices.forEach(function(relatedService) { %>
+            <div class="related-service-card">
+              <%- include('../../partials/service-card', { service: relatedService, showActions: false }) %>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+    
+    <!-- Reviews -->
+    <div class="reviews-section detail-full-width" id="reviewsSection" data-service-id="<%= service._id %>">
+      <div class="section-header" style="display:flex; align-items:center; justify-content: space-between;">
+        <h2>Customer Reviews</h2>
+        <div class="controls">
+          <select id="reviewSort">
+            <option value="newest">Newest</option>
+            <option value="highest">Highest Rated</option>
+            <option value="lowest">Lowest Rated</option>
+            <option value="oldest">Oldest</option>
+          </select>
+        </div>
+      </div>
+      <div id="reviewsList"></div>
+      <div class="pagination" id="reviewsPagination" hidden>
+        <button id="reviewsPrev" class="btn-outline" disabled>Previous</button>
+        <span id="reviewsPageInfo">Page 1</span>
+        <button id="reviewsNext" class="btn-outline" disabled>Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Booking Modal -->
+<%- include('../../partials/booking-modal', { service, provider, availabilityMap }) %>
+<%- include('../../partials/review-form-modal') %>
+<%- include('../../partials/provider-reply-modal') %>
+<input type="hidden" id="razorpayKeyId" value="<%= process.env.RAZORPAY_KEY_ID || '' %>" />

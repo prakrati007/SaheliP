@@ -1,0 +1,123 @@
+<div class="auth-container">
+  <div class="auth-header">
+    <h1>Welcome Back</h1>
+    <p>Log in to your Saheli Plus account</p>
+  </div>
+
+  <% if (locals.errors && errors.length > 0) { %>
+    <div class="alert alert-error">
+      <ul>
+        <% errors.forEach(error => { %>
+          <li><%= error %></li>
+        <% }) %>
+      </ul>
+    </div>
+  <% } %>
+
+  <!-- Login Tabs -->
+  <div class="login-tabs">
+    <button type="button" class="tab-button active" onclick="switchLoginTab('password')">
+      Password Login
+    </button>
+    <button type="button" class="tab-button" onclick="switchLoginTab('otp')">
+      OTP Login
+    </button>
+  </div>
+
+  <!-- Password Login Form -->
+  <div id="passwordLoginTab" class="tab-content active">
+    <form action="/auth/login/password" method="POST" id="passwordLoginForm">
+      <div class="form-group">
+        <label for="email" class="form-label">Email Address *</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-input"
+          placeholder="your@email.com"
+          required
+          value="<%= locals.formData && formData.email || '' %>"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="role" class="form-label">Login As *</label>
+        <select id="role" name="role" class="form-input" required>
+          <option value="">Select your role</option>
+          <option value="customer" <%= locals.formData && formData.role === 'customer' ? 'selected' : '' %>>Customer</option>
+          <option value="saheli" <%= locals.formData && formData.role === 'saheli' ? 'selected' : '' %>>Saheli (Service Provider)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Password *</label>
+        <div class="password-input-wrapper">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-input"
+            placeholder="Enter your password"
+            required
+          />
+          <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password')">
+            👁️
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input type="checkbox" name="remember" />
+          Remember Me
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+        Log In
+      </button>
+
+      <div class="auth-links">
+        <a href="/auth/forgot-password">Forgot Password?</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- OTP Login Form -->
+  <div id="otpLoginTab" class="tab-content">
+    <form action="/auth/login/otp" method="POST" id="otpLoginForm">
+      <div class="form-group">
+        <label for="otpEmail" class="form-label">Email Address *</label>
+        <input
+          type="email"
+          id="otpEmail"
+          name="email"
+          class="form-input"
+          placeholder="your@email.com"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="otpRole" class="form-label">Login As *</label>
+        <select id="otpRole" name="role" class="form-input" required>
+          <option value="">Select your role</option>
+          <option value="customer">Customer</option>
+          <option value="saheli">Saheli (Service Provider)</option>
+        </select>
+      </div>
+
+      <p class="info-text">We'll send a 6-digit code to your email for verification.</p>
+
+      <button type="submit" class="btn btn-secondary btn-large" style="width: 100%;">
+        Send OTP
+      </button>
+    </form>
+  </div>
+
+  <div class="auth-footer">
+    <p>Don't have an account? <a href="/auth/signup">Sign up</a></p>
+  </div>
+</div>
+
+<script src="/js/auth.js"></script>

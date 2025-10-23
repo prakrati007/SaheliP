@@ -1,0 +1,291 @@
+<!-- Customer Dashboard -->
+
+<div class="dashboard-container">
+  <!-- Dashboard Header -->
+  <div class="dashboard-header">
+    <h1 class="dashboard-welcome">Welcome, <%= user.name %>!</h1>
+    <p class="dashboard-subtitle">Discover services and manage your bookings</p>
+  </div>
+
+  <!-- Overview Stats Cards -->
+  <div class="stats-grid">
+    <div class="stats-card color-blue">
+      <div class="stats-icon">📅</div>
+      <div class="stats-value"><%= stats.activeBookings %></div>
+      <div class="stats-label">Active Bookings</div>
+    </div>
+    
+    <div class="stats-card color-green">
+      <div class="stats-icon">✓</div>
+      <div class="stats-value"><%= stats.completedBookings %></div>
+      <div class="stats-label">Services Received</div>
+    </div>
+    
+    <div class="stats-card color-pink">
+      <div class="stats-icon">💰</div>
+      <div class="stats-value">₹<%= stats.totalSpent.toLocaleString('en-IN') %></div>
+      <div class="stats-label">Total Spent</div>
+    </div>
+    
+    <div class="stats-card color-orange">
+      <div class="stats-icon">⚠️</div>
+      <div class="stats-value"><%= stats.pendingPaymentsCount %></div>
+      <div class="stats-label">Pending Payments</div>
+    </div>
+  </div>
+
+  <!-- Find Services Widget -->
+  <div class="dashboard-section find-services-widget">
+    <h2 class="widget-title">Looking for a service?</h2>
+    <form action="/services" method="GET" class="search-form-inline">
+      <input 
+        type="text" 
+        name="search" 
+        placeholder="What service do you need?" 
+        class="search-input-inline"
+      >
+      <input 
+        type="text" 
+        name="city" 
+        placeholder="Your city" 
+        value="<%= user.city || '' %>" 
+        class="search-input-inline"
+      >
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    <div class="category-quick-links">
+      <a href="/services?category=Beauty" class="category-link">Beauty</a>
+      <a href="/services?category=Tutoring" class="category-link">Tutoring</a>
+      <a href="/services?category=Tailoring" class="category-link">Tailoring</a>
+      <a href="/services?category=Events" class="category-link">Events</a>
+    </div>
+  </div>
+
+  <!-- My Bookings (Tabbed) -->
+  <div class="dashboard-section">
+    <div class="section-header">
+      <h2 class="section-title">My Bookings</h2>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="booking-tabs">
+      <button class="booking-tab active" data-tab="upcoming" onclick="switchTab('upcoming')">
+        Upcoming (<%= upcomingBookings.length %>)
+      </button>
+      <button class="booking-tab" data-tab="completed" onclick="switchTab('completed')">
+        Completed (<%= completedBookings.length %>)
+      </button>
+      <button class="booking-tab" data-tab="cancelled" onclick="switchTab('cancelled')">
+        Cancelled (<%= cancelledBookings.length %>)
+      </button>
+    </div>
+
+    <!-- Upcoming Bookings Tab -->
+    <div id="upcomingTab" class="booking-tab-content active">
+      <% if (upcomingBookings && upcomingBookings.length > 0) { %>
+        <div class="bookings-cards-grid">
+          <% upcomingBookings.forEach(booking => { %>
+            <div class="booking-card">
+              <% if (booking.serviceId?.images && booking.serviceId.images[0]) { %>
+                <div class="booking-card-image">
+                  <img src="<%= booking.serviceId.images[0] %>" alt="<%= booking.serviceId.title %>">
+                </div>
+              <% } %>
+              
+              <div class="booking-card-header">
+                <span class="status-badge status-<%= booking.status.toLowerCase() %>">
+                  <%= booking.status %>
+                </span>
+                <span class="payment-badge payment-<%= booking.paymentStatus.toLowerCase() %>">
+                  <%= booking.paymentStatus %>
+                </span>
+              </div>
+              
+              <div class="booking-card-body">
+                <h3 class="booking-service-title"><%= booking.serviceId?.title || 'Service' %></h3>
+                <p class="booking-provider">
+                  Provider: <%= booking.providerId?.name || 'N/A' %>
+                  <% if (booking.providerId?.hasVerificationBadge) { %>
+                    <span class="verification-badge-small">✓</span>
+                  <% } %>
+                </p>
+                <p class="booking-datetime">
+                  <%= new Date(booking.date).toLocaleDateString('en-IN') %> • 
+                  <%= booking.startTime %> - <%= booking.endTime %>
+                </p>
+                <% if (booking.address) { %>
+                  <p class="booking-address">📍 <%= booking.address %></p>
+                <% } %>
+                <p class="booking-amount">Total: ₹<%= booking.totalAmount.toLocaleString('en-IN') %></p>
+              </div>
+              
+              <div class="booking-card-actions">
+                <% if (booking.status === 'Confirmed') { %>
+                  <button class="btn-sm btn-outline-danger" onclick="handleCancelBooking('<%= booking._id %>')">
+                    Cancel
+                  </button>
+                <% } %>
+                <button class="btn-sm btn-primary" onclick="openBookingDetailModal('<%= booking._id %>')">
+                  View Details
+                </button>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <p class="empty-state">No upcoming bookings. <a href="/services">Browse services</a> to get started!</p>
+      <% } %>
+    </div>
+
+    <!-- Completed Bookings Tab -->
+    <div id="completedTab" class="booking-tab-content">
+      <% if (completedBookings && completedBookings.length > 0) { %>
+        <div class="bookings-cards-grid">
+          <% completedBookings.forEach(booking => { %>
+            <div class="booking-card">
+              <% if (booking.serviceId?.images && booking.serviceId.images[0]) { %>
+                <div class="booking-card-image">
+                  <img src="<%= booking.serviceId.images[0] %>" alt="<%= booking.serviceId.title %>">
+                </div>
+              <% } %>
+              
+              <div class="booking-card-header">
+                <span class="status-badge status-completed">Completed</span>
+                <span class="payment-badge payment-<%= booking.paymentStatus.toLowerCase() %>">
+                  <%= booking.paymentStatus %>
+                </span>
+              </div>
+              
+              <div class="booking-card-body">
+                <h3 class="booking-service-title"><%= booking.serviceId?.title || 'Service' %></h3>
+                <p class="booking-provider">
+                  Provider: <%= booking.providerId?.name || 'N/A' %>
+                  <% if (booking.providerId?.hasVerificationBadge) { %>
+                    <span class="verification-badge-small">✓</span>
+                  <% } %>
+                </p>
+                <p class="booking-datetime">
+                  <%= new Date(booking.date).toLocaleDateString('en-IN') %> • 
+                  <%= booking.startTime %> - <%= booking.endTime %>
+                </p>
+                <p class="booking-amount">Total: ₹<%= booking.totalAmount.toLocaleString('en-IN') %></p>
+              </div>
+              
+              <div class="booking-card-actions">
+                <% if (booking.paymentStatus === 'AdvancePaid') { %>
+                  <button class="btn-sm btn-primary" onclick="handlePayRemaining('<%= booking._id %>')">
+                    Pay Remaining
+                  </button>
+                <% } %>
+                <button class="btn-sm btn-outline" onclick="openBookingDetailModal('<%= booking._id %>')">
+                  View Details
+                </button>
+                <% if (!booking.isReviewed) { %>
+                  <button class="btn-sm btn-outline" data-open-review data-booking-id="<%= booking._id %>">
+                    Rate & Review
+                  </button>
+                <% } else { %>
+                  <button class="btn-sm" disabled>
+                    Reviewed
+                  </button>
+                <% } %>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <p class="empty-state">No completed bookings yet.</p>
+      <% } %>
+    </div>
+
+    <!-- Cancelled Bookings Tab -->
+    <div id="cancelledTab" class="booking-tab-content">
+      <% if (cancelledBookings && cancelledBookings.length > 0) { %>
+        <div class="bookings-cards-grid">
+          <% cancelledBookings.forEach(booking => { %>
+            <div class="booking-card">
+              <div class="booking-card-header">
+                <span class="status-badge status-cancelled">Cancelled</span>
+                <% if (booking.refundAmount > 0) { %>
+                  <span class="payment-badge payment-refunded">Refunded</span>
+                <% } %>
+              </div>
+              
+              <div class="booking-card-body">
+                <h3 class="booking-service-title"><%= booking.serviceId?.title || 'Service' %></h3>
+                <p class="booking-provider">Provider: <%= booking.providerId?.name || 'N/A' %></p>
+                <p class="booking-datetime">
+                  <%= new Date(booking.date).toLocaleDateString('en-IN') %> • 
+                  <%= booking.startTime %> - <%= booking.endTime %>
+                </p>
+                <% if (booking.cancellationReason) { %>
+                  <p class="booking-cancel-reason">Reason: <%= booking.cancellationReason %></p>
+                <% } %>
+                <% if (booking.refundAmount > 0) { %>
+                  <p class="booking-refund">Refund: ₹<%= booking.refundAmount.toLocaleString('en-IN') %></p>
+                <% } %>
+              </div>
+              
+              <div class="booking-card-actions">
+                <button class="btn-sm btn-outline" onclick="openBookingDetailModal('<%= booking._id %>')">
+                  View Details
+                </button>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <p class="empty-state">No cancelled bookings.</p>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Payment History -->
+  <% if (recentPayments && recentPayments.length > 0) { %>
+    <div class="dashboard-section">
+      <div class="section-header">
+        <h2 class="section-title">Recent Payments</h2>
+      </div>
+      
+      <div class="payment-history-table-wrapper">
+        <table class="payment-history-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Service</th>
+              <th>Provider</th>
+              <th>Amount</th>
+              <th>Type</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% recentPayments.forEach(payment => { %>
+              <tr class="payment-row" data-booking-id="<%= payment._id %>">
+                <td><%= new Date(payment.updatedAt).toLocaleDateString('en-IN') %></td>
+                <td><%= payment.serviceId?.title || 'N/A' %></td>
+                <td><%= payment.providerId?.name || 'N/A' %></td>
+                <td class="payment-amount">₹<%= payment.advancePaid.toLocaleString('en-IN') %></td>
+                <td>
+                  <% if (payment.paymentStatus === 'FullyPaid') { %>
+                    Full Payment
+                  <% } else { %>
+                    Advance
+                  <% } %>
+                </td>
+                <td>
+                  <span class="status-badge status-paid">Paid</span>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+<!-- Include Booking Detail Modal -->
+<%- include('../../partials/booking-detail-modal') %>
+<%- include('../../partials/review-form-modal') %>
+<%- include('../../partials/provider-reply-modal') %>

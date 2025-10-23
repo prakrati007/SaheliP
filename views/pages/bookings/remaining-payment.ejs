@@ -1,0 +1,271 @@
+<style>
+  .remaining-payment-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+  
+  .payment-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+  }
+  
+  .payment-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .payment-header h1 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 8px;
+  }
+  
+  .payment-header p {
+    color: #666;
+  }
+  
+  .booking-summary {
+    background: #FFF9F8;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #F0F0F0;
+  }
+  
+  .summary-row:last-child {
+    border-bottom: none;
+  }
+  
+  .summary-label {
+    color: #666;
+  }
+  
+  .summary-value {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .amount-due {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #F9C5D1 0%, #F6A5C0 100%);
+    border-radius: 8px;
+    margin: 24px 0;
+  }
+  
+  .amount-due h2 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 8px;
+  }
+  
+  .amount-due .amount {
+    font-size: 36px;
+    font-weight: 700;
+    color: #333;
+  }
+  
+  .pay-button {
+    width: 100%;
+    padding: 16px;
+    background: #F6A5C0;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .pay-button:hover {
+    background: #F48FB1;
+  }
+  
+  .pay-button:disabled {
+    background: #CCC;
+    cursor: not-allowed;
+  }
+  
+  .info-box {
+    background: #E3F2FD;
+    border-left: 4px solid #2196F3;
+    padding: 16px;
+    margin-top: 24px;
+    border-radius: 4px;
+  }
+  
+  .error-message {
+    background: #FFEBEE;
+    border-left: 4px solid #F44336;
+    padding: 16px;
+    margin-bottom: 24px;
+    border-radius: 4px;
+    color: #C62828;
+  }
+</style>
+
+<div class="remaining-payment-container">
+  <div class="payment-card">
+    <div class="payment-header">
+      <h1>💳 Complete Payment</h1>
+      <p>Remaining balance for your service</p>
+    </div>
+    
+    <div id="errorMessage" class="error-message" style="display: none;"></div>
+    
+    <div class="booking-summary">
+      <div class="summary-row">
+        <span class="summary-label">Booking ID:</span>
+        <span class="summary-value">#<%= booking._id.toString().slice(-8).toUpperCase() %></span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Service:</span>
+        <span class="summary-value"><%= booking.serviceId.title %></span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Total Amount:</span>
+        <span class="summary-value">₹<%= booking.totalAmount.toFixed(2) %></span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Advance Paid:</span>
+        <span class="summary-value" style="color: #4CAF50;">₹<%= booking.advancePaid.toFixed(2) %></span>
+      </div>
+    </div>
+    
+    <div class="amount-due">
+      <h2>Amount Due</h2>
+      <div class="amount">₹<%= booking.remainingAmount.toFixed(2) %></div>
+    </div>
+    
+    <button id="payButton" class="pay-button">Pay Now</button>
+    
+    <div class="info-box">
+      <strong>Payment Information:</strong>
+      <ul style="margin: 10px 0 0 20px; padding: 0;">
+        <li>Payment is processed securely via Razorpay</li>
+        <li>You will receive a payment confirmation via email</li>
+        <li>For any issues, contact support</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  const bookingId = '<%= booking._id %>';
+  const remainingAmount = <%= booking.remainingAmount %>;
+  const bookingDetails = {
+    serviceName: '<%= booking.serviceId.title %>',
+    customerName: '<%= user.name %>',
+    customerEmail: '<%= user.email %>'
+  };
+  
+  document.getElementById('payButton').addEventListener('click', initiatePayment);
+  
+  async function initiatePayment() {
+    const payButton = document.getElementById('payButton');
+    payButton.disabled = true;
+    payButton.textContent = 'Processing...';
+    
+    try {
+      // Create Razorpay order
+      const orderResponse = await fetch(`/booking/${bookingId}/remaining/order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      if (!orderResponse.ok) {
+        throw new Error('Failed to create payment order');
+      }
+      
+      const orderData = await orderResponse.json();
+      if (!orderData.success) {
+        throw new Error(orderData.message || 'Failed to create payment order');
+      }
+      
+      // Open Razorpay checkout
+      const options = {
+        key: orderData.razorpayKeyId,
+        amount: orderData.razorpayOrder.amount,
+        currency: orderData.razorpayOrder.currency,
+        name: 'Saheli Plus',
+        description: `Remaining payment for ${bookingDetails.serviceName}`,
+        order_id: orderData.razorpayOrder.id,
+        prefill: {
+          name: bookingDetails.customerName,
+          email: bookingDetails.customerEmail
+        },
+        theme: {
+          color: '#F6A5C0'
+        },
+        handler: async function(response) {
+          await verifyPayment(response);
+        },
+        modal: {
+          ondismiss: function() {
+            payButton.disabled = false;
+            payButton.textContent = 'Pay Now';
+          }
+        }
+      };
+      
+      const rzp = new Razorpay(options);
+      rzp.open();
+      
+    } catch (error) {
+      console.error('Payment initiation error:', error);
+      showError(error.message);
+      payButton.disabled = false;
+      payButton.textContent = 'Pay Now';
+    }
+  }
+  
+  async function verifyPayment(razorpayResponse) {
+    try {
+      const verifyResponse = await fetch('/booking/payment/remaining/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bookingId: bookingId,
+          razorpayOrderId: razorpayResponse.razorpay_order_id,
+          razorpayPaymentId: razorpayResponse.razorpay_payment_id,
+          razorpaySignature: razorpayResponse.razorpay_signature
+        })
+      });
+      
+      const verifyData = await verifyResponse.json();
+      
+      if (!verifyResponse.ok || !verifyData.success) {
+        throw new Error(verifyData.message || 'Payment verification failed');
+      }
+      
+      // Payment successful - redirect to booking details
+      window.location.href = `/booking/${bookingId}?success=Payment completed successfully`;
+      
+    } catch (error) {
+      console.error('Payment verification error:', error);
+      showError(error.message);
+      document.getElementById('payButton').disabled = false;
+      document.getElementById('payButton').textContent = 'Pay Now';
+    }
+  }
+  
+  function showError(message) {
+    const errorDiv = document.getElementById('errorMessage');
+    errorDiv.textContent = message;
+    errorDiv.style.display = 'block';
+    setTimeout(() => {
+      errorDiv.style.display = 'none';
+    }, 5000);
+  }
+</script>

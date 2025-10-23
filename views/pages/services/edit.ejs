@@ -1,0 +1,227 @@
+<div class="service-form-container">
+  <h1 class="page-title">Edit Service</h1>
+  <p class="subtitle"><%= service.title %></p>
+  <% if (errors && errors.length) { %>
+    <div class="alert alert-error">
+      <ul>
+        <% errors.forEach(function(error) { %>
+          <li><%= error %></li>
+        <% }) %>
+      </ul>
+    </div>
+  <% } %>
+  <form id="serviceForm" action="/services/<%= service._id %>?_method=PUT" method="POST" enctype="multipart/form-data" novalidate>
+    <!-- Section 1: Basic Information -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <span class="form-section-title">Basic Information</span>
+      </div>
+      <div class="form-section-content form-grid">
+        <div class="form-group">
+          <label class="form-label" for="title">Service Title *</label>
+          <input class="form-input" type="text" id="title" name="title" required minlength="5" maxlength="100" value="<%= service.title %>" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="category">Category *</label>
+          <select class="form-select" id="category" name="category" required>
+            <% Object.keys(categories).forEach(function(cat) { %>
+              <option value="<%= cat %>" <%= service.category === cat ? 'selected' : '' %>><%= categories[cat].label %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="subcategory">Subcategory</label>
+          <select class="form-select" id="subcategory" name="subcategory" data-value="<%= service.subcategory || '' %>">
+            <option value="">Select subcategory</option>
+            <!-- Populated by JS -->
+          </select>
+        </div>
+        <div class="form-group" style="grid-column: 1 / span 2;">
+          <label class="form-label" for="description">Description *</label>
+          <textarea class="form-textarea" id="description" name="description" required minlength="50" maxlength="2000" rows="4"><%= service.description %></textarea>
+          <div class="character-counter" id="descCounter">0/2000</div>
+        </div>
+      </div>
+    </div>
+    <!-- Section 2: Pricing -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <span class="form-section-title">Pricing</span>
+      </div>
+      <div class="form-section-content form-grid">
+        <div class="form-group">
+          <label class="form-label">Pricing Type *</label>
+          <div class="radio-group" id="pricingTypeGroup">
+            <% pricingTypes.forEach(function(type) { %>
+              <label class="radio-label">
+                <input type="radio" name="pricingType" value="<%= type %>" <%= service.pricingType === type ? 'checked' : '' %> required />
+                <%= type %>
+              </label>
+            <% }) %>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="basePrice">Base Price *</label>
+          <input class="form-input" type="number" id="basePrice" name="basePrice" min="0" max="100000" required value="<%= service.basePrice %>" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="advancePercentage">Advance Payment %</label>
+          <input class="form-input" type="number" id="advancePercentage" name="advancePercentage" min="0" max="50" value="<%= service.advancePercentage %>" />
+          <div class="form-helper-text">Percentage of advance payment required</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="travelFee">Travel Fee</label>
+          <input class="form-input" type="number" id="travelFee" name="travelFee" min="0" max="5000" value="<%= service.travelFee %>" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="weekendPremium">Weekend Premium %</label>
+          <input class="form-input" type="number" id="weekendPremium" name="weekendPremium" min="0" max="15" value="<%= service.weekendPremium %>" />
+          <div class="form-helper-text">Weekend price markup</div>
+        </div>
+      </div>
+      <div class="form-section-content" id="packageSection" style="display:none;">
+        <div class="package-builder">
+          <label class="form-label">Package Details</label>
+          <div id="packageList"></div>
+          <button type="button" class="add-package-btn" id="addPackageBtn">Add Package</button>
+        </div>
+      </div>
+    </div>
+    <!-- Section 3: Service Mode & Location -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <span class="form-section-title">Service Mode & Location</span>
+      </div>
+      <div class="form-section-content form-grid">
+        <div class="form-group">
+          <label class="form-label">Service Mode *</label>
+          <div class="radio-group" id="modeGroup">
+            <% modes.forEach(function(mode) { %>
+              <label class="radio-label">
+                <input type="radio" name="mode" value="<%= mode %>" <%= service.mode === mode ? 'checked' : '' %> required />
+                <%= mode %>
+              </label>
+            <% }) %>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="city">City *</label>
+          <input class="form-input" type="text" id="city" name="city" required minlength="2" maxlength="50" value="<%= service.city %>" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="pincode">Pincode *</label>
+          <input class="form-input" type="text" id="pincode" name="pincode" required pattern="\d{6}" maxlength="6" value="<%= service.pincode %>" />
+        </div>
+        <div class="form-group" id="serviceRadiusGroup" style="display:none;">
+          <label class="form-label" for="serviceRadius">Service Radius (km)</label>
+          <input class="form-input" type="number" id="serviceRadius" name="serviceRadius" min="0" max="100" value="<%= service.serviceRadius %>" />
+        </div>
+      </div>
+    </div>
+    <!-- Section 4: Availability -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <span class="form-section-title">Availability</span>
+      </div>
+      <div class="form-section-content">
+        <div class="availability-builder" id="availabilityBuilder"></div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="unavailableDates">Unavailable Dates</label>
+            <input class="form-input" type="date" id="unavailableDates" name="unavailableDates" multiple />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="maxBookingsPerDay">Max Bookings Per Day</label>
+            <input class="form-input" type="number" id="maxBookingsPerDay" name="maxBookingsPerDay" min="1" max="20" value="<%= service.maxBookingsPerDay %>" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="advanceBookingLimit">Advance Booking Limit (days)</label>
+            <input class="form-input" type="number" id="advanceBookingLimit" name="advanceBookingLimit" min="1" max="365" value="<%= service.advanceBookingLimit %>" />
+            <div class="form-helper-text">Days in advance customers can book</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="preparationTime">Preparation Time (hours)</label>
+            <input class="form-input" type="number" id="preparationTime" name="preparationTime" min="0" max="48" value="<%= service.preparationTime %>" />
+            <div class="form-helper-text">Hours needed between bookings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Section 5: Additional Details -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <span class="form-section-title">Additional Details</span>
+      </div>
+      <div class="form-section-content form-grid">
+        <div class="form-group">
+          <label class="form-label" for="languages">Languages</label>
+          <input class="form-input" type="text" id="languages" name="languages" value="<%= service.languages ? service.languages.join(', ') : '' %>" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="experienceYears">Experience Years</label>
+          <input class="form-input" type="number" id="experienceYears" name="experienceYears" min="0" max="50" value="<%= service.experienceYears %>" />
+        </div>
+        <div class="form-group" style="grid-column: 1 / span 2;">
+          <label class="form-label" for="certifications">Certifications</label>
+          <textarea class="form-textarea" id="certifications" name="certifications"><%= service.certifications ? service.certifications.join(', ') : '' %></textarea>
+        </div>
+        <div class="form-group" style="grid-column: 1 / span 2;">
+          <label class="form-label" for="cancellationPolicy">Cancellation Policy</label>
+          <textarea class="form-textarea" id="cancellationPolicy" name="cancellationPolicy" maxlength="500"><%= service.cancellationPolicy %></textarea>
+        </div>
+      </div>
+    </div>
+    <!-- Section 6: Service Images -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <span class="form-section-title">Service Images</span>
+      </div>
+      <div class="form-section-content">
+        <div class="image-upload-area" id="imageUploadArea">
+          <input type="file" id="serviceImages" name="serviceImages" accept="image/jpeg,image/png,image/webp" multiple />
+          <div class="form-helper-text">Max 5 images, 5MB each, JPEG/PNG/WebP only</div>
+        </div>
+        <div class="image-preview-grid" id="imagePreviewGrid">
+          <% if (service.images && service.images.length) { %>
+            <% service.images.forEach(function(img, idx) { %>
+              <div class="image-preview-item">
+                <img class="image-preview-img" src="<%= img %>" alt="Service Image <%= idx+1 %>" />
+                <button type="button" class="image-remove-btn" data-index="<%= idx %>">&times;</button>
+              </div>
+            <% }) %>
+          <% } %>
+        </div>
+        <input type="hidden" id="deleteImages" name="deleteImages" value="" />
+        <div class="form-helper-text"><span id="imageCount"><%= service.images ? service.images.length : 0 %></span> of 5 images used</div>
+      </div>
+    </div>
+    <!-- Hidden inputs for JSON serialization -->
+    <input type="hidden" id="weeklySchedule" name="weeklySchedule" />
+    <input type="hidden" id="packages" name="packages" />
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" id="submitBtn">Save Changes</button>
+      <a href="/services/my" class="btn btn-outline">Cancel</a>
+      <button type="button" class="btn btn-danger" id="deleteServiceBtn">Delete Service</button>
+    </div>
+    <div class="service-status">
+      <span class="badge <%= service.isPaused ? 'badge-status-paused' : 'badge-status-active' %>">
+        <%= service.isPaused ? 'Paused' : 'Active' %>
+      </span>
+      <button type="button" class="btn btn-secondary" id="toggleStatusBtn"><%= service.isPaused ? 'Activate' : 'Pause' %></button>
+      <span class="text-small text-muted">Last updated: <%= service.updatedAt.toLocaleString() %></span>
+      <span class="text-small text-muted">Views: <%= service.viewCount %></span>
+    </div>
+  </form>
+</div>
+<script>
+  // Embed SERVICE_CATEGORIES for client-side use
+  window.SERVICE_CATEGORIES = <%- JSON.stringify(categories) %>;
+  // Pass existing data to JS
+  const serviceForm = document.getElementById('serviceForm');
+  if (serviceForm) {
+    serviceForm.dataset.subcategory = '<%= service.subcategory || "" %>';
+    serviceForm.dataset.packages = '<%- service.packages ? JSON.stringify(service.packages) : "[]" %>';
+    serviceForm.dataset.schedule = '<%- service.weeklySchedule ? JSON.stringify(service.weeklySchedule) : "[]" %>';
+  }
+</script>
+<script src="/js/service-form.js"></script>

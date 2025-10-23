@@ -1,0 +1,45 @@
+<header class="header">
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/" class="logo">
+          <h1>Saheli Plus</h1>
+        </a>
+      </div>
+      
+      <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" id="mobileMenuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      
+      <div class="navbar-menu" id="navbarMenu">
+        <ul class="navbar-nav">
+          <li><a href="/" class="nav-link">Home</a></li>
+          <li><a href="/services" class="nav-link">Services</a></li>
+          <li><a href="/about" class="nav-link">About</a></li>
+          <li><a href="/contact" class="nav-link">Contact</a></li>
+        </ul>
+        
+        <ul class="navbar-auth">
+          <% if (locals.user) { %>
+            <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
+            <% if (locals.user.role === 'saheli') { %>
+              <li><a href="/services/my" class="nav-link">My Services</a></li>
+              <li><a href="/booking/provider/list" class="nav-link">My Bookings</a></li>
+            <% } %>
+            <li><a href="/profile/view" class="nav-link">Profile</a></li>
+            <li>
+              <form method="POST" action="/auth/logout" style="display: inline;">
+                <button type="submit" class="btn btn-secondary" style="border: none; cursor: pointer;">Logout</button>
+              </form>
+            </li>
+          <% } else { %>
+            <li><a href="/auth/login" class="btn btn-outline">Login</a></li>
+            <li><a href="/auth/signup" class="btn btn-primary">Sign Up</a></li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>

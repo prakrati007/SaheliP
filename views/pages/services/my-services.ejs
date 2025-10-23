@@ -1,0 +1,29 @@
+<div class="services-header">
+  <h1 class="page-title">My Services</h1>
+  <a href="/services/add" class="btn btn-primary">Add New Service</a>
+</div>
+<div class="services-filters">
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="active">Active</button>
+  <button class="filter-btn" data-filter="paused">Paused</button>
+  <select class="form-select" id="sortSelect">
+    <option value="newest">Newest</option>
+    <option value="oldest">Oldest</option>
+    <option value="mostViewed">Most Viewed</option>
+    <option value="titleAZ">Title A-Z</option>
+  </select>
+</div>
+<% if (services && services.length) { %>
+  <div class="services-grid" id="servicesGrid">
+    <% services.forEach(function(service) { %>
+      <%- include('../../partials/service-card', { service: service, showActions: true }) %>
+    <% }) %>
+  </div>
+<% } else { %>
+  <div class="empty-state">
+    <div class="empty-state-icon">🛠️</div>
+    <div class="empty-state-message">You haven't added any services yet</div>
+    <a href="/services/add" class="btn btn-primary">Add Your First Service</a>
+  </div>
+<% } %>
+<script src="/js/my-services.js"></script>

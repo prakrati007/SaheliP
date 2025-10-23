@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Saheli Plus - Women's Service Marketplace">
+  <title><%- title %></title>
+  <link rel="stylesheet" href="/styles/main.css">
+  <% if (locals.authPage) { %>
+    <link rel="stylesheet" href="/styles/auth.css">
+  <% } %>
+  <% if (locals.profilePage) { %>
+    <link rel="stylesheet" href="/styles/profile.css">
+  <% } %>
+  <% if (locals.servicePage) { %>
+    <link rel="stylesheet" href="/styles/service.css">
+  <% } %>
+  <% if (locals.homePage) { %>
+    <link rel="stylesheet" href="/styles/home.css">
+  <% } %>
+  <% if (locals.searchPage) { %>
+    <link rel="stylesheet" href="/styles/search.css">
+  <% } %>
+  <% if (locals.detailPage) { %>
+    <link rel="stylesheet" href="/styles/detail.css">
+    <link rel="stylesheet" href="/styles/booking.css">
+    <link rel="stylesheet" href="/styles/reviews.css">
+  <% } %>
+  <% if (locals.bookingsPage) { %>
+    <link rel="stylesheet" href="/styles/bookings.css">
+  <% } %>
+  <% if (locals.dashboardPage) { %>
+    <link rel="stylesheet" href="/styles/dashboard.css">
+    <link rel="stylesheet" href="/styles/reviews.css">
+  <% } %>
+  <% if (locals.dashboardPage && locals.role === 'saheli') { %>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/frappe-charts@1.6.2/dist/frappe-charts.min.css">
+  <% } %>
+  
+</head>
+<body>
+  <%- include('../partials/header') %>
+  
+  <%- include('../partials/alerts') %>
+  
+  <main class="main-content">
+    <%- body %>
+  </main>
+  
+  <%- include('../partials/footer') %>
+  
+  <script src="/js/main.js"></script>
+  <% if (locals.homePage) { %>
+    <script src="/js/home.js"></script>
+  <% } %>
+  <% if (locals.searchPage) { %>
+    <script src="/js/search.js"></script>
+  <% } %>
+  <% if (locals.detailPage) { %>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="/js/service-detail.js"></script>
+    <script src="/js/booking.js"></script>
+    <script src="/js/reviews.js"></script>
+  <% } %>
+  <% if (locals.bookingsPage) { %>
+    <script src="/js/provider-bookings.js"></script>
+  <% } %>
+  <% if (locals.dashboardPage && locals.role === 'saheli') { %>
+    <script src="https://cdn.jsdelivr.net/npm/frappe-charts@1.6.2/dist/frappe-charts.min.iife.js"></script>
+    <script src="/js/saheli-dashboard.js"></script>
+  <% } %>
+  <% if (locals.dashboardPage && locals.role === 'customer') { %>
+    <script src="/js/customer-dashboard.js"></script>
+    <script src="/js/reviews.js"></script>
+  <% } %>
+  <% if (locals.dashboardPage && locals.role === 'saheli') { %>
+    <script src="/js/reviews.js"></script>
+  <% } %>
+  
+</body>
+</html>

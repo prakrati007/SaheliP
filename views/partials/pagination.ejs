@@ -1,0 +1,55 @@
+<%
+// Build query string function to preserve all filters except page
+function buildPageUrl(pageNum) {
+  const params = new URLSearchParams();
+  
+  // Add all filters if they exist
+  if (filters) {
+    Object.keys(filters).forEach(key => {
+      if (filters[key] && key !== 'page') {
+        params.set(key, filters[key]);
+      }
+    });
+  }
+  
+  // Add the page parameter
+  params.set('page', pageNum);
+  
+  return '?' + params.toString();
+}
+%>
+
+<div class="pagination-container">
+  <% if (pagination.hasPrev) { %>
+    <a href="<%= buildPageUrl(pagination.currentPage - 1) %>" class="pagination-btn" aria-label="Previous page">
+      « Previous
+    </a>
+  <% } else { %>
+    <span class="pagination-btn pagination-btn-disabled" aria-disabled="true">
+      « Previous
+    </span>
+  <% } %>
+  
+  <% pagination.pages.forEach(function(page) { %>
+    <% if (page === '...') { %>
+      <span class="pagination-ellipsis">...</span>
+    <% } else if (page === pagination.currentPage) { %>
+      <span class="pagination-btn pagination-btn-active" aria-current="page"><%= page %></span>
+    <% } else { %>
+      <a href="<%= buildPageUrl(page) %>" class="pagination-btn" aria-label="Page <%= page %>">
+        <%= page %>
+      </a>
+    <% } %>
+  <% }) %>
+  
+  <% if (pagination.hasNext) { %>
+    <a href="<%= buildPageUrl(pagination.currentPage + 1) %>" class="pagination-btn" aria-label="Next page">
+      Next »
+    </a>
+  <% } else { %>
+    <span class="pagination-btn pagination-btn-disabled" aria-disabled="true">
+      Next »
+    </span>
+  <% } %>
+</div>
+

@@ -1,0 +1,61 @@
+
+<div class="profile-container">
+  <h1>Edit Profile</h1>
+  <% if (errors && errors.length) { %>
+    <% errors.forEach(function(error) { %>
+      <div class="alert alert-error"><%= error %></div>
+    <% }) %>
+  <% } %>
+  <form method="POST" action="/profile/edit" enctype="multipart/form-data" id="profileEditForm">
+    <div class="profile-picture-upload">
+      <label class="picture-upload-label" for="profilePic">
+        <% if (user.profilePic) { %>
+          <img src="<%= user.profilePic %>" alt="Profile Picture" class="profile-picture" />
+          Change Picture
+        <% } else { %>
+          <div class="profile-picture-placeholder"><%= user.name[0] %></div>
+          Upload Picture
+        <% } %>
+      </label>
+      <input type="file" id="profilePic" name="profilePic" accept="image/jpeg,image/png,image/webp" />
+      <div class="form-helper-text">Max 5MB, JPEG/PNG/WebP only</div>
+      <% if (user.profilePic) { %>
+        <button type="submit" class="remove-picture-btn" formaction="/profile/delete-picture" formmethod="POST">Remove Picture</button>
+      <% } %>
+      <div id="profile-picture-preview"></div>
+    </div>
+    <div class="form-section">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" value="<%= user.name %>" required minlength="2" maxlength="50" />
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" value="<%= user.email %>" readonly disabled />
+      <div class="form-helper-text">Email cannot be changed</div>
+      <label for="city">City</label>
+      <input type="text" id="city" name="city" value="<%= user.city %>" required minlength="2" maxlength="50" />
+      <label for="pincode">Pincode</label>
+      <input type="text" id="pincode" name="pincode" value="<%= user.pincode %>" required pattern="\d{6}" maxlength="6" />
+    </div>
+    <div class="form-section">
+      <label for="bio">Bio</label>
+      <textarea id="bio" name="bio" maxlength="500"><%= user.bio %></textarea>
+      <div class="character-counter" id="bioCounter"></div>
+      <label for="languages">Languages</label>
+      <input type="text" id="languages" name="languages" value="<%= user.languages ? user.languages.join(', ') : '' %>" placeholder="e.g., English, Hindi, Bengali" />
+      <div class="form-helper-text">Separate multiple languages with commas</div>
+    </div>
+    <% if (user.role === 'saheli') { %>
+      <div class="form-section">
+        <label for="experienceYears">Experience Years</label>
+        <input type="number" id="experienceYears" name="experienceYears" value="<%= user.experienceYears !== null ? user.experienceYears : '' %>" min="0" max="50" />
+        <label for="certifications">Certifications</label>
+        <textarea id="certifications" name="certifications"><%= user.certifications ? user.certifications.join(', ') : '' %></textarea>
+        <div class="form-helper-text">Separate multiple certifications with commas</div>
+      </div>
+    <% } %>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+      <a href="/profile/view" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+<script src="/js/profile.js"></script>

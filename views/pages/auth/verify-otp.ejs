@@ -1,0 +1,92 @@
+<div class="auth-container">
+  <div class="auth-header">
+    <h1>Verify Your Email</h1>
+    <p>We sent a 6-digit code to <strong><%= email %></strong></p>
+  </div>
+
+  <% if (locals.errors && errors.length > 0) { %>
+    <div class="alert alert-error">
+      <ul>
+        <% errors.forEach(error => { %>
+          <li><%= error %></li>
+        <% }) %>
+      </ul>
+    </div>
+  <% } %>
+
+  <form action="<%= locals.purpose === 'login_otp' ? '/auth/verify-login-otp' : '/auth/verify-otp' %>" method="POST" id="otpForm">
+    <input type="hidden" name="email" value="<%= email %>" />
+    <input type="hidden" name="token" value="<%= token %>" />
+    <input type="hidden" name="purpose" id="purposeValue" value="<%= locals.purpose || 'email_verify' %>" />
+    <input type="hidden" name="role" id="roleValue" value="<%= locals.role || '' %>" />
+
+    <div class="form-group">
+      <label class="form-label">Enter 6-Digit Code</label>
+      <div class="otp-inputs" id="otpInputs">
+        <input type="text" class="otp-input" maxlength="1" pattern="\d" required />
+        <input type="text" class="otp-input" maxlength="1" pattern="\d" required />
+        <input type="text" class="otp-input" maxlength="1" pattern="\d" required />
+        <input type="text" class="otp-input" maxlength="1" pattern="\d" required />
+        <input type="text" class="otp-input" maxlength="1" pattern="\d" required />
+        <input type="text" class="otp-input" maxlength="1" pattern="\d" required />
+      </div>
+      <input type="hidden" name="otp" id="otpValue" />
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;" id="verifyButton">
+      Verify
+    </button>
+  </form>
+
+  <div class="auth-footer">
+    <p>
+      Didn't receive code? 
+      <a href="#" id="resendLink" onclick="resendOtp(event)">Resend OTP</a>
+      <span id="countdown" style="display: none;"></span>
+    </p>
+  </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<script>
+  // Initialize OTP inputs on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    initOtpInputs();
+  });
+
+  // Resend OTP function
+  async function resendOtp(event) {
+    event.preventDefault();
+    
+  const email = '<%= email %>';
+  const purpose = document.getElementById('purposeValue').value;
+  const role = document.getElementById('roleValue').value;
+    const resendLink = document.getElementById('resendLink');
+    
+    try {
+      const response = await fetch('/auth/resend-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+  body: JSON.stringify({ email, purpose, role }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        showNotification(data.message, 'success');
+        startResendCooldown(60);
+        
+        // Update token if provided
+        if (data.token) {
+          document.querySelector('input[name="token"]').value = data.token;
+        }
+      } else {
+        showNotification(data.message, 'error');
+      }
+    } catch (error) {
+      showNotification('Failed to resend code. Please try again.', 'error');
+    }
+  }
+</script>

@@ -1,9 +1,17 @@
-<div class="search-page-container">
+<div class="search-page-modern">
   <div class="container">
-    <h1 class="page-title">Browse Services</h1>
-    <% if (services.length > 0) { %>
-      <p class="results-count">(<%= pagination.totalItems %> services found)</p>
-    <% } %>
+    <!-- Modern Header -->
+    <div class="search-header-modern">
+      <div class="search-header-content">
+        <h1 class="search-title-modern">Browse Services</h1>
+        <% if (services.length > 0) { %>
+          <p class="search-count-modern">
+            <span class="count-number"><%= pagination.totalItems %></span> services found
+          </p>
+        <% } %>
+      </div>
+      <div class="search-header-decoration"></div>
+    </div>
     
     <% if (locals.errors && errors.length > 0) { %>
       <div class="alert alert-error">
@@ -13,69 +21,112 @@
       </div>
     <% } %>
     
-    <div class="search-layout">
-      <!-- Filters Sidebar -->
-      <aside class="filters-sidebar">
-        <h2 class="filters-title">Filter Services</h2>
+    <div class="search-layout-modern">
+      <!-- Modern Filters Sidebar -->
+      <aside class="filters-sidebar-modern">
+        <div class="filters-header-modern">
+          <h2 class="filters-title-modern">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M2 4h16M5 10h10M8 16h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Filter Services
+          </h2>
+          <a href="/services" class="clear-all-btn">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Clear All
+          </a>
+        </div>
         
-        <form action="/services" method="GET" id="filterForm">
+        <form action="/services" method="GET" id="filterForm" class="filters-form-modern">
           <!-- Search Input -->
-          <div class="filter-section">
-            <label class="filter-label" for="search">Search</label>
+          <div class="filter-group-modern">
+            <label class="filter-label-modern" for="search">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M7 13A6 6 0 1 0 7 1a6 6 0 0 0 0 12zM15 15l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Search
+            </label>
             <input 
               type="text" 
               id="search" 
               name="search" 
-              class="filter-input" 
+              class="filter-input-modern" 
               placeholder="Search services..." 
               value="<%= filters.search || '' %>" 
             />
           </div>
           
           <!-- Category Filter -->
-          <div class="filter-section">
-            <label class="filter-label" for="category">Category</label>
-            <select id="category" name="category" class="filter-select">
-              <option value="">All Categories</option>
-              <% Object.keys(categories).forEach(function(catKey) { 
-                const category = categories[catKey];
-              %>
-                <option value="<%= catKey %>" <%= filters.category === catKey ? 'selected' : '' %>>
-                  <%= category.label %>
-                </option>
-              <% }) %>
-            </select>
+          <div class="filter-group-modern">
+            <label class="filter-label-modern" for="category">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+              Category
+            </label>
+            <div class="select-wrapper-modern">
+              <select id="category" name="category" class="filter-select-modern">
+                <option value="">All Categories</option>
+                <% Object.keys(categories).forEach(function(catKey) { 
+                  const category = categories[catKey];
+                %>
+                  <option value="<%= catKey %>" <%= filters.category === catKey ? 'selected' : '' %>>
+                    <%= category.label %>
+                  </option>
+                <% }) %>
+              </select>
+              <svg class="select-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
           </div>
           
           <!-- City Filter -->
-          <div class="filter-section">
-            <label class="filter-label" for="city">City</label>
+          <div class="filter-group-modern">
+            <label class="filter-label-modern" for="city">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" fill="currentColor"/>
+                <path d="M8 1a5 5 0 0 0-5 5c0 3 5 9 5 9s5-6 5-9a5 5 0 0 0-5-5z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              </svg>
+              City
+            </label>
             <input 
               type="text" 
               id="city" 
               name="city" 
-              class="filter-input" 
+              class="filter-input-modern" 
               placeholder="Enter city..." 
               value="<%= filters.city || '' %>" 
             />
           </div>
           
           <!-- Price Range -->
-          <div class="filter-section">
-            <label class="filter-label">Price Range (₹)</label>
-            <div class="filter-range">
+          <div class="filter-group-modern">
+            <label class="filter-label-modern">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 1v14M5 4h5a2 2 0 0 1 0 4H5M5 8h6a2 2 0 0 1 0 4H5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              Price Range (₹)
+            </label>
+            <div class="filter-range-modern">
               <input 
                 type="number" 
                 name="priceMin" 
-                class="filter-input" 
+                class="filter-input-modern filter-input-small" 
                 placeholder="Min" 
                 min="0" 
                 value="<%= filters.priceMin || '' %>" 
               />
+              <span class="range-separator">—</span>
               <input 
                 type="number" 
                 name="priceMax" 
-                class="filter-input" 
+                class="filter-input-modern filter-input-small" 
                 placeholder="Max" 
                 min="0" 
                 value="<%= filters.priceMax || '' %>" 
@@ -84,59 +135,99 @@
           </div>
           
           <!-- Minimum Rating -->
-          <div class="filter-section">
-            <label class="filter-label">Minimum Rating</label>
-            <div class="filter-stars" id="ratingFilter">
+          <div class="filter-group-modern">
+            <label class="filter-label-modern">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 1l2 5h5l-4 3 1.5 5L8 11l-4.5 3L5 9 1 6h5l2-5z" fill="currentColor"/>
+              </svg>
+              Minimum Rating
+            </label>
+            <div class="rating-filter-modern" id="ratingFilter">
               <% for (let i = 1; i <= 5; i++) { %>
-                <span class="star <%= filters.rating && parseInt(filters.rating) >= i ? 'active' : '' %>" data-rating="<%= i %>">★</span>
+                <button type="button" class="star-btn <%= filters.rating && parseInt(filters.rating) >= i ? 'active' : '' %>" data-rating="<%= i %>">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7l3-7z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+                  </svg>
+                </button>
               <% } %>
             </div>
             <input type="hidden" name="rating" id="ratingInput" value="<%= filters.rating || '' %>" />
           </div>
           
           <!-- Availability Date -->
-          <div class="filter-section">
-            <label class="filter-label" for="availableDate">Available On</label>
+          <div class="filter-group-modern">
+            <label class="filter-label-modern" for="availableDate">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <rect x="2" y="3" width="12" height="11" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <path d="M5 1v3M11 1v3M2 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              Available On
+            </label>
             <input 
               type="date" 
               id="availableDate" 
               name="availableDate" 
-              class="filter-input" 
+              class="filter-input-modern" 
               min="<%= new Date().toISOString().split('T')[0] %>" 
               value="<%= filters.availableDate || '' %>" 
             />
           </div>
           
           <!-- Sort Options -->
-          <div class="filter-section">
-            <label class="filter-label" for="sort">Sort By</label>
-            <select id="sort" name="sort" class="filter-select">
-              <option value="newest" <%= filters.sort === 'newest' ? 'selected' : '' %>>Newest First</option>
-              <option value="price-low" <%= filters.sort === 'price-low' ? 'selected' : '' %>>Price: Low to High</option>
-              <option value="price-high" <%= filters.sort === 'price-high' ? 'selected' : '' %>>Price: High to Low</option>
-              <option value="rating" <%= filters.sort === 'rating' ? 'selected' : '' %>>Highest Rated</option>
-            </select>
+          <div class="filter-group-modern">
+            <label class="filter-label-modern" for="sort">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 5h10M3 8h7M3 11h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Sort By
+            </label>
+            <div class="select-wrapper-modern">
+              <select id="sort" name="sort" class="filter-select-modern">
+                <option value="newest" <%= filters.sort === 'newest' ? 'selected' : '' %>>Newest First</option>
+                <option value="price-low" <%= filters.sort === 'price-low' ? 'selected' : '' %>>Price: Low to High</option>
+                <option value="price-high" <%= filters.sort === 'price-high' ? 'selected' : '' %>>Price: High to Low</option>
+                <option value="rating" <%= filters.sort === 'rating' ? 'selected' : '' %>>Highest Rated</option>
+              </select>
+              <svg class="select-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
           </div>
           
           <!-- Filter Actions -->
-          <div class="filter-actions">
-            <button type="submit" class="btn btn-primary apply-filters-btn">Apply Filters</button>
-            <a href="/services" class="clear-filters-link">Clear Filters</a>
+          <div class="filter-actions-modern">
+            <button type="submit" class="btn-apply-filters">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M16 5l-8 8-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Apply Filters</span>
+            </button>
           </div>
         </form>
       </aside>
       
       <!-- Search Results -->
-      <main class="search-results">
+      <main class="search-results-modern">
         <% if (services.length === 0) { %>
-          <div class="empty-state">
-            <p class="empty-state-icon">🔍</p>
-            <h3>No services found matching your criteria</h3>
-            <p>Try adjusting your filters or search terms</p>
-            <a href="/services" class="btn btn-outline">Clear Filters</a>
+          <div class="empty-state-modern">
+            <div class="empty-state-icon">
+              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                <circle cx="32" cy="32" r="14" stroke="currentColor" stroke-width="4"/>
+                <path d="M42 42l16 16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                <path d="M50 30l8-8M58 38l8-8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="empty-state-title">No services found</h3>
+            <p class="empty-state-text">Try adjusting your filters or search terms to find what you're looking for</p>
+            <a href="/services" class="btn-empty-state">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M2.5 10h15M10 2.5v15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Clear All Filters
+            </a>
           </div>
         <% } else { %>
-          <div class="results-grid">
+          <div class="results-grid-modern">
             <% services.forEach(function(service) { %>
               <%- include('../../partials/service-card', { service: service, showActions: false }) %>
             <% }) %>
@@ -151,3 +242,5 @@
     </div>
   </div>
 </div>
+
+<script src="/js/search-filters.js"></script>

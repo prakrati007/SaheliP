@@ -1,59 +1,115 @@
-<div class="service-card">
-  <a href="/service/<%= service._id %>" class="service-card-image">
-    <% if (service.images && service.images.length > 0) { %>
-      <img src="<%= service.images[0] %>" alt="<%= service.title %>" loading="lazy" />
-    <% } else if (service.primaryImage) { %>
-      <img src="<%= service.primaryImage %>" alt="<%= service.title %>" loading="lazy" />
-    <% } else { %>
-      <div class="service-card-placeholder">No Image</div>
-    <% } %>
+<div class="service-card-modern">
+  <a href="/service/<%= service._id %>" class="service-card-link-modern">
+    <div class="service-card-image-modern">
+      <% if (service.images && service.images.length > 0) { %>
+        <img src="<%= service.images[0] %>" alt="<%= service.title %>" loading="lazy" />
+        <div class="service-card-overlay"></div>
+      <% } else if (service.primaryImage) { %>
+        <img src="<%= service.primaryImage %>" alt="<%= service.title %>" loading="lazy" />
+        <div class="service-card-overlay"></div>
+      <% } else { %>
+        <div class="service-card-placeholder-modern">
+          <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+            <rect x="10" y="10" width="40" height="40" rx="4" stroke="currentColor" stroke-width="2"/>
+            <path d="M20 35l8-8 5 5 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="25" cy="22" r="3" fill="currentColor"/>
+          </svg>
+          <span>No Image</span>
+        </div>
+      <% } %>
+      <div class="service-card-badges">
+        <span class="badge-category-modern"><%= service.category %></span>
+        <span class="badge-mode-modern"><%= service.mode %></span>
+      </div>
+    </div>
+    
+    <div class="service-card-content-modern">
+      <h3 class="service-card-title-modern"><%= service.title %></h3>
+      
+      <% if (service.providerId && service.providerId.name) { %>
+        <div class="service-card-provider-modern">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M7 7a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM7 8.5a5 5 0 0 0-5 3.5h10a5 5 0 0 0-5-3.5z" fill="currentColor"/>
+          </svg>
+          <%= service.providerId.name %>
+        </div>
+      <% } %>
+      
+      <% if (service.description) { %>
+        <p class="service-card-description-modern"><%= service.description.substring(0, 100) %><%= service.description.length > 100 ? '...' : '' %></p>
+      <% } %>
+      
+      <div class="service-card-location-modern">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" fill="currentColor"/>
+          <path d="M7 1a4 4 0 0 0-4 4c0 2.5 4 7 4 7s4-4.5 4-7a4 4 0 0 0-4-4z" stroke="currentColor" stroke-width="1.2" fill="none"/>
+        </svg>
+        <span><%= service.city %></span>
+        <% if ((service.mode === 'Onsite' || service.mode === 'Hybrid') && service.serviceRadius) { %>
+          <span class="service-radius">• <%= service.serviceRadius %> km</span>
+        <% } %>
+      </div>
+    </div>
   </a>
-  <div class="service-card-content">
-    <span class="badge badge-category"><%= service.category %></span>
-    <a href="/service/<%= service._id %>" class="service-card-title-link">
-      <h3 class="service-card-title"><%= service.title %></h3>
-    </a>
-    <% if (service.providerId && service.providerId.name) { %>
-      <div class="service-card-provider text-small text-muted">By <%= service.providerId.name %></div>
-    <% } %>
-    <p class="service-card-description"><%= service.description ? service.description.substring(0, 100) : '' %></p>
-    <div class="service-card-price">
+  
+  <div class="service-card-footer-modern">
+    <div class="service-card-price-modern">
       <% if (service.pricingType === 'Hourly') { %>
-        ₹<%= service.basePrice %>/hour
+        <span class="price-amount">₹<%= service.basePrice %></span>
+        <span class="price-unit">/hour</span>
       <% } else if (service.pricingType === 'Fixed') { %>
-        ₹<%= service.basePrice %>
+        <span class="price-amount">₹<%= service.basePrice %></span>
       <% } else if (service.pricingType === 'Package' && service.packages && service.packages.length) { %>
         <%
-        // Calculate minimum package price (find cheapest package)
         const minPackagePrice = Math.min(...service.packages.map(p => p.price || 0));
         %>
-        From ₹<%= minPackagePrice %>
+        <span class="price-label">From</span>
+        <span class="price-amount">₹<%= minPackagePrice %></span>
       <% } %>
     </div>
-    <div class="service-card-location text-small">
-      <i class="icon-location"></i> <%= service.city %>
-      <% if ((service.mode === 'Onsite' || service.mode === 'Hybrid') && service.serviceRadius) { %>
-        • <%= service.serviceRadius %> km
+    
+    <div class="service-card-meta-modern">
+      <% if (service.averageRating > 0) { %>
+        <span class="service-rating-modern">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M7 1l1.5 4h4l-3.5 2.5 1.5 4.5L7 9.5 3.5 12 5 7.5 1.5 5h4L7 1z" fill="#FFD700"/>
+          </svg>
+          <%= service.averageRating.toFixed(1) %>
+        </span>
       <% } %>
+      <span class="service-views-modern">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 3C4 3 1.5 5.5 1 7c.5 1.5 3 4 6 4s5.5-2.5 6-4c-.5-1.5-3-4-6-4z" stroke="currentColor" stroke-width="1.2" fill="none"/>
+          <circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2" fill="none"/>
+        </svg>
+        <%= service.viewCount %>
+      </span>
     </div>
-    <span class="badge badge-mode"><%= service.mode %></span>
   </div>
-  <div class="service-card-footer">
-    <% if (service.averageRating > 0) { %>
-      <span class="service-card-rating">★ <%= service.averageRating.toFixed(1) %></span>
-    <% } %>
-    <span class="service-card-views"><i class="icon-eye"></i> <%= service.viewCount %></span>
-    <% if (showActions) { %>
-      <div class="service-card-actions">
-        <a href="/services/<%= service._id %>/edit" class="btn btn-outline btn-sm">Edit</a>
-        <button class="btn btn-secondary btn-sm toggle-status-btn" data-id="<%= service._id %>">
-          <%= service.isPaused ? 'Activate' : 'Pause' %>
-        </button>
-        <button class="btn btn-danger btn-sm delete-service-btn" data-id="<%= service._id %>">Delete</button>
-      </div>
-      <span class="badge <%= service.isPaused ? 'badge-status-paused' : 'badge-status-active' %>">
+  
+  <% if (showActions) { %>
+    <div class="service-card-actions-modern">
+      <a href="/services/<%= service._id %>/edit" class="btn-action-modern btn-edit">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M11.5 2l2.5 2.5L6 12.5H3.5V10L11.5 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Edit
+      </a>
+      <button class="btn-action-modern btn-toggle toggle-status-btn" data-id="<%= service._id %>">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M<%= service.isPaused ? '5 8l3 3 5-5' : '4 4l8 8M12 4l-8 8' %>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <%= service.isPaused ? 'Activate' : 'Pause' %>
+      </button>
+      <button class="btn-action-modern btn-delete delete-service-btn" data-id="<%= service._id %>">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M2 4h12M5 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1m2 0v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4h10z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Delete
+      </button>
+      <span class="badge-status-modern <%= service.isPaused ? 'badge-paused' : 'badge-active' %>">
         <%= service.isPaused ? 'Paused' : 'Active' %>
       </span>
-    <% } %>
-  </div>
+    </div>
+  <% } %>
 </div>

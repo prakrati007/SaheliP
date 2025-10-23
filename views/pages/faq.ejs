@@ -1,0 +1,302 @@
+<div class="bg-gradient-pink py-20 text-center">
+  <div class="container mx-auto px-4">
+    <h1 class="text-4xl md:text-5xl font-bold text-charcoal mb-6">Frequently Asked Questions</h1>
+    <p class="text-xl text-charcoal/80">Find answers to common questions about Saheli Plus</p>
+  </div>
+</div>
+
+<div class="container mx-auto px-4 py-16">
+  <div class="max-w-4xl mx-auto">
+    <!-- Search Box -->
+    <div class="mb-12">
+      <input 
+        type="text" 
+        id="faqSearch" 
+        placeholder="Search FAQs..." 
+        class="input-field"
+      >
+    </div>
+
+    <!-- Category Filters -->
+    <div class="flex flex-wrap gap-3 mb-8">
+      <button class="faq-category-btn bg-pink-200 text-white px-6 py-2 rounded-full font-semibold transition-all" data-category="all">
+        All
+      </button>
+      <button class="faq-category-btn bg-white text-charcoal/60 px-6 py-2 rounded-full font-semibold hover:bg-pink-50 transition-all" data-category="customers">
+        For Customers
+      </button>
+      <button class="faq-category-btn bg-white text-charcoal/60 px-6 py-2 rounded-full font-semibold hover:bg-pink-50 transition-all" data-category="providers">
+        For Providers
+      </button>
+      <button class="faq-category-btn bg-white text-charcoal/60 px-6 py-2 rounded-full font-semibold hover:bg-pink-50 transition-all" data-category="payments">
+        Payments
+      </button>
+      <button class="faq-category-btn bg-white text-charcoal/60 px-6 py-2 rounded-full font-semibold hover:bg-pink-50 transition-all" data-category="bookings">
+        Bookings
+      </button>
+    </div>
+
+    <!-- FAQ Accordion -->
+    <div class="space-y-4" id="faqAccordion">
+      <!-- For Customers -->
+      <div class="faq-item card overflow-hidden" data-category="customers">
+        <button class="faq-question w-full text-left px-6 py-4 font-semibold text-charcoal hover:bg-pink-50 transition-colors flex items-center justify-between">
+          <span>How do I book a service?</span>
+          <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="faq-answer hidden px-6 py-4 bg-pink-50/30 border-t border-pink-100">
+          <p class="text-charcoal/80">
+            Browse services, select one that fits your needs, click "Book Now", choose date/time, provide your address, 
+            and complete the advance payment through Razorpay. You'll receive a confirmation email with booking details.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item card overflow-hidden" data-category="customers">
+        <button class="faq-question w-full text-left px-6 py-4 font-semibold text-charcoal hover:bg-pink-50 transition-colors flex items-center justify-between">
+          <span>How do payments work?</span>
+          <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="faq-answer hidden px-6 py-4 bg-pink-50/30 border-t border-pink-100">
+          <p class="text-charcoal/80">
+            You pay an advance (typically 20-30%) when booking. The remaining amount is paid after the service is completed. 
+            All payments are processed securely through Razorpay.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item card overflow-hidden" data-category="customers">
+        <button class="faq-question w-full text-left px-6 py-4 font-semibold text-charcoal hover:bg-pink-50 transition-colors flex items-center justify-between">
+          <span>Can I cancel a booking?</span>
+          <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="faq-answer hidden px-6 py-4 bg-pink-50/30 border-t border-pink-100">
+          <p class="text-charcoal/80">
+            Yes, you can cancel. Refund amount depends on timing: >48 hours (100%), 24-48 hours (75%), 
+            12-24 hours (50%), 6-12 hours (25%), <6 hours (no refund). See our Refund Policy for details.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item card overflow-hidden" data-category="customers">
+        <button class="faq-question w-full text-left px-6 py-4 font-semibold text-charcoal hover:bg-pink-50 transition-colors flex items-center justify-between">
+          <span>How do I leave a review?</span>
+          <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="faq-answer hidden px-6 py-4 bg-pink-50/30 border-t border-pink-100">
+          <p class="text-charcoal/80">
+            After a service is completed, you'll see a "Rate & Review" button in your dashboard. You can rate the service (1-5 stars), 
+            write a review, and optionally upload a photo. You can edit your review within 24 hours.
+          </p>
+        </div>
+      </div>
+
+      <!-- For Providers -->
+      <div class="faq-item card overflow-hidden" data-category="providers">
+        <button class="faq-question w-full text-left px-6 py-4 font-semibold text-charcoal hover:bg-pink-50 transition-colors flex items-center justify-between">
+          <span>How do I become a Saheli provider?</span>
+          <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="faq-answer hidden px-6 py-4 bg-pink-50/30 border-t border-pink-100">
+          <p class="text-charcoal/80">
+            Sign up as a Saheli, verify your email, complete your profile with experience and certifications, 
+            and create your first service listing. Once approved, you can start receiving bookings.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item card overflow-hidden" data-category="providers">
+        <button class="faq-question w-full text-left px-6 py-4 font-semibold text-charcoal hover:bg-pink-50 transition-colors flex items-center justify-between">
+          <span>How do I receive payments?</span>
+          <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="faq-answer hidden px-6 py-4 bg-pink-50/30 border-t border-pink-100">
+          <p class="text-charcoal/80">
+            Currently, customers pay the remaining amount directly after service completion. Future updates will include 
+            automated payouts to your registered bank account.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item card overflow-hidden" data-category="providers">
+        <button class="faq-question w-full text-left px-6 py-4 font-semibold text-charcoal hover:bg-pink-50 transition-colors flex items-center justify-between">
+          <span>What is the verification badge?</span>
+          <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="faq-answer hidden px-6 py-4 bg-pink-50/30 border-t border-pink-100">
+          <p class="text-charcoal/80">
+            Complete 10 bookings with good ratings to earn a verification badge. This increases your visibility 
+            and builds trust with potential customers.
+          </p>
+        </div>
+      </div>
+
+      <!-- Payments -->
+      <div class="faq-item card overflow-hidden" data-category="payments">
+        <button class="faq-question w-full text-left px-6 py-4 font-semibold text-charcoal hover:bg-pink-50 transition-colors flex items-center justify-between">
+          <span>Is my payment information secure?</span>
+          <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="faq-answer hidden px-6 py-4 bg-pink-50/30 border-t border-pink-100">
+          <p class="text-charcoal/80">
+            Yes, all payments are processed through Razorpay, a PCI DSS certified payment gateway. 
+            We never store your card details on our servers.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item card overflow-hidden" data-category="payments">
+        <button class="faq-question w-full text-left px-6 py-4 font-semibold text-charcoal hover:bg-pink-50 transition-colors flex items-center justify-between">
+          <span>What payment methods are accepted?</span>
+          <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="faq-answer hidden px-6 py-4 bg-pink-50/30 border-t border-pink-100">
+          <p class="text-charcoal/80">
+            We accept credit/debit cards, net banking, UPI, and popular wallets through Razorpay.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item card overflow-hidden" data-category="payments">
+        <button class="faq-question w-full text-left px-6 py-4 font-semibold text-charcoal hover:bg-pink-50 transition-colors flex items-center justify-between">
+          <span>How long do refunds take?</span>
+          <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="faq-answer hidden px-6 py-4 bg-pink-50/30 border-t border-pink-100">
+          <p class="text-charcoal/80">
+            Refunds are processed within 1-2 business days and typically reflect in your account within 5-7 business days, 
+            depending on your bank.
+          </p>
+        </div>
+      </div>
+
+      <!-- Bookings -->
+      <div class="faq-item card overflow-hidden" data-category="bookings">
+        <button class="faq-question w-full text-left px-6 py-4 font-semibold text-charcoal hover:bg-pink-50 transition-colors flex items-center justify-between">
+          <span>What is auto-start and auto-complete?</span>
+          <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="faq-answer hidden px-6 py-4 bg-pink-50/30 border-t border-pink-100">
+          <p class="text-charcoal/80">
+            Bookings automatically start 15 minutes after scheduled time and auto-complete 30 minutes after end time 
+            if not manually updated. This ensures smooth tracking and timely payments.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item card overflow-hidden" data-category="bookings">
+        <button class="faq-question w-full text-left px-6 py-4 font-semibold text-charcoal hover:bg-pink-50 transition-colors flex items-center justify-between">
+          <span>Can I reschedule a booking?</span>
+          <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div class="faq-answer hidden px-6 py-4 bg-pink-50/30 border-t border-pink-100">
+          <p class="text-charcoal/80">
+            Currently, rescheduling requires cancellation and rebooking. This feature is planned for future updates. 
+            Check cancellation policy before making changes.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Still Have Questions? -->
+    <div class="mt-12 text-center bg-gradient-pink p-12 rounded-3xl">
+      <h2 class="text-2xl font-bold text-charcoal mb-4">Still have questions?</h2>
+      <p class="text-charcoal/80 mb-6">Can't find what you're looking for? Contact our support team.</p>
+      <a href="/contact" class="btn-primary inline-block">
+        Contact Support
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const questions = document.querySelectorAll('.faq-question');
+  const categoryBtns = document.querySelectorAll('.faq-category-btn');
+  const searchInput = document.getElementById('faqSearch');
+  const faqItems = document.querySelectorAll('.faq-item');
+
+  // Accordion functionality
+  questions.forEach(question => {
+    question.addEventListener('click', () => {
+      const answer = question.nextElementSibling;
+      const icon = question.querySelector('svg');
+      const isOpen = !answer.classList.contains('hidden');
+
+      // Close all answers
+      document.querySelectorAll('.faq-answer').forEach(a => a.classList.add('hidden'));
+      document.querySelectorAll('.faq-question svg').forEach(i => i.classList.remove('rotate-180'));
+
+      // Toggle current answer
+      if (!isOpen) {
+        answer.classList.remove('hidden');
+        icon.classList.add('rotate-180');
+      }
+    });
+  });
+
+  // Category filtering
+  categoryBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const category = btn.dataset.category;
+      
+      // Update active button
+      categoryBtns.forEach(b => {
+        b.classList.remove('bg-pink-200', 'text-white');
+        b.classList.add('bg-white', 'text-charcoal/60');
+      });
+      btn.classList.add('bg-pink-200', 'text-white');
+      btn.classList.remove('bg-white', 'text-charcoal/60');
+
+      // Filter FAQ items
+      faqItems.forEach(item => {
+        if (category === 'all' || item.dataset.category === category) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  // Search functionality
+  searchInput.addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    
+    faqItems.forEach(item => {
+      const question = item.querySelector('.faq-question').textContent.toLowerCase();
+      const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+      
+      if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+        item.classList.remove('hidden');
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+  });
+});
+</script>

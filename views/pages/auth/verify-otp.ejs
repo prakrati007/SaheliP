@@ -1,16 +1,15 @@
-<div class="auth-container">
+<div class="auth-page">
+  <div class="auth-container">
   <div class="auth-header">
     <h1>Verify Your Email</h1>
-    <p>We sent a 6-digit code to <strong><%= email %></strong></p>
+    <p>📧 We sent a 6-digit code to <strong><%= email %></strong></p>
   </div>
 
   <% if (locals.errors && errors.length > 0) { %>
-    <div class="alert alert-error">
-      <ul>
+    <div class="error-message">
         <% errors.forEach(error => { %>
-          <li><%= error %></li>
+          <p>❌ <%= error %></p>
         <% }) %>
-      </ul>
     </div>
   <% } %>
 
@@ -21,7 +20,7 @@
     <input type="hidden" name="role" id="roleValue" value="<%= locals.role || '' %>" />
 
     <div class="form-group">
-      <label class="form-label">Enter 6-Digit Code</label>
+      <label class="form-label" style="text-align: center; display: block;">Enter 6-Digit Code</label>
       <div class="otp-inputs" id="otpInputs">
         <input type="text" class="otp-input" maxlength="1" pattern="\d" required />
         <input type="text" class="otp-input" maxlength="1" pattern="\d" required />
@@ -33,7 +32,8 @@
       <input type="hidden" name="otp" id="otpValue" />
     </div>
 
-    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;" id="verifyButton">
+    <button type="submit" class="btn-primary" id="verifyButton">
+      ✅
       Verify
     </button>
   </form>
@@ -41,9 +41,10 @@
   <div class="auth-footer">
     <p>
       Didn't receive code? 
-      <a href="#" id="resendLink" onclick="resendOtp(event)">Resend OTP</a>
+      <a href="#" class="resend-link" id="resendLink" onclick="resendOtp(event)">Resend OTP</a>
       <span id="countdown" style="display: none;"></span>
     </p>
+  </div>
   </div>
 </div>
 

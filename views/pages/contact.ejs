@@ -1,0 +1,181 @@
+<div class="bg-gradient-pink py-20 text-center">
+  <div class="container mx-auto px-4">
+    <h1 class="text-4xl md:text-5xl font-bold text-charcoal mb-6">Contact Us</h1>
+    <p class="text-xl text-charcoal/80">We'd love to hear from you. Get in touch with our team.</p>
+  </div>
+</div>
+
+<div class="container mx-auto px-4 py-16">
+  <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+    <!-- Contact Form -->
+    <div>
+      <h2 class="text-2xl font-bold text-charcoal mb-6">Send us a Message</h2>
+      <form action="/contact/submit" method="POST" class="glass-card p-8 space-y-6">
+        <div>
+          <label for="name" class="block text-sm font-semibold text-charcoal mb-2">Full Name *</label>
+          <input 
+            type="text" 
+            id="name" 
+            name="name" 
+            required 
+            minlength="2"
+            maxlength="100"
+            class="input-field"
+            placeholder="Enter your name"
+          >
+        </div>
+        
+        <div>
+          <label for="email" class="block text-sm font-semibold text-charcoal mb-2">Email Address *</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            required 
+            class="input-field"
+            placeholder="your@email.com"
+          >
+        </div>
+        
+        <div>
+          <label for="subject" class="block text-sm font-semibold text-charcoal mb-2">Subject *</label>
+          <select id="subject" name="subject" required class="input-field">
+            <option value="">Select a subject</option>
+            <option value="General Inquiry">General Inquiry</option>
+            <option value="Service Issue">Service Issue</option>
+            <option value="Payment Issue">Payment Issue</option>
+            <option value="Technical Support">Technical Support</option>
+            <option value="Partnership">Partnership Opportunity</option>
+            <option value="Feedback">Feedback</option>
+          </select>
+        </div>
+        
+        <div>
+          <label for="message" class="block text-sm font-semibold text-charcoal mb-2">Message *</label>
+          <textarea 
+            id="message" 
+            name="message" 
+            required 
+            minlength="20"
+            maxlength="1000"
+            rows="6"
+            class="textarea-field"
+            placeholder="Tell us how we can help..."
+          ></textarea>
+          <p class="text-xs text-charcoal/60 mt-2">Minimum 20 characters</p>
+        </div>
+        
+        <button type="submit" class="btn-primary w-full">
+          Send Message
+        </button>
+      </form>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="space-y-6">
+      <h2 class="text-2xl font-bold text-charcoal mb-6">Get in Touch</h2>
+      
+      <!-- Email Card -->
+      <div class="bg-gradient-soft p-6 rounded-2xl shadow-md hover:shadow-lg transition-all">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 bg-pink-100 text-white rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+            ✉️
+          </div>
+          <div>
+            <h3 class="font-bold text-charcoal mb-2">Email Us</h3>
+            <a href="mailto:support@saheliplus.com" class="text-pink-200 hover:text-pink-300 transition-colors">
+              support@saheliplus.com
+            </a>
+            <p class="text-sm text-charcoal/60 mt-1">We'll respond within 24-48 hours</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone Card -->
+      <div class="bg-gradient-soft p-6 rounded-2xl shadow-md hover:shadow-lg transition-all">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 bg-pink-100 text-white rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+            📞
+          </div>
+          <div>
+            <h3 class="font-bold text-charcoal mb-2">Call Us</h3>
+            <a href="tel:+911234567890" class="text-pink-200 hover:text-pink-300 transition-colors">
+              +91 123 456 7890
+            </a>
+            <p class="text-sm text-charcoal/60 mt-1">Mon-Sat, 9 AM - 6 PM IST</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Address Card -->
+      <div class="bg-gradient-soft p-6 rounded-2xl shadow-md hover:shadow-lg transition-all">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 bg-pink-100 text-white rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+            📍
+          </div>
+          <div>
+            <h3 class="font-bold text-charcoal mb-2">Visit Us</h3>
+            <p class="text-charcoal/70">
+              Saheli Plus Headquarters<br>
+              123 Innovation Street<br>
+              Tech Park, Bangalore 560001<br>
+              Karnataka, India
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social Media -->
+      <div class="bg-gradient-soft p-6 rounded-2xl shadow-md">
+        <h3 class="font-bold text-charcoal mb-4">Follow Us</h3>
+        <div class="flex gap-4">
+          <a href="#" class="w-12 h-12 bg-pink-100 text-white rounded-xl flex items-center justify-center hover:bg-pink-200 hover:scale-110 transition-all text-xl">
+            📘
+          </a>
+          <a href="#" class="w-12 h-12 bg-pink-100 text-white rounded-xl flex items-center justify-center hover:bg-pink-200 hover:scale-110 transition-all text-xl">
+            📷
+          </a>
+          <a href="#" class="w-12 h-12 bg-pink-100 text-white rounded-xl flex items-center justify-center hover:bg-pink-200 hover:scale-110 transition-all text-xl">
+            🐦
+          </a>
+          <a href="#" class="w-12 h-12 bg-pink-100 text-white rounded-xl flex items-center justify-center hover:bg-pink-200 hover:scale-110 transition-all text-xl">
+            💼
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="bg-pink-50 border-l-4 border-pink-200 p-6 rounded-r-xl">
+        <h3 class="font-bold text-charcoal mb-3">Need Quick Help?</h3>
+        <ul class="space-y-2">
+          <li>
+            <a href="/faq" class="text-pink-200 hover:text-pink-300 transition-colors flex items-center gap-2">
+              <span>→</span> Check our FAQ
+            </a>
+          </li>
+          <li>
+            <a href="/refund" class="text-pink-200 hover:text-pink-300 transition-colors flex items-center gap-2">
+              <span>→</span> Refund Policy
+            </a>
+          </li>
+          <li>
+            <a href="/terms" class="text-pink-200 hover:text-pink-300 transition-colors flex items-center gap-2">
+              <span>→</span> Terms of Service
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Map Section (Optional) -->
+<div class="bg-gradient-soft py-12">
+  <div class="container mx-auto px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="bg-pink-100/20 h-96 rounded-3xl shadow-lg flex items-center justify-center">
+        <p class="text-charcoal/60">📍 Map integration coming soon</p>
+      </div>
+    </div>
+  </div>
+</div>

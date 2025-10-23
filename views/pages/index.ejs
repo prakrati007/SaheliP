@@ -1,34 +1,86 @@
 <!-- Hero Section -->
-<section class="hero">
+<section class="hero-modern">
+  <div class="hero-background-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
   <div class="container">
-    <div class="hero-content">
-      <h1 class="hero-title">Empowering Women, One Service at a Time</h1>
-      <p class="hero-subtitle">
-        Connect with skilled women professionals or offer your services to build a thriving community
+    <div class="hero-content-modern">
+      <div class="hero-badge">✨ Empowering Women Entrepreneurs</div>
+      <h1 class="hero-title-modern">
+        Your Trusted Platform for
+        <span class="gradient-text">Women-Led Services</span>
+      </h1>
+      <p class="hero-subtitle-modern">
+        Connect with skilled women professionals or showcase your expertise to build a thriving community of support and growth
       </p>
       
-      <!-- Search Bar -->
-      <div class="search-bar">
-        <form action="/services" method="GET">
-          <input type="text" name="search" class="search-input" placeholder="What service are you looking for?" />
-          <input type="text" name="city" class="search-input" placeholder="Enter your city" />
-          <button type="submit" class="btn btn-primary search-btn">Search Services</button>
+      <!-- Modern Search Bar -->
+      <div class="search-bar-modern">
+        <form action="/services" method="GET" class="search-form-modern">
+          <div class="search-input-group">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <input type="text" name="search" class="search-input-modern" placeholder="Search for services (e.g., makeup artist, yoga trainer)" />
+          </div>
+          <div class="search-input-group">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 11c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zM10 13c-4.42 0-8 2.24-8 5v2h16v-2c0-2.76-3.58-5-8-5z" fill="currentColor"/>
+            </svg>
+            <input type="text" name="city" class="search-input-modern" placeholder="Enter your city" />
+          </div>
+          <button type="submit" class="search-btn-modern">
+            <span>Search</span>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M5 10h10M10 5l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
         </form>
       </div>
       
-      <div class="hero-cta">
-        <a href="/services" class="btn btn-primary btn-large">Browse All Services</a>
-        <a href="/auth/signup?type=provider" class="btn btn-secondary btn-large">List Your Service</a>
+      <div class="hero-cta-modern">
+        <a href="/services" class="btn-modern btn-primary-modern">
+          <span>Browse All Services</span>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M5 10h10M10 5l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="/auth/signup?type=provider" class="btn-modern btn-secondary-modern">
+          <span>List Your Service</span>
+        </a>
+      </div>
+      
+      <!-- Stats Section -->
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-number">500+</div>
+          <div class="stat-label">Active Providers</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-number">1000+</div>
+          <div class="stat-label">Services Listed</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-number">5000+</div>
+          <div class="stat-label">Happy Customers</div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- Service Categories Section -->
-<section class="categories-section">
+<section class="categories-section-modern">
   <div class="container">
-    <h2 class="section-title">Popular Service Categories</h2>
-    <div class="categories-grid">
+    <div class="section-header-modern">
+      <h2 class="section-title-modern">Explore Popular Categories</h2>
+      <p class="section-subtitle-modern">Discover a wide range of services tailored to your needs</p>
+    </div>
+    <div class="categories-grid-modern">
       <% Object.keys(categories).forEach(function(catKey) { 
         const category = categories[catKey];
         const iconMap = {
@@ -44,11 +96,14 @@
         const icon = iconMap[category.label] || '✨';
         const subcatList = category.subcategories ? category.subcategories.slice(0, 3).join(', ') : '';
       %>
-        <a href="/services?category=<%= encodeURIComponent(catKey) %>" class="category-card-link">
-          <div class="category-card clickable">
-            <div class="category-icon"><%= icon %></div>
-            <h3><%= category.label %></h3>
-            <p><%= subcatList %></p>
+        <a href="/services?category=<%= encodeURIComponent(catKey) %>" class="category-card-modern">
+          <div class="category-icon-modern"><%= icon %></div>
+          <h3 class="category-title-modern"><%= category.label %></h3>
+          <p class="category-subtitle-modern"><%= subcatList %></p>
+          <div class="category-arrow">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M5 10h10M10 5l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
         </a>
       <% }) %>
@@ -57,57 +112,94 @@
 </section>
 
 <!-- How It Works Section -->
-<section class="how-it-works">
+<section class="how-it-works-modern">
   <div class="container">
-    <h2 class="section-title">How It Works</h2>
-    <div class="steps-grid">
-      <div class="step-card">
-        <div class="step-number">1</div>
-        <h3>Create Your Profile</h3>
-        <p>Sign up as a service seeker or provider and complete your profile</p>
+    <div class="section-header-modern">
+      <h2 class="section-title-modern">How It Works</h2>
+      <p class="section-subtitle-modern">Get started in four simple steps</p>
+    </div>
+    <div class="steps-grid-modern">
+      <div class="step-card-modern">
+        <div class="step-number-modern">
+          <span>01</span>
+        </div>
+        <div class="step-icon-modern">👤</div>
+        <h3 class="step-title-modern">Create Your Profile</h3>
+        <p class="step-description-modern">Sign up as a service seeker or provider and complete your profile with your details</p>
       </div>
-      <div class="step-card">
-        <div class="step-number">2</div>
-        <h3>Browse or List Services</h3>
-        <p>Find the perfect service or showcase what you offer</p>
+      <div class="step-connector"></div>
+      <div class="step-card-modern">
+        <div class="step-number-modern">
+          <span>02</span>
+        </div>
+        <div class="step-icon-modern">🔍</div>
+        <h3 class="step-title-modern">Browse or List Services</h3>
+        <p class="step-description-modern">Find the perfect service that matches your needs or showcase what you offer</p>
       </div>
-      <div class="step-card">
-        <div class="step-number">3</div>
-        <h3>Connect & Book</h3>
-        <p>Make secure bookings and communicate directly</p>
+      <div class="step-connector"></div>
+      <div class="step-card-modern">
+        <div class="step-number-modern">
+          <span>03</span>
+        </div>
+        <div class="step-icon-modern">📅</div>
+        <h3 class="step-title-modern">Connect & Book</h3>
+        <p class="step-description-modern">Make secure bookings, schedule appointments, and communicate directly</p>
       </div>
-      <div class="step-card">
-        <div class="step-number">4</div>
-        <h3>Review & Grow</h3>
-        <p>Share feedback and build your reputation</p>
+      <div class="step-connector"></div>
+      <div class="step-card-modern">
+        <div class="step-number-modern">
+          <span>04</span>
+        </div>
+        <div class="step-icon-modern">⭐</div>
+        <h3 class="step-title-modern">Review & Grow</h3>
+        <p class="step-description-modern">Share feedback, rate services, and build your reputation in the community</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Featured Providers Section -->
-<section class="featured-providers">
+<!-- Featured Services Section -->
+<section class="featured-services-modern">
   <div class="container">
-    <h2 class="section-title">Featured Services</h2>
-    <p class="section-subtitle">Discover top-rated services from our community</p>
-    <div class="providers-grid">
+    <div class="section-header-modern">
+      <h2 class="section-title-modern">Featured Services</h2>
+      <p class="section-subtitle-modern">Discover top-rated services from our trusted community</p>
+    </div>
+    <div class="featured-grid-modern">
       <% if (featuredServices && featuredServices.length > 0) { %>
         <% featuredServices.forEach(function(service) { %>
-          <div class="featured-service-card">
-            <a href="/service/<%= service._id %>">
-              <% if (service.images && service.images.length > 0) { %>
-                <img src="<%= service.images[0] %>" alt="<%= service.title %>" class="service-image" />
-              <% } else { %>
-                <div class="service-image-placeholder">📷</div>
-              <% } %>
-              <div class="service-info">
-                <h3><%= service.title %></h3>
-                <p class="provider-name">by <%= service.providerId ? service.providerId.name : 'Provider' %></p>
-                <span class="category-badge"><%= service.category %></span>
-                <div class="service-meta">
-                  <span class="price">₹<%= service.basePrice %></span>
+          <div class="featured-card-modern">
+            <a href="/service/<%= service._id %>" class="featured-link-modern">
+              <div class="featured-image-wrapper">
+                <% if (service.images && service.images.length > 0) { %>
+                  <img src="<%= service.images[0] %>" alt="<%= service.title %>" class="featured-image" />
+                <% } else { %>
+                  <div class="featured-image-placeholder">
+                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                      <path d="M30 15v30M15 30h30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                <% } %>
+                <div class="featured-badge">Featured</div>
+              </div>
+              <div class="featured-content">
+                <span class="featured-category-badge"><%= service.category %></span>
+                <h3 class="featured-title"><%= service.title %></h3>
+                <p class="featured-provider">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8 9a6 6 0 0 0-6 4v2h12v-2a6 6 0 0 0-6-4z" fill="currentColor"/>
+                  </svg>
+                  <%= service.providerId ? service.providerId.name : 'Provider' %>
+                </p>
+                <div class="featured-meta">
+                  <span class="featured-price">₹<%= service.basePrice %></span>
                   <% if (service.averageRating > 0) { %>
-                    <span class="rating">⭐ <%= service.averageRating.toFixed(1) %></span>
+                    <span class="featured-rating">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 1l2 5h5l-4 3 1.5 5L8 11l-4.5 3L5 9 1 6h5l2-5z" fill="#FFD700"/>
+                      </svg>
+                      <%= service.averageRating.toFixed(1) %>
+                    </span>
                   <% } %>
                 </div>
               </div>
@@ -115,26 +207,38 @@
           </div>
         <% }) %>
       <% } else { %>
-        <div class="provider-card">
-          <div class="provider-placeholder">
-            <span>👤</span>
+        <div class="featured-card-modern placeholder-card">
+          <div class="featured-image-placeholder">
+            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+              <path d="M30 15v30M15 30h30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            </svg>
           </div>
-          <h4>Coming Soon</h4>
-          <p>Featured services will appear here</p>
+          <div class="featured-content">
+            <h4 class="placeholder-title">Coming Soon</h4>
+            <p class="placeholder-text">Featured services will appear here</p>
+          </div>
         </div>
-        <div class="provider-card">
-          <div class="provider-placeholder">
-            <span>👤</span>
+        <div class="featured-card-modern placeholder-card">
+          <div class="featured-image-placeholder">
+            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+              <path d="M30 15v30M15 30h30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            </svg>
           </div>
-          <h4>Coming Soon</h4>
-          <p>Featured services will appear here</p>
+          <div class="featured-content">
+            <h4 class="placeholder-title">Coming Soon</h4>
+            <p class="placeholder-text">Featured services will appear here</p>
+          </div>
         </div>
-        <div class="provider-card">
-          <div class="provider-placeholder">
-            <span>👤</span>
+        <div class="featured-card-modern placeholder-card">
+          <div class="featured-image-placeholder">
+            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+              <path d="M30 15v30M15 30h30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            </svg>
           </div>
-          <h4>Coming Soon</h4>
-          <p>Featured services will appear here</p>
+          <div class="featured-content">
+            <h4 class="placeholder-title">Coming Soon</h4>
+            <p class="placeholder-text">Featured services will appear here</p>
+          </div>
         </div>
       <% } %>
     </div>
@@ -142,10 +246,44 @@
 </section>
 
 <!-- CTA Section -->
-<section class="cta-section">
+<section class="cta-section-modern">
+  <div class="cta-background-gradient"></div>
   <div class="container">
-    <h2>Ready to Get Started?</h2>
-    <p>Join thousands of women building their businesses and finding trusted services</p>
-    <a href="/auth/signup" class="btn btn-primary btn-large">Join Saheli Plus Today</a>
+    <div class="cta-content-modern">
+      <div class="cta-icon-modern">🚀</div>
+      <h2 class="cta-title-modern">Ready to Get Started?</h2>
+      <p class="cta-subtitle-modern">Join thousands of women building their businesses and finding trusted services in our supportive community</p>
+      <div class="cta-buttons-modern">
+        <a href="/auth/signup" class="btn-modern btn-cta-primary">
+          <span>Join Saheli Plus Today</span>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M5 10h10M10 5l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="/services" class="btn-modern btn-cta-secondary">
+          <span>Explore Services</span>
+        </a>
+      </div>
+      <div class="cta-features">
+        <div class="cta-feature-item">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 1l2.5 6.5L19 9l-5.5 4.5L15 20l-5-3.5L5 20l1.5-6.5L1 9l6.5-1.5L10 1z" fill="currentColor"/>
+          </svg>
+          <span>Verified Providers</span>
+        </div>
+        <div class="cta-feature-item">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 1v18M1 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span>Secure Payments</span>
+        </div>
+        <div class="cta-feature-item">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 1a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm-1 13l-3-3 1.5-1.5L9 11l4.5-4.5L15 8l-6 6z" fill="currentColor"/>
+          </svg>
+          <span>24/7 Support</span>
+        </div>
+      </div>
+    </div>
   </div>
 </section>

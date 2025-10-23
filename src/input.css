@@ -1,0 +1,89 @@
+/* Tailwind CSS Source File */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Custom Button Components */
+  .btn-primary {
+    @apply px-6 py-3 bg-gradient-to-r from-pink-200 to-pink-100 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all;
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-3 border-2 border-pink-200 text-pink-200 rounded-xl font-semibold hover:bg-pink-200 hover:text-white transition-all;
+  }
+  
+  .btn-outline {
+    @apply px-6 py-2 rounded-full border-2 border-pink-200 text-pink-200 hover:bg-pink-200 hover:text-white transition-all;
+  }
+  
+  /* Card Components */
+  .card {
+    @apply bg-white rounded-2xl shadow-md hover:shadow-xl border border-pink-100 transition-all;
+  }
+  
+  .card-hover {
+    @apply hover:-translate-y-2;
+  }
+  
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-pink-100;
+  }
+  
+  /* Form Components */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border-2 border-pink-100 focus:border-pink-200 focus:ring-4 focus:ring-pink-100/50 outline-none transition-all;
+  }
+  
+  .textarea-field {
+    @apply w-full px-4 py-3 rounded-xl border-2 border-pink-100 focus:border-pink-200 focus:ring-4 focus:ring-pink-100/50 outline-none transition-all resize-none;
+  }
+  
+  /* Badge Components */
+  .badge {
+    @apply inline-block px-3 py-1 text-xs font-semibold rounded-full;
+  }
+  
+  .badge-primary {
+    @apply bg-pink-100 text-pink-200;
+  }
+  
+  .badge-success {
+    @apply bg-green-100 text-green-700;
+  }
+  
+  .badge-warning {
+    @apply bg-yellow-100 text-yellow-700;
+  }
+  
+  .badge-danger {
+    @apply bg-red-100 text-red-700;
+  }
+}
+
+@layer utilities {
+  /* Custom gradient backgrounds */
+  .bg-gradient-pink {
+    @apply bg-gradient-to-br from-pink-100 via-pink-50 to-peach-100;
+  }
+  
+  .bg-gradient-soft {
+    @apply bg-gradient-to-br from-pink-50 to-white;
+  }
+  
+  /* Text gradients */
+  .text-gradient-pink {
+    @apply bg-gradient-to-r from-pink-200 to-peach-100 bg-clip-text text-transparent;
+  }
+  
+  /* Glassmorphism */
+  .glass {
+    @apply bg-white/80 backdrop-blur-md;
+  }
+  
+  .glass-dark {
+    @apply bg-black/60 backdrop-blur-sm;
+  }
+}

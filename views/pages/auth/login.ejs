@@ -1,25 +1,26 @@
-<div class="auth-container">
+<div class="auth-page">
+  <div class="auth-container">
   <div class="auth-header">
     <h1>Welcome Back</h1>
     <p>Log in to your Saheli Plus account</p>
   </div>
 
   <% if (locals.errors && errors.length > 0) { %>
-    <div class="alert alert-error">
-      <ul>
+    <div class="error-message">
         <% errors.forEach(error => { %>
-          <li><%= error %></li>
+          <p>❌ <%= error %></p>
         <% }) %>
-      </ul>
     </div>
   <% } %>
 
   <!-- Login Tabs -->
   <div class="login-tabs">
     <button type="button" class="tab-button active" onclick="switchLoginTab('password')">
+      🔑
       Password Login
     </button>
     <button type="button" class="tab-button" onclick="switchLoginTab('otp')">
+      📧
       OTP Login
     </button>
   </div>
@@ -29,29 +30,37 @@
     <form action="/auth/login/password" method="POST" id="passwordLoginForm">
       <div class="form-group">
         <label for="email" class="form-label">Email Address *</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          class="form-input"
-          placeholder="your@email.com"
-          required
-          value="<%= locals.formData && formData.email || '' %>"
-        />
+        <div class="input-with-icon">
+          <span class="input-icon">📧</span>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-input"
+            placeholder="your@email.com"
+            required
+            value="<%= locals.formData && formData.email || '' %>"
+          />
+        </div>
       </div>
 
       <div class="form-group">
         <label for="role" class="form-label">Login As *</label>
-        <select id="role" name="role" class="form-input" required>
-          <option value="">Select your role</option>
-          <option value="customer" <%= locals.formData && formData.role === 'customer' ? 'selected' : '' %>>Customer</option>
-          <option value="saheli" <%= locals.formData && formData.role === 'saheli' ? 'selected' : '' %>>Saheli (Service Provider)</option>
-        </select>
+        <div class="input-with-icon">
+          <span class="input-icon">👤</span>
+          <select id="role" name="role" class="form-input" required>
+            <option value="">Select your role</option>
+            <option value="customer" <%= locals.formData && formData.role === 'customer' ? 'selected' : '' %>>Customer</option>
+            <option value="saheli" <%= locals.formData && formData.role === 'saheli' ? 'selected' : '' %>>Saheli (Service Provider)</option>
+          </select>
+        </div>
       </div>
 
       <div class="form-group">
         <label for="password" class="form-label">Password *</label>
         <div class="password-input-wrapper">
+          <div class="input-with-icon">
+            <span class="input-icon">🔒</span>
           <input
             type="password"
             id="password"
@@ -59,7 +68,9 @@
             class="form-input"
             placeholder="Enter your password"
             required
+            style="padding-right: 3rem;"
           />
+          </div>
           <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password')">
             👁️
           </button>
@@ -73,7 +84,8 @@
         </label>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+      <button type="submit" class="btn-primary">
+        🔐
         Log In
       </button>
 
@@ -88,28 +100,37 @@
     <form action="/auth/login/otp" method="POST" id="otpLoginForm">
       <div class="form-group">
         <label for="otpEmail" class="form-label">Email Address *</label>
-        <input
-          type="email"
-          id="otpEmail"
-          name="email"
-          class="form-input"
-          placeholder="your@email.com"
-          required
-        />
+        <div class="input-with-icon">
+          <span class="input-icon">📧</span>
+          <input
+            type="email"
+            id="otpEmail"
+            name="email"
+            class="form-input"
+            placeholder="your@email.com"
+            required
+          />
+        </div>
       </div>
 
       <div class="form-group">
         <label for="otpRole" class="form-label">Login As *</label>
-        <select id="otpRole" name="role" class="form-input" required>
-          <option value="">Select your role</option>
-          <option value="customer">Customer</option>
-          <option value="saheli">Saheli (Service Provider)</option>
-        </select>
+        <div class="input-with-icon">
+          <span class="input-icon">👤</span>
+          <select id="otpRole" name="role" class="form-input" required>
+            <option value="">Select your role</option>
+            <option value="customer">Customer</option>
+            <option value="saheli">Saheli (Service Provider)</option>
+          </select>
+        </div>
       </div>
 
-      <p class="info-text">We'll send a 6-digit code to your email for verification.</p>
+      <div class="info-message">
+        <p>💡 We'll send a 6-digit code to your email for verification.</p>
+      </div>
 
-      <button type="submit" class="btn btn-secondary btn-large" style="width: 100%;">
+      <button type="submit" class="btn-secondary">
+        📨
         Send OTP
       </button>
     </form>
@@ -117,6 +138,7 @@
 
   <div class="auth-footer">
     <p>Don't have an account? <a href="/auth/signup">Sign up</a></p>
+  </div>
   </div>
 </div>
 

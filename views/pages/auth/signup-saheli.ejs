@@ -1,51 +1,58 @@
-<div class="auth-container">
+<div class="auth-page">
+  <div class="auth-container">
   <div class="auth-header">
     <h1>Sign Up as Saheli</h1>
     <p>Start offering your services today</p>
   </div>
 
   <% if (locals.errors && errors.length > 0) { %>
-    <div class="alert alert-error">
-      <ul>
+    <div class="error-message">
         <% errors.forEach(error => { %>
-          <li><%= error %></li>
+          <p>❌ <%= error %></p>
         <% }) %>
-      </ul>
     </div>
   <% } %>
 
   <form action="/auth/signup/saheli" method="POST" id="signupForm">
     <div class="form-group">
       <label for="name" class="form-label">Full Name *</label>
-      <input
-        type="text"
-        id="name"
-        name="name"
-        class="form-input"
-        placeholder="Full Name"
-        required
-        minlength="2"
-        maxlength="50"
-        value="<%= locals.formData && formData.name || '' %>"
-      />
+      <div class="input-with-icon">
+        <span class="input-icon">👤</span>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="form-input"
+          placeholder="Full Name"
+          required
+          minlength="2"
+          maxlength="50"
+          value="<%= locals.formData && formData.name || '' %>"
+        />
+      </div>
     </div>
 
     <div class="form-group">
       <label for="email" class="form-label">Email Address *</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        class="form-input"
-        placeholder="your@email.com"
-        required
-        value="<%= locals.formData && formData.email || '' %>"
-      />
+      <div class="input-with-icon">
+        <span class="input-icon">📧</span>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-input"
+          placeholder="your@email.com"
+          required
+          value="<%= locals.formData && formData.email || '' %>"
+        />
+      </div>
     </div>
 
     <div class="form-group">
       <label for="password" class="form-label">Password *</label>
       <div class="password-input-wrapper">
+        <div class="input-with-icon">
+          <span class="input-icon">🔒</span>
         <input
           type="password"
           id="password"
@@ -55,7 +62,9 @@
           required
           minlength="8"
           maxlength="72"
+          style="padding-right: 3rem;"
         />
+        </div>
         <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password')">
           👁️
         </button>
@@ -65,6 +74,8 @@
     <div class="form-group">
       <label for="confirmPassword" class="form-label">Confirm Password *</label>
       <div class="password-input-wrapper">
+        <div class="input-with-icon">
+          <span class="input-icon">🔒</span>
         <input
           type="password"
           id="confirmPassword"
@@ -74,7 +85,9 @@
           required
           minlength="8"
           maxlength="72"
+          style="padding-right: 3rem;"
         />
+        </div>
         <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirmPassword')">
           👁️
         </button>
@@ -84,43 +97,51 @@
 
     <div class="form-group">
       <label for="city" class="form-label">City *</label>
-      <input
-        type="text"
-        id="city"
-        name="city"
-        class="form-input"
-        placeholder="Your City"
-        required
-        minlength="2"
-        maxlength="50"
-        value="<%= locals.formData && formData.city || '' %>"
-      />
+      <div class="input-with-icon">
+        <span class="input-icon">📍</span>
+        <input
+          type="text"
+          id="city"
+          name="city"
+          class="form-input"
+          placeholder="Your City"
+          required
+          minlength="2"
+          maxlength="50"
+          value="<%= locals.formData && formData.city || '' %>"
+        />
+      </div>
     </div>
 
     <div class="form-group">
       <label for="pincode" class="form-label">Pincode *</label>
-      <input
-        type="text"
-        id="pincode"
-        name="pincode"
-        class="form-input"
-        placeholder="123456"
-        required
-        pattern="\d{6}"
-        maxlength="6"
-        value="<%= locals.formData && formData.pincode || '' %>"
-      />
+      <div class="input-with-icon">
+        <span class="input-icon">📮</span>
+        <input
+          type="text"
+          id="pincode"
+          name="pincode"
+          class="form-input"
+          placeholder="123456"
+          required
+          pattern="\d{6}"
+          maxlength="6"
+          value="<%= locals.formData && formData.pincode || '' %>"
+        />
+      </div>
     </div>
 
     <input type="hidden" name="role" value="saheli" />
 
-    <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">
+    <button type="submit" class="btn-primary">
+      💼
       Create Account
     </button>
   </form>
 
   <div class="auth-footer">
     <p>Already have an account? <a href="/auth/login">Log in</a></p>
+  </div>
   </div>
 </div>
 

@@ -1,5 +1,5 @@
-<div class="my-service-card-modern <%= showActions ? 'with-actions' : '' %>" data-status="<%= service.isPaused ? 'paused' : 'active' %>">
-  <!-- Status Badge -->
+<div class="<%= showActions ? 'my-service-card-modern' : 'browse-service-card-modern' %> <%= showActions ? 'with-actions' : '' %>" data-status="<%= service.isPaused ? 'paused' : 'active' %>">
+  <!-- Status Badge (only for my services) -->
   <% if (showActions) { %>
     <div class="card-status-badge-modern <%= service.isPaused ? 'status-paused' : 'status-active' %>">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -61,8 +61,29 @@
     <div class="card-content-section-modern">
       <div class="card-header-section-modern">
         <h3 class="card-title-modern"><%= service.title %></h3>
+        
+        <!-- Provider Info (for browse view) -->
+        <% if (!showActions && service.providerId) { %>
+          <div class="card-provider-info-modern">
+            <div class="provider-avatar-modern">
+              <% if (service.providerId.profilePicture) { %>
+                <img src="<%= service.providerId.profilePicture %>" alt="<%= service.providerId.name %>" />
+              <% } else { %>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              <% } %>
+            </div>
+            <div class="provider-details-modern">
+              <span class="provider-label">Provider</span>
+              <span class="provider-name"><%= service.providerId.name %></span>
+            </div>
+          </div>
+        <% } %>
+        
         <% if (service.description) { %>
-          <p class="card-description-modern"><%= service.description.substring(0, 120) %><%= service.description.length > 120 ? '...' : '' %></p>
+          <p class="card-description-modern"><%= service.description.substring(0, 100) %><%= service.description.length > 100 ? '...' : '' %></p>
         <% } %>
       </div>
 

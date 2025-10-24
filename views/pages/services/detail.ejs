@@ -57,9 +57,6 @@
             <span class="badge badge-subcategory"><%= service.subcategory %></span>
           <% } %>
           <span class="badge badge-mode"><%= service.mode %></span>
-          <% if ((service.mode === 'Onsite' || service.mode === 'Hybrid') && service.serviceRadius) { %>
-            <span class="badge badge-radius">📍 <%= service.serviceRadius %> km radius</span>
-          <% } %>
         </div>
         
         <!-- Provider Info Card -->

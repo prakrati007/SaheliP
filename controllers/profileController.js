@@ -30,24 +30,29 @@ async function renderViewProfile(req, res) {
 // GET /profile/edit
 async function renderEditProfile(req, res) {
   try {
+    // Check if session has user info
+    if (!req.session || !req.session.user || !req.session.user.id) {
+      return res.redirect('/auth/login');
+    }
+
     const userId = req.session.user.id;
     const user = await User.findById(userId);
+    
     if (!user) {
-      return res.status(404).render('pages/profile/edit', {
-        title: 'Edit Profile',
-        user: { name: '', city: '', pincode: '', role: '', bio: '', languages: [], experienceYears: null, certifications: [], profilePic: null, completedBookingsCount: 0 },
-        errors: ['User not found'],
-        profilePage: true
-      });
+      req.flash('error', 'User profile not found');
+      return res.redirect('/auth/login');
     }
-    res.render('pages/profile/edit', { title: 'Edit Profile', user, profilePage: true });
-  } catch (err) {
-    res.status(500).render('pages/profile/edit', {
-      title: 'Edit Profile',
-      user: { name: '', city: '', pincode: '', role: '', bio: '', languages: [], experienceYears: null, certifications: [], profilePic: null, completedBookingsCount: 0 },
-      errors: ['Error loading profile'],
-      profilePage: true
+    
+    res.render('pages/profile/edit', { 
+      title: 'Edit Profile', 
+      user,
+      errors: [],
+      profilePage: true 
     });
+  } catch (err) {
+    console.error('Error loading profile edit:', err);
+    req.flash('error', 'Error loading profile. Please try again.');
+    res.redirect('/profile/view');
   }
 }
 

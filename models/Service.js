@@ -40,7 +40,6 @@ const serviceSchema = new mongoose.Schema({
   mode: { type: String, required: true, enum: SERVICE_MODES },
   city: { type: String, required: true, trim: true, minlength: 2, maxlength: 50, index: true },
   pincode: { type: String, required: true, match: /^\d{6}$/ },
-  serviceRadius: { type: Number, min: 0, max: 100 },
   weeklySchedule: { type: [dayScheduleSchema], required: true, validate: v => v.length > 0 },
   unavailableDates: { type: [Date], default: [] },
   maxBookingsPerDay: { type: Number, default: 5, min: 1, max: 20 },
@@ -120,9 +119,6 @@ serviceSchema.pre('save', function(next) {
     if (!Array.isArray(this.packages) || this.packages.length === 0) {
       return next(new Error('At least one package is required for Package pricing type'));
     }
-  }
-  if ((this.mode === 'Onsite' || this.mode === 'Hybrid') && (this.serviceRadius == null)) {
-    return next(new Error('Service radius is required for Onsite/Hybrid mode'));
   }
   if (!this.weeklySchedule || this.weeklySchedule.length === 0) {
     return next(new Error('At least one weekly schedule is required'));

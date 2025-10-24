@@ -69,7 +69,7 @@ async function createService(req, res) {
   try {
     const {
       title, category, subcategory, description, pricingType, basePrice, packages,
-      advancePercentage, travelFee, weekendPremium, mode, city, pincode, serviceRadius,
+      advancePercentage, travelFee, weekendPremium, mode, city, pincode,
       weeklySchedule, unavailableDates, maxBookingsPerDay, advanceBookingLimit, preparationTime,
       languages, experienceYears, certifications, cancellationPolicy
     } = req.body;
@@ -105,7 +105,6 @@ async function createService(req, res) {
       mode,
       city,
       pincode,
-      serviceRadius: serviceRadius ? Number(serviceRadius) : undefined,
       weeklySchedule: parsedWeeklySchedule,
       unavailableDates: unavailableDates ? (Array.isArray(unavailableDates) ? unavailableDates : [unavailableDates]) : [],
       maxBookingsPerDay: maxBookingsPerDay ? Number(maxBookingsPerDay) : undefined,
@@ -149,7 +148,7 @@ async function updateService(req, res) {
     const service = req.service;
     const {
       title, category, subcategory, description, pricingType, basePrice, packages,
-      advancePercentage, travelFee, weekendPremium, mode, city, pincode, serviceRadius,
+      advancePercentage, travelFee, weekendPremium, mode, city, pincode,
       weeklySchedule, unavailableDates, maxBookingsPerDay, advanceBookingLimit, preparationTime,
       languages, experienceYears, certifications, cancellationPolicy, deleteImages
     } = req.body;
@@ -173,7 +172,6 @@ async function updateService(req, res) {
     if (mode) service.mode = mode;
     if (city) service.city = city;
     if (pincode) service.pincode = pincode;
-    if (serviceRadius) service.serviceRadius = Number(serviceRadius);
     if (weeklySchedule) service.weeklySchedule = JSON.parse(weeklySchedule);
     if (unavailableDates) service.unavailableDates = Array.isArray(unavailableDates) ? unavailableDates : [unavailableDates];
     if (maxBookingsPerDay) service.maxBookingsPerDay = Number(maxBookingsPerDay);

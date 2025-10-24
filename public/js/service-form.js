@@ -17,7 +17,6 @@
     initAvailabilityBuilder();
     initImagePreview();
     initDescriptionCounter();
-    initServiceRadiusToggle();
     initFormSubmit();
     initEditPageHandlers();
   });
@@ -94,7 +93,37 @@
       }
       packages.push({ name: '', description: '', price: 0, duration: '' });
       renderPackages();
+      updatePackageButton();
     });
+    
+    updatePackageButton();
+  }
+
+  function updatePackageButton() {
+    const addBtn = document.getElementById('addPackageBtn');
+    if (!addBtn) return;
+    
+    if (packages.length >= 5) {
+      addBtn.disabled = true;
+      addBtn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="16"></line>
+          <line x1="8" y1="12" x2="16" y2="12"></line>
+        </svg>
+        Maximum Packages Reached (5/5)
+      `;
+    } else {
+      addBtn.disabled = false;
+      addBtn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="16"></line>
+          <line x1="8" y1="12" x2="16" y2="12"></line>
+        </svg>
+        Add Package (${packages.length}/5)
+      `;
+    }
   }
 
   function renderPackages() {
@@ -104,17 +133,68 @@
     packageList.innerHTML = '';
     packages.forEach(function(pkg, idx) {
       const div = document.createElement('div');
-      div.className = 'package-item';
+      div.className = 'package-item-modern';
       div.innerHTML = `
-        <div class="package-item-header">
-          <span>Package ${idx + 1}</span>
-          <button type="button" class="package-remove-btn" data-index="${idx}">&times;</button>
+        <div class="package-header-modern">
+          <div class="package-number-modern">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+            <span class="package-title-modern">Package ${idx + 1}</span>
+          </div>
+          <button type="button" class="package-remove-btn-modern" data-index="${idx}" title="Remove package">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="15" y1="9" x2="9" y2="15"></line>
+              <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+          </button>
         </div>
-        <div class="package-item-fields">
-          <input type="text" class="form-input" placeholder="Package Name" value="${pkg.name || ''}" data-index="${idx}" data-field="name" />
-          <input type="text" class="form-input" placeholder="Description" value="${pkg.description || ''}" data-index="${idx}" data-field="description" />
-          <input type="number" class="form-input" placeholder="Price" min="0" value="${pkg.price || 0}" data-index="${idx}" data-field="price" />
-          <input type="text" class="form-input" placeholder="Duration (e.g., 2 hours)" value="${pkg.duration || ''}" data-index="${idx}" data-field="duration" />
+        <div class="package-fields-modern">
+          <div class="package-field-modern package-field-full-modern">
+            <label class="package-field-label-modern">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+              Package Name
+            </label>
+            <input type="text" class="package-input-modern" placeholder="e.g., Bridal Makeup Package" value="${pkg.name || ''}" data-index="${idx}" data-field="name" />
+          </div>
+          <div class="package-field-modern package-field-full-modern">
+            <label class="package-field-label-modern">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="17" y1="10" x2="3" y2="10"></line>
+                <line x1="21" y1="6" x2="3" y2="6"></line>
+                <line x1="21" y1="14" x2="3" y2="14"></line>
+                <line x1="17" y1="18" x2="3" y2="18"></line>
+              </svg>
+              Description
+            </label>
+            <input type="text" class="package-input-modern" placeholder="Brief description of what's included" value="${pkg.description || ''}" data-index="${idx}" data-field="description" />
+          </div>
+          <div class="package-field-modern">
+            <label class="package-field-label-modern">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+              Price (₹)
+            </label>
+            <input type="number" class="package-input-modern" placeholder="0" min="0" step="100" value="${pkg.price || 0}" data-index="${idx}" data-field="price" />
+          </div>
+          <div class="package-field-modern">
+            <label class="package-field-label-modern">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              Duration
+            </label>
+            <input type="text" class="package-input-modern" placeholder="e.g., 2 hours" value="${pkg.duration || ''}" data-index="${idx}" data-field="duration" />
+          </div>
         </div>
       `;
       packageList.appendChild(div);
@@ -133,11 +213,12 @@
       });
     });
 
-    packageList.querySelectorAll('.package-remove-btn').forEach(function(btn) {
+    packageList.querySelectorAll('.package-remove-btn-modern').forEach(function(btn) {
       btn.addEventListener('click', function() {
         const idx = parseInt(this.dataset.index);
         packages.splice(idx, 1);
         renderPackages();
+        updatePackageButton();
       });
     });
   }
@@ -149,35 +230,43 @@
 
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     
-    builder.innerHTML = '<div class="availability-header"><h3>Weekly Schedule</h3></div>';
+    builder.innerHTML = '<h3 class="availability-title-modern">Weekly Schedule</h3>';
     
     daysOfWeek.forEach(function(day) {
       const dayDiv = document.createElement('div');
-      dayDiv.className = 'availability-day';
+      dayDiv.className = 'availability-day-modern';
       dayDiv.innerHTML = `
-        <div class="availability-day-header">
-          <label class="checkbox-label">
-            <input type="checkbox" data-day="${day}" class="day-toggle" />
-            <span>${day}</span>
+        <div class="availability-day-header-modern">
+          <label class="day-checkbox-modern">
+            <input type="checkbox" data-day="${day}" class="day-toggle-modern" />
+            <span class="day-label-modern">${day}</span>
           </label>
         </div>
-        <div class="availability-slots" data-day="${day}" style="display:none;">
-          <div class="slots-container" data-day="${day}"></div>
-          <button type="button" class="add-slot-btn" data-day="${day}">Add Time Slot</button>
+        <div class="availability-slots-modern" data-day="${day}" style="display:none;">
+          <div class="slots-container-modern" data-day="${day}"></div>
+          <button type="button" class="add-slot-btn-modern" data-day="${day}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="16"></line>
+              <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
+            Add Time Slot
+          </button>
         </div>
       `;
       builder.appendChild(dayDiv);
     });
 
     // Day toggle
-    builder.querySelectorAll('.day-toggle').forEach(function(checkbox) {
+    builder.querySelectorAll('.day-toggle-modern').forEach(function(checkbox) {
       checkbox.addEventListener('change', function() {
         const day = this.dataset.day;
-        const slotsDiv = builder.querySelector(`.availability-slots[data-day="${day}"]`);
+        const slotsDiv = builder.querySelector(`.availability-slots-modern[data-day="${day}"]`);
         if (this.checked) {
           slotsDiv.style.display = 'block';
           if (!weeklySchedule.find(d => d.day === day)) {
-            weeklySchedule.push({ day: day, slots: [] });
+            weeklySchedule.push({ day: day, slots: [{ start: '09:00', end: '17:00' }] });
+            renderSlots(day);
           }
         } else {
           slotsDiv.style.display = 'none';
@@ -187,11 +276,15 @@
     });
 
     // Add slot buttons
-    builder.querySelectorAll('.add-slot-btn').forEach(function(btn) {
+    builder.querySelectorAll('.add-slot-btn-modern').forEach(function(btn) {
       btn.addEventListener('click', function() {
         const day = this.dataset.day;
         const daySchedule = weeklySchedule.find(d => d.day === day);
         if (daySchedule) {
+          if (daySchedule.slots.length >= 5) {
+            alert('Maximum 5 time slots per day allowed');
+            return;
+          }
           daySchedule.slots.push({ start: '09:00', end: '17:00' });
           renderSlots(day);
         }
@@ -200,7 +293,7 @@
   }
 
   function renderSlots(day) {
-    const container = document.querySelector(`.slots-container[data-day="${day}"]`);
+    const container = document.querySelector(`.slots-container-modern[data-day="${day}"]`);
     if (!container) return;
 
     const daySchedule = weeklySchedule.find(d => d.day === day);
@@ -209,12 +302,18 @@
     container.innerHTML = '';
     daySchedule.slots.forEach(function(slot, idx) {
       const slotDiv = document.createElement('div');
-      slotDiv.className = 'slot-item';
+      slotDiv.className = 'slot-item-modern';
       slotDiv.innerHTML = `
-        <input type="time" class="form-input" value="${slot.start}" data-day="${day}" data-slot="${idx}" data-field="start" />
-        <span>to</span>
-        <input type="time" class="form-input" value="${slot.end}" data-day="${day}" data-slot="${idx}" data-field="end" />
-        <button type="button" class="slot-remove-btn" data-day="${day}" data-slot="${idx}">&times;</button>
+        <input type="time" class="slot-time-input-modern" value="${slot.start}" data-day="${day}" data-slot="${idx}" data-field="start" />
+        <span class="slot-separator-modern">to</span>
+        <input type="time" class="slot-time-input-modern" value="${slot.end}" data-day="${day}" data-slot="${idx}" data-field="end" />
+        <button type="button" class="slot-remove-btn-modern" data-day="${day}" data-slot="${idx}" title="Remove time slot">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+        </button>
       `;
       container.appendChild(slotDiv);
     });
@@ -232,7 +331,7 @@
       });
     });
 
-    container.querySelectorAll('.slot-remove-btn').forEach(function(btn) {
+    container.querySelectorAll('.slot-remove-btn-modern').forEach(function(btn) {
       btn.addEventListener('click', function() {
         const day = this.dataset.day;
         const slotIdx = parseInt(this.dataset.slot);
@@ -240,6 +339,15 @@
         if (daySchedule) {
           daySchedule.slots.splice(slotIdx, 1);
           renderSlots(day);
+          
+          // If no slots left, uncheck the day
+          if (daySchedule.slots.length === 0) {
+            const checkbox = document.querySelector(`.day-toggle-modern[data-day="${day}"]`);
+            if (checkbox) {
+              checkbox.checked = false;
+              checkbox.dispatchEvent(new Event('change'));
+            }
+          }
         }
       });
     });
@@ -310,30 +418,7 @@
     updateCounter();
   }
 
-  // 7. Service Radius Toggle
-  function initServiceRadiusToggle() {
-    const modeInputs = document.querySelectorAll('input[name="mode"]');
-    const radiusGroup = document.getElementById('serviceRadiusGroup');
-    if (!radiusGroup) return;
-
-    modeInputs.forEach(function(input) {
-      input.addEventListener('change', function() {
-        if (this.value === 'At Customer Location') {
-          radiusGroup.style.display = 'block';
-        } else {
-          radiusGroup.style.display = 'none';
-        }
-      });
-    });
-
-    // Initialize
-    const checkedMode = document.querySelector('input[name="mode"]:checked');
-    if (checkedMode && checkedMode.value === 'At Customer Location') {
-      radiusGroup.style.display = 'block';
-    }
-  }
-
-  // 8. Form Submit
+  // 7. Form Submit
   function initFormSubmit() {
     const form = document.getElementById('serviceForm');
     if (!form) return;

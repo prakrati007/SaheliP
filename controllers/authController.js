@@ -114,6 +114,10 @@ async function signupSaheli(req, res) {
     const otp = generateOtp();
     const token = generateToken(32);
 
+    console.log('=== Signup OTP Generation ===');
+    console.log('Generated OTP:', otp, 'Type:', typeof otp);
+    console.log('Generated Token:', token);
+
     // Create verification token with 10-minute expiry
     await VerificationToken.createToken(user._id, 'email_verify', otp, token, 10);
 
@@ -197,9 +201,16 @@ async function verifyOtp(req, res) {
   try {
     const { email, otp, token, role } = req.body;
 
+    console.log('=== OTP Verification Debug ===');
+    console.log('Received OTP:', otp, 'Type:', typeof otp);
+    console.log('Received Token:', token);
+    console.log('Email:', email);
+    console.log('Role:', role);
+
     // Find user
     const user = await User.findByEmail(email, role);
     if (!user) {
+      console.log('User not found for email:', email, 'role:', role);
       return res.status(400).render('pages/auth/verify-otp', {
         title: 'Verify OTP - Saheli Plus',
         errors: ['Invalid verification request'],
@@ -210,6 +221,8 @@ async function verifyOtp(req, res) {
       });
     }
 
+    console.log('User found:', user._id);
+
     // Find active verification token
     const verificationToken = await VerificationToken.findOne({
       userId: user._id,
@@ -219,6 +232,7 @@ async function verifyOtp(req, res) {
     });
 
     if (!verificationToken) {
+      console.log('No active verification token found for user:', user._id);
       return res.status(400).render('pages/auth/verify-otp', {
         title: 'Verify OTP - Saheli Plus',
         errors: ['Verification code has expired. Please request a new one.'],
@@ -229,8 +243,11 @@ async function verifyOtp(req, res) {
       });
     }
 
+    console.log('Verification token found, attempts:', verificationToken.attempts, '/', verificationToken.maxAttempts);
+
     // Check max attempts
     if (verificationToken.attempts >= verificationToken.maxAttempts) {
+      console.log('Max attempts exceeded');
       return res.status(400).render('pages/auth/verify-otp', {
         title: 'Verify OTP - Saheli Plus',
         errors: ['Maximum verification attempts exceeded. Please request a new code.'],
@@ -242,6 +259,7 @@ async function verifyOtp(req, res) {
 
     // Verify OTP and token
     const isValid = await verificationToken.verify(otp, token);
+    console.log('Verification result:', isValid);
 
     if (isValid) {
       // Mark token as consumed

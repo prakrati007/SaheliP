@@ -88,21 +88,18 @@ const uploadReviewImage = multer({
 }).single('reviewImage');
 
 function validateImageFile(req, res, next) {
+  // Profile picture is optional - only validate if a file is uploaded
   if (!req.file) {
-    return res.render('pages/profile/edit', {
-      title: 'Edit Profile',
-      errors: ['Profile picture is required'],
-      formData: req.body,
-      profilePage: true
-    });
+    return next();
   }
+  
   const allowed = ['.jpg', '.jpeg', '.png', '.webp'];
   const ext = path.extname(req.file.originalname).toLowerCase();
   if (!allowed.includes(ext)) {
     fs.unlinkSync(req.file.path);
     return res.render('pages/profile/edit', {
       title: 'Edit Profile',
-      errors: ['Invalid image file type'],
+      errors: ['Invalid image file type. Please use JPG, PNG, or WebP.'],
       formData: req.body,
       profilePage: true
     });

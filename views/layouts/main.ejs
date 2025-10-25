@@ -41,7 +41,7 @@
   <% } %>
   
 </head>
-<body>
+<body <% if (locals.user) { %>data-user-authenticated="true" data-user-role="<%= user.role %>" data-user-id="<%= user._id %>"<% } %>>
   <%- include('../partials/header') %>
   
   <%- include('../partials/alerts') %>
@@ -75,6 +75,7 @@
     <script src="/js/saheli-dashboard.js"></script>
   <% } %>
   <% if (locals.dashboardPage && locals.role === 'customer') { %>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="/js/customer-dashboard.js"></script>
     <script src="/js/reviews.js"></script>
   <% } %>

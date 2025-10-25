@@ -80,6 +80,12 @@ async function searchServices(req, res) {
     // Build sort using helper
     const sort = buildServiceSort(filters.sort);
     
+    // Debug logging for price filters
+    if (filters.priceMin || filters.priceMax) {
+      console.log(`[PRICE FILTER] Min: ${filters.priceMin}, Max: ${filters.priceMax}`);
+      console.log(`[PRICE FILTER] Query: ${JSON.stringify(query.$or || query.basePrice)}`);
+    }
+    
     // Count total matching services
     const totalCount = await Service.countDocuments(query);
     
@@ -92,6 +98,11 @@ async function searchServices(req, res) {
       .skip(pagination.skip)
       .limit(pagination.limit)
       .populate('providerId', 'name city profilePic experienceYears hasVerificationBadge');
+    
+    // Debug logging
+    console.log(`[SEARCH] Found ${services.length} services`);
+    console.log(`[SEARCH] Query: ${JSON.stringify(query)}`);
+    console.log(`[SEARCH] Total count: ${totalCount}`);
     
     res.render('pages/services/search', {
       title: 'Browse Services',

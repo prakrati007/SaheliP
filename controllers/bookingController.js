@@ -123,7 +123,7 @@ exports.createBooking = async (req, res) => {
     const razorpayOrder = await createOrder({
       amount: pricing.advancePaid,
       currency: 'INR',
-      receipt: `booking_${booking._id}`,
+      receipt: `adv_${booking._id}`,
       notes: {
         bookingId: booking._id.toString(),
         serviceTitle: service.title,
@@ -463,6 +463,8 @@ exports.getBookingDetails = async (req, res) => {
     const bookingId = req.params.id;
     const userId = req.session.user.id;
 
+    console.log('[BOOKING DETAILS] Fetching booking:', bookingId, 'for user:', userId);
+
     // Find booking with populated references
     const booking = await Booking.findById(bookingId)
       .populate('serviceId')
@@ -470,32 +472,51 @@ exports.getBookingDetails = async (req, res) => {
       .populate('customerId', 'name email city profilePicture');
 
     if (!booking) {
+      console.error('[BOOKING DETAILS] Booking not found:', bookingId);
       return res.status(404).json({
         success: false,
         message: 'Booking not found'
       });
     }
 
+    console.log('[BOOKING DETAILS] Booking found:', {
+      id: booking._id,
+      serviceId: booking.serviceId?._id || 'NULL',
+      providerId: booking.providerId?._id || 'NULL',
+      customerId: booking.customerId?._id || 'NULL'
+    });
+
+    // Check if serviceId was deleted
+    if (!booking.serviceId) {
+      console.error('[BOOKING DETAILS] Service has been deleted for booking:', bookingId);
+      return res.status(404).json({
+        success: false,
+        message: 'The service associated with this booking no longer exists'
+      });
+    }
+
     // Validate user is either customer or provider
-    const isCustomer = booking.customerId._id.toString() === userId;
-    const isProvider = booking.providerId._id.toString() === userId;
+    const isCustomer = booking.customerId && booking.customerId._id.toString() === userId;
+    const isProvider = booking.providerId && booking.providerId._id.toString() === userId;
 
     if (!isCustomer && !isProvider) {
+      console.error('[BOOKING DETAILS] Unauthorized access attempt by:', userId);
       return res.status(403).json({
         success: false,
         message: 'You do not have permission to view this booking'
       });
     }
 
+    console.log('[BOOKING DETAILS] Success - returning booking details');
     res.status(200).json({
       success: true,
       booking
     });
   } catch (error) {
-    console.error('Error fetching booking details:', error);
+    console.error('[BOOKING DETAILS] Error fetching booking details:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch booking details'
+      message: 'Failed to fetch booking details: ' + error.message
     });
   }
 };
@@ -626,19 +647,36 @@ exports.getProviderBookings = async (req, res) => {
   try {
     const providerId = req.session.user.id;
     
+    console.log('[PROVIDER BOOKINGS] Fetching bookings for provider:', providerId);
+    console.log('[PROVIDER BOOKINGS] Request headers:', {
+      xhr: req.xhr,
+      accept: req.headers.accept,
+      xRequestedWith: req.headers['x-requested-with']
+    });
+    
     // Fetch all bookings for this provider
     const bookings = await Booking.findByProvider(providerId)
       .populate('serviceId', 'title category images')
       .populate('customerId', 'name email phone city');
     
+    console.log('[PROVIDER BOOKINGS] Found bookings:', bookings.length);
+    console.log('[PROVIDER BOOKINGS] Bookings status breakdown:', {
+      confirmed: bookings.filter(b => b.status === 'Confirmed').length,
+      inProgress: bookings.filter(b => b.status === 'InProgress').length,
+      completed: bookings.filter(b => b.status === 'Completed').length,
+      cancelled: bookings.filter(b => b.status === 'Cancelled').length
+    });
+    
     // If it's an API request (AJAX), return JSON
     if (req.xhr || req.headers.accept?.includes('application/json')) {
+      console.log('[PROVIDER BOOKINGS] Returning JSON response');
       return res.json({
         success: true,
         bookings
       });
     }
     
+    console.log('[PROVIDER BOOKINGS] Rendering page');
     // Otherwise render the page
     res.render('pages/bookings/provider-list', {
       title: 'My Bookings',
@@ -646,7 +684,7 @@ exports.getProviderBookings = async (req, res) => {
       user: req.session.user
     });
   } catch (error) {
-    console.error('Error fetching provider bookings:', error);
+    console.error('[PROVIDER BOOKINGS] Error fetching provider bookings:', error);
     if (req.xhr || req.headers.accept?.includes('application/json')) {
       return res.status(500).json({
         success: false,
@@ -1165,24 +1203,65 @@ exports.cancelByProvider = async (req, res) => {
  */
 exports.createRemainingPaymentOrder = async (req, res) => {
   try {
-    const booking = await Booking.findById(req.params.id);
-    if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
-    if (String(booking.customerId) !== String(req.session.user.id)) {
+    const bookingId = req.params.id;
+    const userId = req.session.user.id;
+    
+    console.log('[REMAINING PAYMENT] Creating order for booking:', bookingId, 'user:', userId);
+    
+    const booking = await Booking.findById(bookingId);
+    
+    if (!booking) {
+      console.error('[REMAINING PAYMENT] Booking not found:', bookingId);
+      return res.status(404).json({ success: false, message: 'Booking not found' });
+    }
+    
+    console.log('[REMAINING PAYMENT] Booking found:', {
+      id: booking._id,
+      customerId: booking.customerId,
+      status: booking.status,
+      paymentStatus: booking.paymentStatus,
+      remainingAmount: booking.remainingAmount,
+      hasRemainingBalance: booking.hasRemainingBalance
+    });
+    
+    if (String(booking.customerId) !== String(userId)) {
+      console.error('[REMAINING PAYMENT] Unauthorized access attempt');
       return res.status(403).json({ success: false, message: 'Unauthorized' });
     }
+    
     if (!booking.hasRemainingBalance) {
-      return res.status(400).json({ success: false, message: 'No remaining balance' });
+      console.error('[REMAINING PAYMENT] No remaining balance:', {
+        remainingAmount: booking.remainingAmount,
+        paymentStatus: booking.paymentStatus
+      });
+      return res.status(400).json({ success: false, message: 'No remaining balance to pay' });
     }
+    
+    console.log('[REMAINING PAYMENT] Creating Razorpay order for amount:', booking.remainingAmount);
+    
     const order = await createOrder({
       amount: booking.remainingAmount,
       currency: 'INR',
-      receipt: `booking_remaining_${booking._id}`,
+      receipt: `rem_${booking._id}`,
       notes: { bookingId: booking._id.toString(), type: 'remaining' }
     });
+    
+    console.log('[REMAINING PAYMENT] Razorpay order created:', order.id);
+    
     booking.remainingRazorpayOrderId = order.id;
     await booking.save();
-    return res.json({ success: true, razorpayOrder: { id: order.id, amount: order.amount, currency: order.currency }, razorpayKeyId: process.env.RAZORPAY_KEY_ID });
+    
+    return res.json({ 
+      success: true, 
+      razorpayOrder: { 
+        id: order.id, 
+        amount: order.amount, 
+        currency: order.currency 
+      }, 
+      razorpayKeyId: process.env.RAZORPAY_KEY_ID 
+    });
   } catch (err) {
+    console.error('[REMAINING PAYMENT] Error creating order:', err);
     return res.status(500).json({ success: false, message: err.message });
   }
 };
@@ -1190,17 +1269,58 @@ exports.createRemainingPaymentOrder = async (req, res) => {
 exports.verifyRemainingPayment = async (req, res) => {
   try {
     const { razorpayOrderId, razorpayPaymentId, razorpaySignature, bookingId } = req.body;
+    
+    console.log('[REMAINING PAYMENT] Verifying payment:', {
+      bookingId,
+      orderId: razorpayOrderId,
+      paymentId: razorpayPaymentId
+    });
+    
     const booking = await Booking.findById(bookingId);
-    if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
+    
+    if (!booking) {
+      console.error('[REMAINING PAYMENT] Booking not found for verification:', bookingId);
+      return res.status(404).json({ success: false, message: 'Booking not found' });
+    }
+    
+    console.log('[REMAINING PAYMENT] Booking order ID:', booking.remainingRazorpayOrderId);
+    
     if (booking.remainingRazorpayOrderId !== razorpayOrderId) {
+      console.error('[REMAINING PAYMENT] Order ID mismatch:', {
+        expected: booking.remainingRazorpayOrderId,
+        received: razorpayOrderId
+      });
       return res.status(400).json({ success: false, message: 'Order mismatch' });
     }
-    const isValid = verifyPaymentSignature({ orderId: razorpayOrderId, paymentId: razorpayPaymentId, signature: razorpaySignature });
-    if (!isValid) return res.status(400).json({ success: false, message: 'Invalid signature' });
+    
+    const isValid = verifyPaymentSignature({ 
+      orderId: razorpayOrderId, 
+      paymentId: razorpayPaymentId, 
+      signature: razorpaySignature 
+    });
+    
+    console.log('[REMAINING PAYMENT] Signature validation:', isValid);
+    
+    if (!isValid) {
+      console.error('[REMAINING PAYMENT] Invalid signature');
+      return res.status(400).json({ success: false, message: 'Invalid signature' });
+    }
+    
     booking.markRemainingAsPaid({ paymentId: razorpayPaymentId });
     await booking.save();
-    return res.json({ success: true, message: 'Remaining payment completed', paymentStatus: booking.paymentStatus });
+    
+    console.log('[REMAINING PAYMENT] Payment marked as paid:', {
+      paymentStatus: booking.paymentStatus,
+      remainingPaidAt: booking.remainingPaidAt
+    });
+    
+    return res.json({ 
+      success: true, 
+      message: 'Remaining payment completed', 
+      paymentStatus: booking.paymentStatus 
+    });
   } catch (err) {
+    console.error('[REMAINING PAYMENT] Error verifying payment:', err);
     return res.status(500).json({ success: false, message: err.message });
   }
 };

@@ -104,17 +104,146 @@
 /* Form spacing inside modal body */
 #reviewModal .modal-body form,
 #replyModal .modal-body form { padding: 0; }
-.form-group { margin-bottom: 12px; }
-.form-group label { display: block; font-weight: 600; margin-bottom: 6px; }
-.form-group .help { color: #777; font-size: 12px; }
-.form-group .error { color: #D32F2F; font-size: 12px; margin-top: 4px; min-height: 14px; }
-.btn-primary { background: #F06EA9; color: #fff; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; }
-.btn-secondary { background: #eee; color: #333; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; }
+
+.form-group { margin-bottom: 1.5rem; }
+.form-group label { 
+  display: block; 
+  font-weight: 600; 
+  margin-bottom: 0.75rem; 
+  color: #333;
+  font-size: 0.9375rem;
+}
+
+/* Textarea styling */
+.form-group textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #FFE8E8;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  line-height: 1.6;
+  resize: vertical;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background: #FEFEFE;
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: #F9C5D1;
+  box-shadow: 0 0 0 3px rgba(249, 197, 209, 0.1);
+  background: white;
+}
+
+.form-group textarea::placeholder {
+  color: #999;
+}
+
+/* File input styling */
+.form-group input[type="file"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px dashed #FFE8E8;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #FEFEFE;
+}
+
+.form-group input[type="file"]:hover {
+  border-color: #F9C5D1;
+  background: white;
+}
+
+.form-group input[type="file"]:focus {
+  outline: none;
+  border-color: #F6A5C0;
+  box-shadow: 0 0 0 3px rgba(249, 197, 209, 0.1);
+}
+
+.form-group .help { 
+  color: #777; 
+  font-size: 0.8125rem; 
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.form-group .error { 
+  color: #D32F2F; 
+  font-size: 0.8125rem; 
+  margin-top: 0.5rem; 
+  min-height: 16px;
+  display: block;
+}
+
+.btn-primary { 
+  background: linear-gradient(135deg, #F06EA9, #F9C5D1); 
+  color: #fff; 
+  border: none; 
+  padding: 0.75rem 1.5rem; 
+  border-radius: 0.5rem; 
+  cursor: pointer; 
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(240, 110, 169, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #E05D98, #F6A5C0);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(240, 110, 169, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary { 
+  background: #F5F5F5; 
+  color: #333; 
+  border: 2px solid #E0E0E0; 
+  padding: 0.75rem 1.5rem; 
+  border-radius: 0.5rem; 
+  cursor: pointer; 
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #EBEBEB;
+  border-color: #BDBDBD;
+}
 
 /* Star input for review modal */
-.star-input { display: inline-flex; gap: 6px; cursor: pointer; }
-.star-input .star { width: 22px; height: 22px; background-image: url('/images/star-empty.svg'); background-size: contain; }
-.star-input .star.active { background-image: url('/images/star-filled.svg'); }
+.star-input { 
+  display: inline-flex; 
+  gap: 0.5rem; 
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+
+.star-input .star { 
+  width: 2rem; 
+  height: 2rem; 
+  background-image: url('/images/star-empty.svg'); 
+  background-size: contain; 
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.star-input .star:hover {
+  transform: scale(1.2);
+}
+
+.star-input .star.active { 
+  background-image: url('/images/star-filled.svg'); 
+}
 
 /* Animations */
 @keyframes fadeInUp {

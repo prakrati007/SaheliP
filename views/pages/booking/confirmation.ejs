@@ -1,344 +1,487 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title %> | Saheli Plus</title>
-  <link rel="stylesheet" href="/styles/main.css">
-  <link rel="stylesheet" href="/styles/booking.css">
-  <style>
-    .confirmation-container {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+<style>
+  .confirmation-page {
+    min-height: calc(100vh - 80px);
+    background: linear-gradient(135deg, #FFF5F7 0%, #FFF0F3 50%, #FFE4EC 100%);
+    padding: 3rem 0;
+  }
+
+  .confirmation-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* Success Header */
+  .confirmation-success-header {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(240, 110, 169, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .confirmation-success-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #F06EA9, #F9C5D1);
+  }
+
+  .success-icon-circle {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, #10B981, #059669);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 50px;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    animation: successPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  @keyframes successPop {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .confirmation-success-header h1 {
+    color: #10B981;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  .confirmation-success-header p {
+    color: #666;
+    font-size: 1.15rem;
+    margin: 0;
+  }
+
+  /* Info Cards Grid */
+  .confirmation-cards-grid {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .confirmation-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .confirmation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(240, 110, 169, 0.15);
+  }
+
+  .confirmation-card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #FFF0F3;
+  }
+
+  .confirmation-card-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #F9C5D1, #F6A5C0);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .confirmation-card-header h2 {
+    color: #D91B5C;
+    font-size: 1.4rem;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .info-grid-modern {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .info-item-modern {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .info-item-modern.full-width {
+    grid-column: 1 / -1;
+  }
+
+  .info-item-modern label {
+    font-size: 0.875rem;
+    color: #888;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .info-item-modern .value {
+    font-size: 1.05rem;
+    color: #333;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  /* Status Badge */
+  .status-badge-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .status-badge-modern.confirmed {
+    background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+    color: #065F46;
+  }
+
+  .status-badge-modern::before {
+    content: '●';
+    font-size: 12px;
+  }
+
+  /* Payment Summary */
+  .payment-summary-card {
+    background: linear-gradient(135deg, #FFF5F7, #FFE4EC);
+    border: 2px solid #F9C5D1;
+  }
+
+  .price-row-modern {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    font-size: 1rem;
+    color: #555;
+  }
+
+  .price-row-modern:not(:last-child) {
+    border-bottom: 1px solid rgba(240, 110, 169, 0.1);
+  }
+
+  .price-row-modern.total {
+    padding: 1rem 0 0;
+    margin-top: 0.75rem;
+    border-top: 3px solid #F06EA9 !important;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #D91B5C;
+  }
+
+  .price-row-modern.highlight {
+    background: white;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin: 0.5rem 0;
+    font-weight: 600;
+  }
+
+  .price-row-modern.highlight.paid {
+    color: #059669;
+  }
+
+  .price-row-modern.highlight.remaining {
+    color: #F59E0B;
+  }
+
+  /* Action Buttons */
+  .confirmation-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .btn-modern {
+    flex: 1;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1.05rem;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .btn-modern-primary {
+    background: linear-gradient(135deg, #D91B5C, #F06EA9);
+    color: white;
+    box-shadow: 0 4px 15px rgba(217, 27, 92, 0.3);
+  }
+
+  .btn-modern-primary:hover {
+    background: linear-gradient(135deg, #C0185A, #E05D98);
+    box-shadow: 0 6px 20px rgba(217, 27, 92, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .btn-modern-secondary {
+    background: white;
+    color: #D91B5C;
+    border: 2px solid #F9C5D1;
+  }
+
+  .btn-modern-secondary:hover {
+    background: #FFF5F7;
+    border-color: #F06EA9;
+    transform: translateY(-2px);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .confirmation-page {
+      padding: 2rem 0;
     }
 
-    .confirmation-header {
-      text-align: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 2px solid #f0f0f0;
+    .confirmation-success-header {
+      padding: 2rem 1.5rem;
     }
 
-    .confirmation-header .success-icon {
-      width: 80px;
-      height: 80px;
-      margin: 0 auto 1rem;
-      background: #10b981;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 40px;
-    }
-
-    .confirmation-header h1 {
-      color: #10b981;
-      margin-bottom: 0.5rem;
+    .confirmation-success-header h1 {
       font-size: 2rem;
     }
 
-    .confirmation-header p {
-      color: #666;
-      font-size: 1.1rem;
+    .success-icon-circle {
+      width: 80px;
+      height: 80px;
+      font-size: 40px;
     }
 
-    .booking-info-section {
-      margin-bottom: 2rem;
+    .confirmation-card {
+      padding: 1.5rem;
     }
 
-    .booking-info-section h2 {
-      color: #333;
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid #e5e5e5;
+    .info-grid-modern {
+      grid-template-columns: 1fr;
     }
 
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
+    .confirmation-actions {
+      flex-direction: column;
     }
 
-    .info-item {
-      padding: 0.75rem;
-      background: #f9f9f9;
-      border-radius: 6px;
-    }
-
-    .info-item label {
-      display: block;
-      font-size: 0.85rem;
-      color: #666;
-      margin-bottom: 0.25rem;
-      font-weight: 500;
-    }
-
-    .info-item .value {
-      font-size: 1rem;
-      color: #333;
-      font-weight: 600;
-    }
-
-    .status-badge {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .status-badge.confirmed {
-      background: #d1fae5;
-      color: #065f46;
-    }
-
-    .status-badge.pending {
-      background: #fef3c7;
-      color: #92400e;
-    }
-
-    .price-breakdown {
-      background: #f0f9ff;
-      padding: 1rem;
-      border-radius: 6px;
-      margin-top: 1rem;
-    }
-
-    .price-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.5rem 0;
-    }
-
-    .price-row.total {
-      border-top: 2px solid #0284c7;
-      margin-top: 0.5rem;
-      padding-top: 0.75rem;
-      font-weight: 700;
+    .price-row-modern.total {
       font-size: 1.2rem;
-      color: #0c4a6e;
     }
+  }
+</style>
 
-    .action-buttons {
-      display: flex;
-      gap: 1rem;
-      margin-top: 2rem;
-      justify-content: center;
-    }
-
-    .btn {
-      padding: 0.75rem 2rem;
-      border-radius: 6px;
-      font-weight: 600;
-      text-decoration: none;
-      cursor: pointer;
-      transition: all 0.3s;
-      border: none;
-      font-size: 1rem;
-    }
-
-    .btn-primary {
-      background: #7c3aed;
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: #6d28d9;
-    }
-
-    .btn-secondary {
-      background: #e5e5e5;
-      color: #333;
-    }
-
-    .btn-secondary:hover {
-      background: #d4d4d4;
-    }
-
-    @media (max-width: 768px) {
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .confirmation-container {
-        margin: 1rem;
-        padding: 1.5rem;
-      }
-
-      .action-buttons {
-        flex-direction: column;
-      }
-    }
-  </style>
-</head>
-<body>
-  <%- include('../../partials/header') %>
+<div class="confirmation-page">
 
   <div class="confirmation-container">
-    <div class="confirmation-header">
-      <div class="success-icon">✓</div>
+    <!-- Success Header -->
+    <div class="confirmation-success-header">
+      <div class="success-icon-circle">✓</div>
       <h1>Booking Confirmed!</h1>
       <p>Your appointment has been successfully booked</p>
     </div>
 
-    <!-- Booking Reference -->
-    <div class="booking-info-section">
-      <h2>Booking Details</h2>
-      <div class="info-grid">
-        <div class="info-item">
-          <label>Booking ID</label>
-          <div class="value"><%= booking._id %></div>
+    <div class="confirmation-cards-grid">
+      <!-- Booking Details Card -->
+      <div class="confirmation-card">
+        <div class="confirmation-card-header">
+          <div class="confirmation-card-icon">📅</div>
+          <h2>Booking Details</h2>
         </div>
-        <div class="info-item">
-          <label>Status</label>
-          <div class="value">
-            <span class="status-badge <%= booking.status === 'Confirmed' ? 'confirmed' : 'pending' %>">
-              <%= booking.status %>
-            </span>
+        <div class="info-grid-modern">
+          <div class="info-item-modern full-width">
+            <label>Booking ID</label>
+            <div class="value"><%= booking._id %></div>
+          </div>
+          <div class="info-item-modern">
+            <label>Status</label>
+            <div class="value">
+              <span class="status-badge-modern confirmed">
+                <%= booking.status %>
+              </span>
+            </div>
+          </div>
+          <div class="info-item-modern">
+            <label>Date</label>
+            <div class="value"><%= new Date(booking.date).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></div>
+          </div>
+          <div class="info-item-modern">
+            <label>Time</label>
+            <div class="value"><%= booking.startTime %> - <%= booking.endTime %></div>
+          </div>
+          <div class="info-item-modern">
+            <label>Duration</label>
+            <div class="value"><%= booking.duration %> hours</div>
           </div>
         </div>
-        <div class="info-item">
-          <label>Date</label>
-          <div class="value"><%= new Date(booking.date).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></div>
-        </div>
-        <div class="info-item">
-          <label>Time</label>
-          <div class="value"><%= booking.startTime %> - <%= booking.endTime %></div>
-        </div>
       </div>
-    </div>
 
-    <!-- Service Information -->
-    <div class="booking-info-section">
-      <h2>Service Information</h2>
-      <div class="info-grid">
-        <div class="info-item">
-          <label>Service Name</label>
-          <div class="value"><%= booking.serviceId.title %></div>
+      <!-- Service Information Card -->
+      <div class="confirmation-card">
+        <div class="confirmation-card-header">
+          <div class="confirmation-card-icon">💼</div>
+          <h2>Service Information</h2>
         </div>
-        <div class="info-item">
-          <label>Category</label>
-          <div class="value"><%= booking.serviceId.category %></div>
-        </div>
-        <div class="info-item">
-          <label>Service Type</label>
-          <div class="value"><%= booking.serviceType %></div>
-        </div>
-        <div class="info-item">
-          <label>Duration</label>
-          <div class="value"><%= booking.duration %> hours</div>
+        <div class="info-grid-modern">
+          <div class="info-item-modern full-width">
+            <label>Service Name</label>
+            <div class="value"><%= booking.serviceId.title %></div>
+          </div>
+          <div class="info-item-modern">
+            <label>Category</label>
+            <div class="value"><%= booking.serviceId.category %></div>
+          </div>
+          <div class="info-item-modern">
+            <label>Service Type</label>
+            <div class="value"><%= booking.serviceType %></div>
+          </div>
+          <% if (booking.serviceId.description) { %>
+            <div class="info-item-modern full-width">
+              <label>Description</label>
+              <div class="value"><%= booking.serviceId.description %></div>
+            </div>
+          <% } %>
         </div>
       </div>
-      <% if (booking.serviceId.description) { %>
-        <div class="info-item" style="margin-top: 1rem;">
-          <label>Description</label>
-          <div class="value"><%= booking.serviceId.description %></div>
+
+      <!-- Provider Information Card -->
+      <div class="confirmation-card">
+        <div class="confirmation-card-header">
+          <div class="confirmation-card-icon">👤</div>
+          <h2>Provider Information</h2>
+        </div>
+        <div class="info-grid-modern">
+          <div class="info-item-modern">
+            <label>Name</label>
+            <div class="value"><%= booking.providerId.name %></div>
+          </div>
+          <div class="info-item-modern">
+            <label>Email</label>
+            <div class="value"><%= booking.providerId.email %></div>
+          </div>
+          <% if (booking.providerId.phone) { %>
+            <div class="info-item-modern">
+              <label>Phone</label>
+              <div class="value"><%= booking.providerId.phone %></div>
+            </div>
+          <% } %>
+          <div class="info-item-modern">
+            <label>Location</label>
+            <div class="value"><%= booking.providerId.city %></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Location Details (if applicable) -->
+      <% if (booking.address) { %>
+        <div class="confirmation-card">
+          <div class="confirmation-card-header">
+            <div class="confirmation-card-icon">📍</div>
+            <h2>Service Location</h2>
+          </div>
+          <div class="info-item-modern full-width">
+            <label>Address</label>
+            <div class="value"><%= booking.address %></div>
+          </div>
         </div>
       <% } %>
-    </div>
 
-    <!-- Provider Information -->
-    <div class="booking-info-section">
-      <h2>Provider Information</h2>
-      <div class="info-grid">
-        <div class="info-item">
-          <label>Name</label>
-          <div class="value"><%= booking.providerId.name %></div>
-        </div>
-        <div class="info-item">
-          <label>Email</label>
-          <div class="value"><%= booking.providerId.email %></div>
-        </div>
-        <% if (booking.providerId.phone) { %>
-          <div class="info-item">
-            <label>Phone</label>
-            <div class="value"><%= booking.providerId.phone %></div>
+      <!-- Additional Notes -->
+      <% if (booking.notes) { %>
+        <div class="confirmation-card">
+          <div class="confirmation-card-header">
+            <div class="confirmation-card-icon">📝</div>
+            <h2>Additional Notes</h2>
           </div>
-        <% } %>
-        <div class="info-item">
-          <label>Location</label>
-          <div class="value"><%= booking.providerId.city %></div>
+          <div class="info-item-modern full-width">
+            <div class="value"><%= booking.notes %></div>
+          </div>
         </div>
-      </div>
-    </div>
+      <% } %>
 
-    <!-- Location Details (if applicable) -->
-    <% if (booking.address) { %>
-      <div class="booking-info-section">
-        <h2>Service Location</h2>
-        <div class="info-item">
-          <label>Address</label>
-          <div class="value"><%= booking.address %></div>
+      <!-- Payment Summary Card -->
+      <div class="confirmation-card payment-summary-card">
+        <div class="confirmation-card-header">
+          <div class="confirmation-card-icon">💳</div>
+          <h2>Payment Summary</h2>
         </div>
-      </div>
-    <% } %>
-
-    <!-- Additional Notes -->
-    <% if (booking.notes) { %>
-      <div class="booking-info-section">
-        <h2>Additional Notes</h2>
-        <div class="info-item">
-          <div class="value"><%= booking.notes %></div>
-        </div>
-      </div>
-    <% } %>
-
-    <!-- Price Breakdown -->
-    <div class="booking-info-section">
-      <h2>Payment Summary</h2>
-      <div class="price-breakdown">
-        <div class="price-row">
-          <span>Base Amount</span>
-          <span>₹<%= booking.baseAmount.toFixed(2) %></span>
-        </div>
-        <% if (booking.travelFee && booking.travelFee > 0) { %>
-          <div class="price-row">
-            <span>Travel Fee</span>
-            <span>₹<%= booking.travelFee.toFixed(2) %></span>
+        <div>
+          <div class="price-row-modern">
+            <span>Base Amount</span>
+            <span>₹<%= booking.baseAmount.toFixed(2) %></span>
           </div>
-        <% } %>
-        <% if (booking.weekendPremium && booking.weekendPremium > 0) { %>
-          <div class="price-row">
-            <span>Weekend Premium</span>
-            <span>₹<%= booking.weekendPremium.toFixed(2) %></span>
+          <% if (booking.travelFee && booking.travelFee > 0) { %>
+            <div class="price-row-modern">
+              <span>Travel Fee</span>
+              <span>₹<%= booking.travelFee.toFixed(2) %></span>
+            </div>
+          <% } %>
+          <% if (booking.weekendPremium && booking.weekendPremium > 0) { %>
+            <div class="price-row-modern">
+              <span>Weekend Premium</span>
+              <span>₹<%= booking.weekendPremium.toFixed(2) %></span>
+            </div>
+          <% } %>
+          <div class="price-row-modern total">
+            <span>Total Amount</span>
+            <span>₹<%= booking.totalAmount.toFixed(2) %></span>
           </div>
-        <% } %>
-        <div class="price-row total">
-          <span>Total Amount</span>
-          <span>₹<%= booking.totalAmount.toFixed(2) %></span>
-        </div>
-        <div class="price-row" style="border-top: 1px solid #bae6fd; margin-top: 0.5rem; padding-top: 0.5rem;">
-          <span>Advance Paid (<%= booking.advancePercentage %>%)</span>
-          <span style="color: #4CAF50; font-weight: 600;">₹<%= booking.advancePaid.toFixed(2) %></span>
-        </div>
-        <div class="price-row">
-          <span>Remaining Balance</span>
-          <span style="color: #FF9800; font-weight: 600;">₹<%= booking.remainingAmount.toFixed(2) %></span>
-        </div>
-        <% if (booking.paymentMethod) { %>
-          <div class="price-row" style="border-top: 1px solid #bae6fd; margin-top: 0.5rem; padding-top: 0.5rem;">
-            <span>Payment Method</span>
-            <span style="text-transform: capitalize;"><%= booking.paymentMethod %></span>
+          <div class="price-row-modern highlight paid">
+            <span>✓ Advance Paid (<%= booking.advancePercentage %>%)</span>
+            <span>₹<%= booking.advancePaid.toFixed(2) %></span>
           </div>
-        <% } %>
+          <div class="price-row-modern highlight remaining">
+            <span>⏰ Remaining Balance</span>
+            <span>₹<%= booking.remainingAmount.toFixed(2) %></span>
+          </div>
+          <% if (booking.paymentMethod) { %>
+            <div class="price-row-modern" style="margin-top: 1rem;">
+              <span>Payment Method</span>
+              <span style="text-transform: capitalize;"><%= booking.paymentMethod %></span>
+            </div>
+          <% } %>
+        </div>
       </div>
     </div>
 
     <!-- Action Buttons -->
-    <div class="action-buttons">
-      <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
-      <a href="/services" class="btn btn-secondary">Browse More Services</a>
+    <div class="confirmation-actions">
+      <a href="/dashboard" class="btn-modern btn-modern-primary">
+        <span>📊</span>
+        <span>Go to Dashboard</span>
+      </a>
+      <a href="/services" class="btn-modern btn-modern-secondary">
+        <span>🔍</span>
+        <span>Browse More Services</span>
+      </a>
     </div>
   </div>
-
-  <%- include('../../partials/footer') %>
-</body>
-</html>
+</div>

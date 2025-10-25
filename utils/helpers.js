@@ -193,37 +193,32 @@ function buildServiceQuery(filters = {}) {
   // Price range filter
   // For Hourly/Fixed pricing types, basePrice is used.
   // For Package pricing, we check if any package falls within the price range.
-  // Note: Package filtering uses $elemMatch to apply both min and max bounds.
   if (filters.priceMin || filters.priceMax) {
+    const priceMin = filters.priceMin ? parseFloat(filters.priceMin) : 0;
+    const priceMax = filters.priceMax ? parseFloat(filters.priceMax) : Number.MAX_SAFE_INTEGER;
+    
+    // Build condition: service must have at least one pricing option within range
     const priceConditions = [];
     
-    // For Hourly/Fixed pricing - filter by basePrice
-    const basePriceCondition = {};
-    if (filters.priceMin) basePriceCondition.$gte = parseFloat(filters.priceMin);
-    if (filters.priceMax) basePriceCondition.$lte = parseFloat(filters.priceMax);
-    if (Object.keys(basePriceCondition).length > 0) {
-      priceConditions.push({ basePrice: basePriceCondition });
-    }
+    // Condition 1: basePrice is within range (for Hourly/Fixed pricing)
+    const basePriceCondition = {
+      basePrice: { $gte: priceMin, $lte: priceMax }
+    };
+    priceConditions.push(basePriceCondition);
     
-    // For Package pricing - check if any package falls within the range
-    if (filters.priceMin || filters.priceMax) {
-      const packagePriceCondition = {};
-      if (filters.priceMin) packagePriceCondition.$gte = parseFloat(filters.priceMin);
-      if (filters.priceMax) packagePriceCondition.$lte = parseFloat(filters.priceMax);
-      
-      if (Object.keys(packagePriceCondition).length > 0) {
-        priceConditions.push({
-          pricingType: 'Package',
-          packages: {
-            $elemMatch: { price: packagePriceCondition }
-          }
-        });
+    // Condition 2: at least one package price is within range (for Package pricing)
+    const packagePriceCondition = {
+      pricingType: 'Package',
+      packages: {
+        $elemMatch: { 
+          price: { $gte: priceMin, $lte: priceMax }
+        }
       }
-    }
+    };
+    priceConditions.push(packagePriceCondition);
     
-    if (priceConditions.length > 0) {
-      query.$or = priceConditions;
-    }
+    // Use $or to match services with either basePrice or package price in range
+    query.$or = priceConditions;
   }
   
   // Minimum rating filter

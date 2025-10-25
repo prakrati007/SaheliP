@@ -67,15 +67,32 @@ async function renderSaheliDashboard(req, res, userId) {
           cancelledBookings: {
             $sum: { $cond: [{ $eq: ['$status', 'Cancelled'] }, 1, 0] }
           },
+          // Total Earnings = All advance payments received (excluding refunded) + All remaining payments
           totalEarnings: {
             $sum: {
-              $cond: [{ $eq: ['$paymentStatus', 'FullyPaid'] }, '$totalAmount', 0]
+              $cond: [
+                { $eq: ['$status', 'Cancelled'] }, // If cancelled, subtract refunded amount
+                { $subtract: ['$advancePaid', { $ifNull: ['$refundAmount', 0] }] },
+                { 
+                  $cond: [
+                    { $eq: ['$paymentStatus', 'FullyPaid'] }, 
+                    '$totalAmount', // Fully paid = total amount
+                    '$advancePaid' // Otherwise count advance paid amount
+                  ]
+                }
+              ]
             }
           },
+          // Pending Earnings = Remaining amount from active bookings (not cancelled)
           pendingEarnings: {
             $sum: {
               $cond: [
-                { $eq: ['$paymentStatus', 'AdvancePaid'] },
+                {
+                  $and: [
+                    { $ne: ['$status', 'Cancelled'] }, // Not cancelled
+                    { $eq: ['$paymentStatus', 'AdvancePaid'] } // Only advance paid
+                  ]
+                },
                 '$remainingAmount',
                 0
               ]
@@ -94,6 +111,15 @@ async function renderSaheliDashboard(req, res, userId) {
       totalEarnings: 0,
       pendingEarnings: 0
     };
+
+    // Debug logging for earnings calculation
+    console.log('[DASHBOARD] Provider earnings stats:', {
+      providerId: providerId.toString(),
+      totalEarnings: stats.totalEarnings,
+      pendingEarnings: stats.pendingEarnings,
+      totalBookings: stats.totalBookings,
+      cancelledBookings: stats.cancelledBookings
+    });
 
     // Service stats
     const totalServices = await Service.countDocuments({ providerId });
@@ -136,19 +162,31 @@ async function renderSaheliDashboard(req, res, userId) {
       .populate('customerId', 'name email')
       .lean();
 
-    // Upcoming bookings
+    // Recent bookings (active: confirmed or in progress)
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    
+    console.log('[DASHBOARD] Fetching recent bookings for provider:', providerId.toString());
+    console.log('[DASHBOARD] Today date:', today);
+    
     const upcomingBookings = await Booking.find({
       providerId,
-      status: { $in: ['Confirmed', 'InProgress'] },
-      date: { $gte: today }
+      status: { $in: ['Confirmed', 'InProgress'] }
     })
-      .sort({ date: 1, startTime: 1 })
+      .sort({ date: -1, startTime: 1 })
       .limit(5)
       .populate('serviceId', 'title category')
       .populate('customerId', 'name email')
       .lean();
+    
+    console.log('[DASHBOARD] Upcoming bookings found:', upcomingBookings.length);
+    if (upcomingBookings.length > 0) {
+      console.log('[DASHBOARD] First booking:', {
+        date: upcomingBookings[0].date,
+        status: upcomingBookings[0].status,
+        service: upcomingBookings[0].serviceId?.title
+      });
+    }
 
     // Top services (by view count)
     const topServices = await Service.find({ providerId, isActive: true })
@@ -213,9 +251,20 @@ async function renderCustomerDashboard(req, res, userId) {
           completedBookings: {
             $sum: { $cond: [{ $eq: ['$status', 'Completed'] }, 1, 0] }
           },
+          // Total Spent = All payments made minus refunds received
           totalSpent: {
             $sum: {
-              $cond: [{ $eq: ['$paymentStatus', 'FullyPaid'] }, '$totalAmount', 0]
+              $cond: [
+                { $eq: ['$status', 'Cancelled'] }, // If cancelled, subtract refund from what was paid
+                0, // Don't count cancelled bookings as spent (they were refunded)
+                { 
+                  $cond: [
+                    { $eq: ['$paymentStatus', 'FullyPaid'] }, 
+                    '$totalAmount', // Fully paid = total amount spent
+                    '$advancePaid' // Otherwise count advance paid amount
+                  ]
+                }
+              ]
             }
           }
         }
@@ -228,6 +277,15 @@ async function renderCustomerDashboard(req, res, userId) {
       completedBookings: 0,
       totalSpent: 0
     };
+
+    // Debug logging for customer spending calculation
+    console.log('[DASHBOARD] Customer spending stats:', {
+      customerId: customerId.toString(),
+      totalSpent: stats.totalSpent,
+      totalBookings: stats.totalBookings,
+      activeBookings: stats.activeBookings,
+      completedBookings: stats.completedBookings
+    });
 
     // Pending payments count
     const pendingPaymentsCount = await Booking.countDocuments({

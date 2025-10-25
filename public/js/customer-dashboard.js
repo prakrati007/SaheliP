@@ -121,8 +121,10 @@ async function handleCancelBooking(bookingId) {
  */
 async function handlePayRemaining(bookingId) {
   try {
+    console.log('[PAY REMAINING] Creating payment order for booking:', bookingId);
+    
     // Create Razorpay order for remaining payment
-    const orderResponse = await fetch(`/booking/${bookingId}/payment/remaining`, {
+    const orderResponse = await fetch(`/booking/${bookingId}/remaining/order`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -130,10 +132,43 @@ async function handlePayRemaining(bookingId) {
       credentials: 'include'
     });
 
+    console.log('[PAY REMAINING] Order response status:', orderResponse.status);
+
+    if (!orderResponse.ok) {
+      const errorText = await orderResponse.text();
+      console.error('[PAY REMAINING] Order creation failed:', errorText);
+      showToast('Failed to create payment order', 'error');
+      return;
+    }
+
     const orderData = await orderResponse.json();
+    console.log('[PAY REMAINING] Order data:', orderData);
 
     if (!orderData.success) {
       showToast(orderData.message || 'Failed to create payment order', 'error');
+      return;
+    }
+
+    // Validate required data
+    if (!orderData.razorpayKeyId) {
+      console.error('[PAY REMAINING] Missing Razorpay key ID');
+      showToast('Payment configuration error', 'error');
+      return;
+    }
+
+    if (!orderData.razorpayOrder || !orderData.razorpayOrder.id) {
+      console.error('[PAY REMAINING] Missing Razorpay order ID');
+      showToast('Payment order error', 'error');
+      return;
+    }
+
+    console.log('[PAY REMAINING] Razorpay key:', orderData.razorpayKeyId);
+    console.log('[PAY REMAINING] Order ID:', orderData.razorpayOrder.id);
+    console.log('[PAY REMAINING] Checking Razorpay object:', typeof Razorpay);
+
+    if (typeof Razorpay === 'undefined') {
+      console.error('[PAY REMAINING] Razorpay script not loaded');
+      showToast('Payment gateway not available', 'error');
       return;
     }
 
@@ -146,8 +181,10 @@ async function handlePayRemaining(bookingId) {
       description: 'Remaining Payment',
       order_id: orderData.razorpayOrder.id,
       handler: async function(response) {
+        console.log('[PAY REMAINING] Payment successful, verifying...');
+        
         // Verify payment on backend
-        const verifyResponse = await fetch('/booking/payment/verify-remaining', {
+        const verifyResponse = await fetch('/booking/payment/remaining/verify', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -162,12 +199,13 @@ async function handlePayRemaining(bookingId) {
         });
 
         const verifyData = await verifyResponse.json();
+        console.log('[PAY REMAINING] Verification result:', verifyData);
 
         if (verifyData.success) {
           showToast('Payment completed successfully!', 'success');
           setTimeout(() => location.reload(), 1500);
         } else {
-          showToast('Payment verification failed', 'error');
+          showToast(verifyData.message || 'Payment verification failed', 'error');
         }
       },
       prefill: {
@@ -177,13 +215,19 @@ async function handlePayRemaining(bookingId) {
       },
       theme: {
         color: '#F6A5C0'
+      },
+      modal: {
+        ondismiss: function() {
+          console.log('[PAY REMAINING] Payment modal dismissed');
+        }
       }
     };
 
+    console.log('[PAY REMAINING] Opening Razorpay checkout...');
     const razorpay = new Razorpay(options);
     razorpay.open();
   } catch (error) {
-    console.error('Error processing remaining payment:', error);
+    console.error('[PAY REMAINING] Error processing remaining payment:', error);
     showToast('An error occurred. Please try again.', 'error');
   }
 }
@@ -214,7 +258,9 @@ async function openBookingDetailModal(bookingId) {
       loadingEl.style.display = 'none';
       contentEl.style.display = 'block';
     } else {
-      showToast('Failed to load booking details', 'error');
+      // Show specific error message if available
+      const errorMsg = data.message || 'Failed to load booking details';
+      showToast(errorMsg, 'error');
       closeBookingDetailModal();
     }
   } catch (error) {
@@ -272,11 +318,20 @@ function populateBookingModal(booking, userRole) {
   document.getElementById('bookingPaymentStatus').innerHTML = `<span class="payment-badge payment-${booking.paymentStatus.toLowerCase()}">${booking.paymentStatus}</span>`;
   document.getElementById('bookingCreatedAt').textContent = new Date(booking.createdAt).toLocaleDateString('en-IN');
 
-  // Service details
-  document.getElementById('serviceName').textContent = booking.serviceId?.title || 'N/A';
-  document.getElementById('serviceCategory').textContent = booking.serviceId?.category || 'N/A';
+  // Service details (handle deleted service)
+  const serviceName = booking.serviceId?.title || '[Service Deleted]';
+  const serviceCategory = booking.serviceId?.category || 'N/A';
+  document.getElementById('serviceName').textContent = serviceName;
+  document.getElementById('serviceCategory').textContent = serviceCategory;
   document.getElementById('serviceType').textContent = booking.serviceType || 'N/A';
   document.getElementById('serviceDuration').textContent = `${booking.duration} hours`;
+  
+  // Show warning if service was deleted
+  if (!booking.serviceId) {
+    const serviceNameEl = document.getElementById('serviceName');
+    serviceNameEl.style.color = '#999';
+    serviceNameEl.title = 'This service has been removed by the provider';
+  }
 
   // Schedule
   document.getElementById('bookingDate').textContent = new Date(booking.date).toLocaleDateString('en-IN');
@@ -404,3 +459,8 @@ document.addEventListener('click', function(e) {
     closeBookingDetailModal();
   }
 });
+
+// Expose functions to global scope for inline onclick handlers
+window.handlePayRemaining = handlePayRemaining;
+window.openBookingDetailModal = openBookingDetailModal;
+

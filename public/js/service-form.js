@@ -529,13 +529,14 @@
       }
     }
 
-    // Image deletion
-    const removeButtons = document.querySelectorAll('.image-remove-btn');
+    // Image deletion handlers (modern UI)
+    const removeButtons = document.querySelectorAll('.image-remove-btn-modern');
     removeButtons.forEach(function(btn) {
-      btn.addEventListener('click', function() {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
         const idx = parseInt(this.dataset.index);
         imagesToDelete.push(idx);
-        this.parentElement.remove();
+        this.closest('.image-preview-item-modern').remove();
         
         const deleteInput = document.getElementById('deleteImages');
         if (deleteInput) {
@@ -544,47 +545,55 @@
 
         const imageCount = document.getElementById('imageCount');
         if (imageCount) {
-          const remaining = document.querySelectorAll('.image-preview-item:not(.image-preview-new)').length;
+          const remaining = document.querySelectorAll('.image-preview-item-modern').length;
           imageCount.textContent = remaining;
         }
       });
     });
 
-    // Delete service button
-    const deleteBtn = document.getElementById('deleteServiceBtn');
-    if (deleteBtn) {
-      deleteBtn.addEventListener('click', function() {
-        if (confirm('Are you sure you want to delete this service? This action cannot be undone.')) {
-          const serviceId = form.action.match(/\/services\/([^?]+)/)[1];
-          const deleteForm = document.createElement('form');
-          deleteForm.method = 'POST';
-          deleteForm.action = `/services/${serviceId}?_method=DELETE`;
-          document.body.appendChild(deleteForm);
-          deleteForm.submit();
+    // Toggle status button
+    const toggleStatusBtn = document.getElementById('toggleStatusBtn');
+    if (toggleStatusBtn) {
+      toggleStatusBtn.addEventListener('click', function() {
+        const serviceId = window.location.pathname.split('/')[2];
+        if (confirm('Are you sure you want to change the service status?')) {
+          fetch(`/services/${serviceId}/toggle`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              window.location.reload();
+            } else {
+              alert(data.message || 'Failed to toggle status');
+            }
+          })
+          .catch(err => {
+            console.error('Error:', err);
+            alert('Failed to toggle status');
+          });
         }
       });
     }
 
-    // Toggle status button
-    const toggleBtn = document.getElementById('toggleStatusBtn');
-    if (toggleBtn) {
-      toggleBtn.addEventListener('click', function() {
-        const serviceId = form.action.match(/\/services\/([^?]+)/)[1];
-        fetch(`/services/${serviceId}/toggle`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' }
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            location.reload();
-          } else {
-            alert(data.message || 'Failed to toggle status');
-          }
-        })
-        .catch(err => {
-          alert('Failed to toggle status');
-        });
+    // Delete service button with modal
+    const deleteServiceBtn = document.getElementById('deleteServiceBtn');
+    const deleteModal = document.getElementById('deleteModal');
+    if (deleteServiceBtn && deleteModal) {
+      deleteServiceBtn.addEventListener('click', function() {
+        deleteModal.style.display = 'flex';
+      });
+    }
+
+    // Cancellation policy character counter
+    const cancelPolicy = document.getElementById('cancellationPolicy');
+    const cancelCounter = document.getElementById('cancelCounter');
+    if (cancelPolicy && cancelCounter) {
+      cancelPolicy.addEventListener('input', function() {
+        cancelCounter.textContent = this.value.length;
       });
     }
   }

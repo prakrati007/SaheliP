@@ -31,14 +31,30 @@ async function loadBookings() {
   listContainer.innerHTML = '<div class="loading-indicator">Loading bookings...</div>';
   
   try {
-    const response = await fetch('/booking/provider/list');
-    if (!response.ok) throw new Error('Failed to load bookings');
+    const response = await fetch('/booking/provider/list', {
+      headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      credentials: 'include'
+    });
+    
+    console.log('[PROVIDER BOOKINGS] Response status:', response.status);
+    
+    if (!response.ok) {
+      console.error('[PROVIDER BOOKINGS] Response not ok:', response.status);
+      throw new Error('Failed to load bookings');
+    }
     
     const data = await response.json();
+    console.log('[PROVIDER BOOKINGS] Data received:', data);
+    
     bookings = data.bookings || [];
+    console.log('[PROVIDER BOOKINGS] Total bookings:', bookings.length);
+    
     renderBookings();
   } catch (error) {
-    console.error('Error loading bookings:', error);
+    console.error('[PROVIDER BOOKINGS] Error loading bookings:', error);
     listContainer.innerHTML = `<div class="error-message">Failed to load bookings. Please try again.</div>`;
   }
 }

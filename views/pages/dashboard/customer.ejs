@@ -17,7 +17,7 @@
     
     <div class="stats-card color-green">
       <div class="stats-icon">✓</div>
-      <div class="stats-value"><%= stats.completedBookings %></div>
+      <div class="stats-value"><%= stats.servicesReceived || stats.completedBookings %></div>
       <div class="stats-label">Services Received</div>
     </div>
     
@@ -261,18 +261,12 @@
           </thead>
           <tbody>
             <% recentPayments.forEach(payment => { %>
-              <tr class="payment-row" data-booking-id="<%= payment._id %>">
-                <td><%= new Date(payment.updatedAt).toLocaleDateString('en-IN') %></td>
+              <tr class="payment-row" data-booking-id="<%= payment.bookingId %>">
+                <td><%= new Date(payment.createdAt).toLocaleDateString('en-IN') %></td>
                 <td><%= payment.serviceId?.title || 'N/A' %></td>
                 <td><%= payment.providerId?.name || 'N/A' %></td>
-                <td class="payment-amount">₹<%= payment.advancePaid.toLocaleString('en-IN') %></td>
-                <td>
-                  <% if (payment.paymentStatus === 'FullyPaid') { %>
-                    Full Payment
-                  <% } else { %>
-                    Advance
-                  <% } %>
-                </td>
+                <td class="payment-amount">₹<%= payment.amount.toLocaleString('en-IN') %></td>
+                <td><%= payment.type %></td>
                 <td>
                   <span class="status-badge status-paid">Paid</span>
                 </td>

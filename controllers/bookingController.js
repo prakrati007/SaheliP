@@ -6,6 +6,7 @@
 const Booking = require('../models/Booking');
 const Service = require('../models/Service');
 const User = require('../models/User');
+const Payment = require('../models/Payment');
 const {
   createOrder,
   verifyPaymentSignature,
@@ -222,6 +223,20 @@ exports.verifyPayment = async (req, res) => {
       method: 'razorpay' // Will be updated with actual method from webhook
     });
     await booking.save();
+
+    // Create Payment record for advance payment
+    await Payment.create({
+      bookingId: booking._id,
+      customerId: booking.customerId,
+      providerId: booking.providerId,
+      serviceId: booking.serviceId,
+      amount: booking.advancePaid,
+      type: 'Advance',
+      status: 'Success',
+      razorpayOrderId: razorpayOrderId,
+      razorpayPaymentId: razorpayPaymentId,
+      razorpaySignature: razorpaySignature
+    });
 
     // Fetch full booking details for email
     const fullBooking = await Booking.findById(booking._id)
@@ -1308,6 +1323,20 @@ exports.verifyRemainingPayment = async (req, res) => {
     
     booking.markRemainingAsPaid({ paymentId: razorpayPaymentId });
     await booking.save();
+    
+    // Create Payment record for remaining payment
+    await Payment.create({
+      bookingId: booking._id,
+      customerId: booking.customerId,
+      providerId: booking.providerId,
+      serviceId: booking.serviceId,
+      amount: booking.remainingAmount,
+      type: 'Remaining',
+      status: 'Success',
+      razorpayOrderId: razorpayOrderId,
+      razorpayPaymentId: razorpayPaymentId,
+      razorpaySignature: razorpaySignature
+    });
     
     console.log('[REMAINING PAYMENT] Payment marked as paid:', {
       paymentStatus: booking.paymentStatus,

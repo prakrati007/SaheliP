@@ -234,7 +234,23 @@ async function renderCustomerDashboard(req, res, userId) {
 
     // Aggregate booking stats
     const bookingStats = await Booking.aggregate([
-      { $match: { customerId } },
+      { 
+        $match: { 
+          customerId,
+          // Exclude Pending bookings that haven't been paid
+          // They are failed bookings that should be cleaned up
+          $or: [
+            { status: { $ne: 'Pending' } }, // Include all non-Pending
+            { 
+              // Or include Pending only if payment was made (shouldn't happen, but safety check)
+              $and: [
+                { status: 'Pending' },
+                { paymentStatus: { $in: ['AdvancePaid', 'FullyPaid'] } }
+              ]
+            }
+          ]
+        }
+      },
       {
         $group: {
           _id: null,
@@ -251,19 +267,41 @@ async function renderCustomerDashboard(req, res, userId) {
           completedBookings: {
             $sum: { $cond: [{ $eq: ['$status', 'Completed'] }, 1, 0] }
           },
-          // Total Spent = All payments made minus refunds received
+          // Services Received = Completed + Active bookings where payment was made
+          servicesReceived: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $in: ['$status', ['Confirmed', 'InProgress', 'Completed']] },
+                    { $in: ['$paymentStatus', ['AdvancePaid', 'FullyPaid']] }
+                  ]
+                },
+                1,
+                0
+              ]
+            }
+          },
+          // Total Spent = Only count bookings where payment was actually made
+          // Don't count Pending or Cancelled bookings
           totalSpent: {
             $sum: {
               $cond: [
-                { $eq: ['$status', 'Cancelled'] }, // If cancelled, subtract refund from what was paid
-                0, // Don't count cancelled bookings as spent (they were refunded)
-                { 
+                {
+                  $and: [
+                    { $ne: ['$status', 'Cancelled'] }, // Not cancelled
+                    { $ne: ['$status', 'Pending'] }, // Not pending (failed payment)
+                    { $in: ['$paymentStatus', ['AdvancePaid', 'FullyPaid']] } // Payment actually made
+                  ]
+                },
+                {
                   $cond: [
                     { $eq: ['$paymentStatus', 'FullyPaid'] }, 
                     '$totalAmount', // Fully paid = total amount spent
-                    '$advancePaid' // Otherwise count advance paid amount
+                    '$advancePaid' // AdvancePaid = count advance paid amount
                   ]
-                }
+                },
+                0 // Don't count this booking
               ]
             }
           }
@@ -275,6 +313,7 @@ async function renderCustomerDashboard(req, res, userId) {
       totalBookings: 0,
       activeBookings: 0,
       completedBookings: 0,
+      servicesReceived: 0,
       totalSpent: 0
     };
 
@@ -293,6 +332,16 @@ async function renderCustomerDashboard(req, res, userId) {
       status: 'Completed',
       paymentStatus: 'AdvancePaid'
     });
+
+    // Debug: Get ALL bookings for this customer to see what's happening
+    const allBookings = await Booking.find({ customerId }).select('status paymentStatus totalAmount advancePaid').lean();
+    console.log('[DASHBOARD] All customer bookings:', allBookings.map(b => ({
+      id: b._id,
+      status: b.status,
+      paymentStatus: b.paymentStatus,
+      totalAmount: b.totalAmount,
+      advancePaid: b.advancePaid
+    })));
 
     // Bookings by status
     const today = new Date();
@@ -328,12 +377,19 @@ async function renderCustomerDashboard(req, res, userId) {
       .populate('providerId', 'name email city')
       .lean();
 
+    console.log('[DASHBOARD] Bookings by status:', {
+      upcoming: upcomingBookings.length,
+      completed: completedBookings.length,
+      cancelled: cancelledBookings.length
+    });
+
     // Recent payments
-    const recentPayments = await Booking.find({
+    const Payment = require('../models/Payment');
+    const recentPayments = await Payment.find({
       customerId,
-      paymentStatus: { $in: ['AdvancePaid', 'FullyPaid'] }
+      status: 'Success'
     })
-      .sort({ updatedAt: -1 })
+      .sort({ createdAt: -1 })
       .limit(10)
       .populate('serviceId', 'title category')
       .populate('providerId', 'name email')
